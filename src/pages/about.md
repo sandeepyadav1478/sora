@@ -3,28 +3,27 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-I'm Sandeep Yadav, a developer based in New Delhi, India.
+Hi, I'm John Doe — a software engineer based in New York.
 
-I contribute to open-source projects like [HuggingFace Transformers](https://github.com/huggingface/transformers), build developer tools, and write about ML and systems.
+I build developer tools, contribute to open source, and write about distributed systems and web engineering. Currently working on the developer platform team at Acme Corp.
 
-## What is Sora?
+## About Sora
 
-Sora is an open-source portfolio template built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/). It's designed for developers, researchers, and creators who want to showcase their life's work in a clean, professional manner.
+This site is built with **Sora**, an open-source portfolio template for developers, researchers, and creators who want to showcase their life's work.
 
 ### Features
 
 - Single-page board with filter tabs for content types
 - Modal-based UX for viewing work details
-- Multiple content types: OSS, projects, writing, talks, certifications
+- Multiple content types: OSS, projects, writing, talks, certifications, experience
 - Dark/light mode with system preference detection
 - Fuzzy search powered by Pagefind
 - Fully configurable from a single config file
 - SEO optimized with dynamic OG image generation
-- GitHub Pages deployment via GitHub Actions
 
 ### Using Sora for your own portfolio
 
-1. Use this repo as a template on GitHub
+1. [Use this template](https://github.com/sandeepyadav1478/sora) on GitHub
 2. Edit `src/config.ts` with your personal details
 3. Add your works as markdown files in `src/data/works/`
 4. Push to GitHub — it auto-deploys to GitHub Pages
