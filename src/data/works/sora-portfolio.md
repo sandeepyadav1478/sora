@@ -10,6 +10,7 @@ links:
     url: "https://github.com/sandeepyadav1478/sora"
   - label: "Live Demo"
     url: "https://sandeepyadav1478.github.io"
+image: "https://astro.build/assets/press/astro-icon-light-gradient.svg"
 ---
 
 Sora is an open-source portfolio template designed for developers, researchers, and creators who want to showcase their life's work in a clean, professional manner.

@@ -5,37 +5,41 @@ const tabs = [
   { filter: "project", label: "Projects" },
   { filter: "writing", label: "Writing" },
   { filter: "talk", label: "Talks" },
-  { filter: "certification", label: "Certifications" },
+  { filter: "certification", label: "Certs" },
   { filter: "experience", label: "Experience" },
 ];
 ---
 
-<div id="filter-tabs" class="mb-6 flex flex-wrap gap-2">
-  {
-    tabs.map(tab => (
-      <button
-        data-filter={tab.filter}
-        class:list={[
-          "filter-tab",
-          { active: tab.filter === "all" },
-        ]}
-      >
-        {tab.label}
-      </button>
-    ))
-  }
-</div>
+<aside class="filter-sidebar">
+  <nav class="filter-nav">
+    {
+      tabs.map(tab => (
+        <a
+          href="#"
+          data-filter={tab.filter}
+          class:list={[
+            "filter-link",
+            { active: tab.filter === "all" },
+          ]}
+        >
+          {tab.label}
+        </a>
+      ))
+    }
+  </nav>
+</aside>
 
 <script>
   function initFilterTabs() {
-    const tabs = document.querySelectorAll<HTMLButtonElement>(".filter-tab");
+    const links = document.querySelectorAll<HTMLAnchorElement>(".filter-link");
     const items = document.querySelectorAll<HTMLElement>(".work-item");
 
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        const filter = tab.dataset.filter;
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
+    links.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const filter = link.dataset.filter;
+        links.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
         items.forEach(item => {
           if (filter === "all" || item.dataset.type === filter) {
             item.style.display = "";

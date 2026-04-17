@@ -8,7 +8,6 @@ import AboutSection from "@/components/AboutSection.astro";
 import FilterTabs from "@/components/FilterTabs.astro";
 import WorkCard from "@/components/WorkCard.astro";
 import WorkModal from "@/components/WorkModal.astro";
-import Datetime from "@/components/Datetime.astro";
 import ExperienceTimeline from "@/components/ExperienceTimeline.astro";
 import SkillsSection from "@/components/SkillsSection.astro";
 import ContactSection from "@/components/ContactSection.astro";
@@ -37,7 +36,6 @@ const typeLabelMap: Record<string, string> = {
 
     {/* === THE BOARD === */}
     <section id="works" class="pt-8 pb-6">
-      <FilterTabs />
       <ul>
         {sortedWorks.map(work => <WorkCard {...work} />)}
       </ul>
@@ -47,53 +45,68 @@ const typeLabelMap: Record<string, string> = {
     {SECTIONS.showSkills && <SkillsSection />}
     {SECTIONS.showContact && <ContactSection />}
 
-    {/* Pre-rendered work content for the modal */}
+    {/* Pre-rendered work content (hidden, cloned into modal by JS) */}
     {sortedWorks.map(async work => {
       const { Content } = await render(work);
+      const img = work.data.image;
+      const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
+      const displayDate = new Date(work.data.modDatetime ?? work.data.pubDatetime)
+        .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
       return (
-        <template data-work-template={work.id}>
-          <article class="app-prose max-w-none">
-            <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
-            <div class="mt-2 flex flex-wrap items-center gap-3">
-              <span class="type-badge">{typeLabelMap[work.data.type]}</span>
-              <Datetime
-                pubDatetime={work.data.pubDatetime}
-                modDatetime={work.data.modDatetime}
-                size="lg"
-              />
-            </div>
-            {work.data.organization && (
-              <p class="mt-1 opacity-60">at {work.data.organization}</p>
-            )}
-            <div class="mt-6">
-              <Content />
-            </div>
-            {work.data.links && work.data.links.length > 0 && (
-              <div class="mt-6 flex flex-wrap gap-3">
-                {work.data.links.map(link => (
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="modal-link"
-                  >
-                    {link.label} &rarr;
-                  </a>
-                ))}
+        <div data-work-template={work.id} class="hidden">
+          <article class="modal-article">
+            {imgSrc && (
+              <div class="modal-cover">
+                <img src={imgSrc} alt={work.data.title} />
               </div>
             )}
-            <div class="mt-4 flex flex-wrap gap-2">
-              {work.data.tags.map(tag => (
-                <span class="tag-chip">#{tag}</span>
-              ))}
+
+            <div class="modal-body">
+              <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
+
+              <div class="modal-meta">
+                <span class="type-badge">{typeLabelMap[work.data.type]}</span>
+                <span class="text-sm opacity-80">{displayDate}</span>
+                {work.data.organization && (
+                  <span class="modal-org">at {work.data.organization}</span>
+                )}
+              </div>
+
+              <div class="modal-tags">
+                {work.data.tags.map(tag => (
+                  <span class="tag-chip">#{tag}</span>
+                ))}
+              </div>
+
+              <hr class="modal-divider" />
+
+              <div class="app-prose max-w-none">
+                <Content />
+              </div>
+
+              {work.data.links && work.data.links.length > 0 && (
+                <div class="modal-actions">
+                  {work.data.links.map(link => (
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="modal-action-btn"
+                    >
+                      {link.label} &rarr;
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           </article>
-        </template>
+        </div>
       );
     })}
 
     <WorkModal />
   </main>
+  <FilterTabs />
   <Footer />
 </Layout>
 

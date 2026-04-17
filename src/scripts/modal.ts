@@ -9,14 +9,13 @@ function initModal() {
   document.querySelectorAll<HTMLElement>(".work-card-trigger").forEach(trigger => {
     trigger.addEventListener("click", () => {
       const workId = trigger.dataset.workId;
-      const template = document.querySelector(
-        `template[data-work-template="${workId}"]`
-      ) as HTMLTemplateElement;
+      const source = document.querySelector(
+        `div[data-work-template="${workId}"]`
+      ) as HTMLDivElement;
 
-      if (!template) return;
+      if (!source) return;
 
-      modalContent.innerHTML = "";
-      modalContent.appendChild(template.content.cloneNode(true));
+      modalContent.innerHTML = source.innerHTML;
 
       // Update URL without navigation
       history.pushState({ modal: true, slug: workId }, "", `/works/${workId}`);

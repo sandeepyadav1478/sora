@@ -11,6 +11,7 @@ links:
   - label: "Repository"
     url: "https://github.com/huggingface/transformers"
 organization: "HuggingFace"
+image: "https://huggingface.co/front/assets/huggingface_logo-noborder.svg"
 ---
 
 Contributed to the HuggingFace Transformers library — one of the most widely-used open-source ML frameworks with 100k+ GitHub stars.
