@@ -8,14 +8,14 @@ import Footer from "@/components/Footer.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import { SITE } from "@/config";
 
-const posts = await getCollection("blog");
+const works = await getCollection("works");
 
-let tags = getUniqueTags(posts);
+let tags = getUniqueTags(works);
 ---
 
 <Layout title={`Tags | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Tags" pageDesc="All the tags used in posts.">
+  <Main pageTitle="Tags" pageDesc="All the tags used in works.">
     <ul class="flex flex-wrap gap-6">
       {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
     </ul>

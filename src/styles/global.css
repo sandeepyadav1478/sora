@@ -68,3 +68,113 @@ html[data-theme="dark"] {
 :target {
   scroll-margin-block: 1rem;
 }
+
+/* ============================================================================
+   Work Modal
+   ============================================================================ */
+.work-modal {
+  max-width: 42rem;
+  width: 90vw;
+  max-height: 85vh;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  overflow: hidden;
+}
+
+.work-modal::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.work-modal .modal-inner {
+  overflow-y: auto;
+  max-height: 85vh;
+  padding: 2rem;
+  position: relative;
+}
+
+.work-modal .modal-close-btn {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 10;
+  font-size: 1.5rem;
+  line-height: 1;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  color: var(--foreground);
+  transition: color 0.15s;
+}
+
+.work-modal .modal-close-btn:hover {
+  color: var(--accent);
+}
+
+/* ============================================================================
+   Type Badges & Tag Chips
+   ============================================================================ */
+.type-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background: var(--muted);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.tag-chip {
+  font-size: 0.75rem;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* ============================================================================
+   Filter Tabs
+   ============================================================================ */
+.filter-tab {
+  font-size: 0.875rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter-tab.active {
+  background: var(--accent);
+  color: var(--background);
+  border-color: var(--accent);
+}
+
+/* ============================================================================
+   Modal Content Links
+   ============================================================================ */
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  font-size: 0.875rem;
+  transition: all 0.15s;
+}
+
+.modal-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}

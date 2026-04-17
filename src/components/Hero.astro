@@ -1,0 +1,23 @@
+---
+import Socials from "./Socials.astro";
+import { PROFILE } from "@/config";
+---
+
+<section id="hero" class="pt-8 pb-6">
+  <div class="flex flex-col items-center gap-6 sm:flex-row">
+    <img
+      src={PROFILE.photo}
+      alt={PROFILE.name}
+      class="size-28 rounded-full object-cover border-2 border-border"
+      width="112"
+      height="112"
+    />
+    <div class="text-center sm:text-left">
+      <h1 class="text-3xl font-bold sm:text-4xl">{PROFILE.name}</h1>
+      <p class="mt-1.5 text-lg opacity-80">{PROFILE.tagline}</p>
+      <div class="mt-3">
+        <Socials />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,12 +1,12 @@
-import { BLOG_PATH } from "@/content.config";
+import { WORKS_PATH } from "@/content.config";
 import { slugifyStr } from "./slugify";
 
 /**
- * Get full path of a blog post
- * @param id - id of the blog post (aka slug)
- * @param filePath - the blog post full file location
- * @param includeBase - whether to include `/posts` in return value
- * @returns blog post path
+ * Get full path of a work item
+ * @param id - id of the work item (aka slug)
+ * @param filePath - the work item full file location
+ * @param includeBase - whether to include `/works` in return value
+ * @returns work item path
  */
 export function getPath(
   id: string,
@@ -14,20 +14,18 @@ export function getPath(
   includeBase = true
 ) {
   const pathSegments = filePath
-    ?.replace(BLOG_PATH, "")
+    ?.replace(WORKS_PATH, "")
     .split("/")
-    .filter(path => path !== "") // remove empty string in the segments ["", "other-path"] <- empty string will be removed
-    .filter(path => !path.startsWith("_")) // exclude directories start with underscore "_"
-    .slice(0, -1) // remove the last segment_ file name_ since it's unnecessary
-    .map(segment => slugifyStr(segment)); // slugify each segment path
+    .filter(path => path !== "")
+    .filter(path => !path.startsWith("_"))
+    .slice(0, -1)
+    .map(segment => slugifyStr(segment));
 
-  const basePath = includeBase ? "/posts" : "";
+  const basePath = includeBase ? "/works" : "";
 
-  // Making sure `id` does not contain the directory
-  const blogId = id.split("/");
-  const slug = blogId.length > 0 ? blogId.slice(-1) : blogId;
+  const workId = id.split("/");
+  const slug = workId.length > 0 ? workId.slice(-1) : workId;
 
-  // If not inside the sub-dir, simply return the file path
   if (!pathSegments || pathSegments.length < 1) {
     return [basePath, slug].join("/");
   }

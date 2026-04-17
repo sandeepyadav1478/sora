@@ -81,7 +81,7 @@ import loadGoogleFonts from "../loadGoogleFont";
 //                 "
 //               </span>
 //               <span style={{ overflow: "hidden", fontWeight: "bold" }}>
-//                 {post.data.author}
+//                 {SITE.author}
 //               </span>
 //             </span>
 
@@ -193,7 +193,7 @@ export default async post => {
                                       overflow: "hidden",
                                       fontWeight: "bold",
                                     },
-                                    children: post.data.author,
+                                    children: SITE.author,
                                   },
                                 },
                               ],
@@ -222,7 +222,7 @@ export default async post => {
       height: 630,
       embedFont: true,
       fonts: await loadGoogleFonts(
-        post.data.title + post.data.author + SITE.title + "by"
+        post.data.title + SITE.author + SITE.title + "by"
       ),
     }
   );

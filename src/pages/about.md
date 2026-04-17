@@ -3,35 +3,30 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+I'm Sandeep Yadav, a developer based in New Delhi, India.
 
-![Astro Paper](public/astropaper-og.jpg)
+I contribute to open-source projects like [HuggingFace Transformers](https://github.com/huggingface/transformers), build developer tools, and write about ML and systems.
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+## What is Sora?
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+Sora is an open-source portfolio template built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/). It's designed for developers, researchers, and creators who want to showcase their life's work in a clean, professional manner.
 
-## Features
+### Features
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+- Single-page board with filter tabs for content types
+- Modal-based UX for viewing work details
+- Multiple content types: OSS, projects, writing, talks, certifications
+- Dark/light mode with system preference detection
+- Fuzzy search powered by Pagefind
+- Fully configurable from a single config file
+- SEO optimized with dynamic OG image generation
+- GitHub Pages deployment via GitHub Actions
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
+### Using Sora for your own portfolio
 
-and so much more.
+1. Use this repo as a template on GitHub
+2. Edit `src/config.ts` with your personal details
+3. Add your works as markdown files in `src/data/works/`
+4. Push to GitHub — it auto-deploys to GitHub Pages
 
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+Built on top of [AstroPaper](https://github.com/satnaing/astro-paper) by Sat Naing.

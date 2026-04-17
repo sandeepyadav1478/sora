@@ -1,0 +1,36 @@
+---
+import { EXPERIENCE } from "@/config";
+---
+
+{EXPERIENCE.length > 0 && (
+  <section id="experience" class="pt-12 pb-6 border-b border-border">
+    <h2 class="text-2xl font-semibold tracking-wide">Experience</h2>
+    <div class="mt-6 relative border-l-2 border-border pl-6 space-y-6">
+      {EXPERIENCE.map(entry => (
+        <div class="relative">
+          <div class="absolute -left-[1.9rem] top-1.5 size-3 rounded-full bg-accent" />
+          <div class="flex flex-wrap items-baseline gap-x-2">
+            <h3 class="font-medium">{entry.role}</h3>
+            <span class="text-sm opacity-60">at</span>
+            {entry.companyUrl ? (
+              <a
+                href={entry.companyUrl}
+                target="_blank"
+                rel="noopener"
+                class="text-accent hover:underline"
+              >
+                {entry.company}
+              </a>
+            ) : (
+              <span class="text-accent">{entry.company}</span>
+            )}
+          </div>
+          <p class="text-sm opacity-60">
+            {entry.startDate} — {entry.endDate}
+          </p>
+          <p class="mt-1">{entry.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

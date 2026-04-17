@@ -1,0 +1,51 @@
+---
+const tabs = [
+  { filter: "all", label: "All" },
+  { filter: "oss", label: "OSS" },
+  { filter: "project", label: "Projects" },
+  { filter: "writing", label: "Writing" },
+  { filter: "talk", label: "Talks" },
+  { filter: "certification", label: "Certifications" },
+];
+---
+
+<div id="filter-tabs" class="mb-6 flex flex-wrap gap-2">
+  {
+    tabs.map(tab => (
+      <button
+        data-filter={tab.filter}
+        class:list={[
+          "filter-tab",
+          { active: tab.filter === "all" },
+        ]}
+      >
+        {tab.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  function initFilterTabs() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>(".filter-tab");
+    const items = document.querySelectorAll<HTMLElement>(".work-item");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const filter = tab.dataset.filter;
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        items.forEach(item => {
+          if (filter === "all" || item.dataset.type === filter) {
+            item.style.display = "";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      });
+    });
+  }
+
+  initFilterTabs();
+  document.addEventListener("astro:page-load", initFilterTabs);
+</script>

@@ -16,15 +16,14 @@ import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 
 type Props = {
-  post: CollectionEntry<"blog">;
-  posts: CollectionEntry<"blog">[];
+  post: CollectionEntry<"works">;
+  posts: CollectionEntry<"works">[];
 };
 
 const { post, posts } = Astro.props;
 
 const {
   title,
-  author,
   description,
   ogImage: initOgImage,
   canonicalURL,
@@ -32,7 +31,6 @@ const {
   modDatetime,
   timezone,
   tags,
-  hideEditPost,
 } = post.data;
 
 const { Content } = await render(post);
@@ -58,7 +56,7 @@ const ogImage = ogImageUrl
 
 const layoutProps = {
   title: `${title} | ${SITE.title}`,
-  author,
+  author: SITE.author,
   description,
   pubDatetime,
   modDatetime,
@@ -102,10 +100,10 @@ const nextPost =
         aria-hidden="true"
         class:list={[
           "max-sm:hidden",
-          { hidden: !SITE.editPost.enabled || hideEditPost },
+          { hidden: true },
         ]}>|</span
       >
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+      <EditPost hideEditPost={true} {post} class="max-sm:hidden" />
     </div>
     <article
       id="article"
@@ -116,7 +114,7 @@ const nextPost =
 
     <hr class="my-8 border-dashed" />
 
-    <EditPost class="sm:hidden" {hideEditPost} {post} />
+    <EditPost class="sm:hidden" hideEditPost={true} {post} />
 
     <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}

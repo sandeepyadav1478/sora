@@ -1,121 +1,99 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import Card from "@/components/Card.astro";
-import getSortedPosts from "@/utils/getSortedPosts";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import { SITE } from "@/config";
-import { SOCIALS } from "@/constants";
+import Hero from "@/components/Hero.astro";
+import AboutSection from "@/components/AboutSection.astro";
+import FilterTabs from "@/components/FilterTabs.astro";
+import WorkCard from "@/components/WorkCard.astro";
+import WorkModal from "@/components/WorkModal.astro";
+import Datetime from "@/components/Datetime.astro";
+import ExperienceTimeline from "@/components/ExperienceTimeline.astro";
+import SkillsSection from "@/components/SkillsSection.astro";
+import ContactSection from "@/components/ContactSection.astro";
+import getSortedWorks from "@/utils/getSortedWorks";
 
-const posts = await getCollection("blog");
+const allWorks = await getCollection("works");
+const sortedWorks = getSortedWorks(allWorks);
 
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const typeLabelMap: Record<string, string> = {
+  oss: "OSS",
+  project: "Project",
+  writing: "Writing",
+  talk: "Talk",
+  certification: "Cert",
+};
 ---
 
-<Layout>
+<Layout scrollSmooth>
   <Header />
-  <main id="main-content" data-layout="index" class="app-layout">
-    <section id="hero" class:list={["pt-8 pb-6", "border-b border-border"]}>
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Mingalaba
-      </h1>
-      <a
-        target="_blank"
-        href="/rss.xml"
-        class="inline-block"
-        aria-label="rss feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="scale-125 stroke-accent stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+  <main id="main-content" data-pagefind-body class="app-layout">
+    <Hero />
+    <AboutSection />
 
-      <p>
-        AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro
-        blog theme. This theme follows best practices and provides accessibility
-        out of the box. Light and dark mode are supported by default. Moreover,
-        additional color schemes can also be configured.
-      </p>
-      <p class="mt-2">
-        Read the blog posts or check
-        <LinkButton
-          class="underline decoration-dashed underline-offset-4 hover:text-accent"
-          href="https://github.com/satnaing/astro-paper#readme"
-        >
-          README
-        </LinkButton> for more info.
-      </p>
-      {
-        // only display if at least one social link is enabled
-        SOCIALS.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">Social Links:</div>
-            <Socials />
-          </div>
-        )
-      }
+    <section id="works" class="pt-12 pb-6 border-b border-border">
+      <h2 class="text-2xl font-semibold tracking-wide">Works</h2>
+      <div class="mt-6">
+        <FilterTabs />
+        <ul>
+          {sortedWorks.map(work => <WorkCard {...work} />)}
+        </ul>
+      </div>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-b border-border": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">Featured</h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <ExperienceTimeline />
+    <SkillsSection />
+    <ContactSection />
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">Recent Posts</h2>
-          <ul>
-            {recentPosts.map(
-              (data, index) =>
-                index < SITE.postPerIndex && <Card variant="h3" {...data} />
+    {/* Pre-rendered work content for the modal */}
+    {sortedWorks.map(async work => {
+      const { Content } = await render(work);
+      return (
+        <template data-work-template={work.id}>
+          <article class="app-prose max-w-none">
+            <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
+            <div class="mt-2 flex flex-wrap items-center gap-3">
+              <span class="type-badge">{typeLabelMap[work.data.type]}</span>
+              <Datetime
+                pubDatetime={work.data.pubDatetime}
+                modDatetime={work.data.modDatetime}
+                size="lg"
+              />
+            </div>
+            {work.data.organization && (
+              <p class="mt-1 opacity-60">at {work.data.organization}</p>
             )}
-          </ul>
-        </section>
-      )
-    }
+            <div class="mt-6">
+              <Content />
+            </div>
+            {work.data.links && work.data.links.length > 0 && (
+              <div class="mt-6 flex flex-wrap gap-3">
+                {work.data.links.map(link => (
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="modal-link"
+                  >
+                    {link.label} &rarr;
+                  </a>
+                ))}
+              </div>
+            )}
+            <div class="mt-4 flex flex-wrap gap-2">
+              {work.data.tags.map(tag => (
+                <span class="tag-chip">#{tag}</span>
+              ))}
+            </div>
+          </article>
+        </template>
+      );
+    })}
 
-    <div class="my-8 text-center">
-      <LinkButton href="/posts/">
-        All Posts
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
+    <WorkModal />
   </main>
   <Footer />
 </Layout>
 
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset?.layout;
-    if (indexLayout) {
-      sessionStorage.setItem("backUrl", "/");
-    }
-  });
-</script>
+<script src="../scripts/modal.ts"></script>
