@@ -31,13 +31,28 @@ export const SITE = {
 export const PROFILE = {
   name: "Sandeep Yadav",
   tagline: "Developer from New Delhi. Open source contributor, builder, writer.",
-  bio: "I contribute to open-source projects like HuggingFace Transformers, build developer tools, and write about ML and systems. Based in New Delhi, India.",
   photo: "/profile-photo.jpg", // place your photo in public/
-  location: "New Delhi, India",
 } as const;
 
 // ============================================================================
-// EXPERIENCE — Your career timeline (customize this)
+// SECTIONS — Toggle optional homepage sections (set to false to hide)
+// ============================================================================
+export const SECTIONS = {
+  showAbout: false,
+  showExperience: false,
+  showSkills: false,
+  showContact: false,
+} as const;
+
+// ============================================================================
+// ABOUT — Short bio (shown on homepage only if SECTIONS.showAbout is true)
+// ============================================================================
+export const ABOUT = {
+  bio: "I contribute to open-source projects like HuggingFace Transformers, build developer tools, and write about ML and systems. Based in New Delhi, India.",
+} as const;
+
+// ============================================================================
+// EXPERIENCE — Career timeline (shown only if SECTIONS.showExperience is true)
 // ============================================================================
 export interface ExperienceEntry {
   role: string;
@@ -49,19 +64,18 @@ export interface ExperienceEntry {
 }
 
 export const EXPERIENCE: ExperienceEntry[] = [
-  {
-    role: "Software Developer",
-    company: "Your Company",
-    companyUrl: "https://example.com",
-    startDate: "Jan 2023",
-    endDate: "Present",
-    description: "Describe your role and key contributions here.",
-  },
-  // Add more entries...
+  // {
+  //   role: "Software Developer",
+  //   company: "Your Company",
+  //   companyUrl: "https://example.com",
+  //   startDate: "Jan 2023",
+  //   endDate: "Present",
+  //   description: "Describe your role and key contributions here.",
+  // },
 ];
 
 // ============================================================================
-// SKILLS — Your skill groups (customize this)
+// SKILLS — Skill groups (shown only if SECTIONS.showSkills is true)
 // ============================================================================
 export interface SkillGroup {
   category: string;
@@ -69,20 +83,8 @@ export interface SkillGroup {
 }
 
 export const SKILLS: SkillGroup[] = [
-  {
-    category: "Languages",
-    items: ["Python", "TypeScript", "JavaScript", "C"],
-  },
-  {
-    category: "ML / AI",
-    items: ["PyTorch", "HuggingFace Transformers", "ONNX"],
-  },
-  {
-    category: "Web",
-    items: ["Astro", "React", "Tailwind CSS", "Node.js"],
-  },
-  {
-    category: "Tools & Cloud",
-    items: ["Git", "Docker", "AWS", "GitHub Actions", "Linux"],
-  },
+  // {
+  //   category: "Languages",
+  //   items: ["Python", "TypeScript", "JavaScript"],
+  // },
 ];

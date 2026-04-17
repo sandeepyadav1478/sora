@@ -13,6 +13,7 @@ import ExperienceTimeline from "@/components/ExperienceTimeline.astro";
 import SkillsSection from "@/components/SkillsSection.astro";
 import ContactSection from "@/components/ContactSection.astro";
 import getSortedWorks from "@/utils/getSortedWorks";
+import { SECTIONS } from "@/config";
 
 const allWorks = await getCollection("works");
 const sortedWorks = getSortedWorks(allWorks);
@@ -23,6 +24,7 @@ const typeLabelMap: Record<string, string> = {
   writing: "Writing",
   talk: "Talk",
   certification: "Cert",
+  experience: "Experience",
 };
 ---
 
@@ -30,21 +32,20 @@ const typeLabelMap: Record<string, string> = {
   <Header />
   <main id="main-content" data-pagefind-body class="app-layout">
     <Hero />
-    <AboutSection />
 
-    <section id="works" class="pt-12 pb-6 border-b border-border">
-      <h2 class="text-2xl font-semibold tracking-wide">Works</h2>
-      <div class="mt-6">
-        <FilterTabs />
-        <ul>
-          {sortedWorks.map(work => <WorkCard {...work} />)}
-        </ul>
-      </div>
+    {SECTIONS.showAbout && <AboutSection />}
+
+    {/* === THE BOARD === */}
+    <section id="works" class="pt-8 pb-6">
+      <FilterTabs />
+      <ul>
+        {sortedWorks.map(work => <WorkCard {...work} />)}
+      </ul>
     </section>
 
-    <ExperienceTimeline />
-    <SkillsSection />
-    <ContactSection />
+    {SECTIONS.showExperience && <ExperienceTimeline />}
+    {SECTIONS.showSkills && <SkillsSection />}
+    {SECTIONS.showContact && <ContactSection />}
 
     {/* Pre-rendered work content for the modal */}
     {sortedWorks.map(async work => {

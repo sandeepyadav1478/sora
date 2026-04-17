@@ -8,7 +8,7 @@ const works = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      type: z.enum(["oss", "project", "writing", "talk", "certification"]),
+      type: z.enum(["oss", "project", "writing", "talk", "certification", "experience"]),
       pubDatetime: z.date(),
       modDatetime: z.date().optional().nullable(),
       description: z.string(),
