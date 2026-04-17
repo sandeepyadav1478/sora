@@ -31,7 +31,7 @@ export const SITE = {
 export const PROFILE = {
   name: "Sandeep Yadav",
   tagline: "Developer from New Delhi. Open source contributor, builder, writer.",
-  photo: "/profile-photo.jpg", // place your photo in public/
+  photo: "/profile-photo.svg", // replace with your photo in public/ (.jpg, .png, or .svg)
 } as const;
 
 // ============================================================================
