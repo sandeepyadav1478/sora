@@ -6,7 +6,7 @@ export const SITE = {
   author: "John Doe",
   profile: "https://johndoe.github.io/",
   desc: "Software engineer building tools for the web. Open source contributor and technical writer.",
-  title: "Sora",
+  title: "John Doe",
   ogImage: "sora-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 6,
@@ -39,7 +39,7 @@ export const PROFILE = {
 // ============================================================================
 export const SECTIONS = {
   showAbout: true,
-  showExperience: true,
+  showExperience: false,
   showSkills: true,
   showContact: true,
 } as const;
