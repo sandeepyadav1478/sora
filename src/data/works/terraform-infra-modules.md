@@ -3,7 +3,7 @@ title: "terraform-modules — Reusable Cloud Infrastructure"
 type: oss
 pubDatetime: 2024-04-18T00:00:00Z
 description: "Collection of production-tested Terraform modules for AWS — VPC, ECS, Lambda, IAM, and monitoring with security-first defaults."
-tags: [terraform, aws, iac, cloud, devops, infrastructure]
+tags: [iac, cloud, devops, infrastructure, open-source]
 tech: [Terraform, AWS, CloudWatch, SNS, KMS, IAM, VPC, ECS, Lambda]
 status: maintained
 links:

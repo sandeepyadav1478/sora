@@ -3,7 +3,8 @@ title: "DeepAgents — Multi-Agent Orchestration Research"
 type: oss
 pubDatetime: 2026-02-01T00:00:00Z
 description: "Contributing to DeepAgents, a framework for building hierarchical multi-agent systems with planning, tool use, and memory."
-tags: [deepagents, multi-agent, llm, agents, research, python]
+tags: [multi-agent, llm, agents, research, open-source]
+tech: [Python, DeepAgents, LangGraph, GPT-4, Claude]
 role: "Contributor"
 status: active
 links:

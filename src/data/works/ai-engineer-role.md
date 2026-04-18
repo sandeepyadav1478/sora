@@ -4,6 +4,7 @@ type: experience
 pubDatetime: 2024-01-15T00:00:00Z
 description: "Building LLM-powered applications and agentic workflows. Leading fine-tuning, RAG, and inference optimization for enterprise AI products."
 tags: [ai-engineering, llm, rag, fine-tuning, mlops, leadership]
+tech: [Python, PyTorch, LangGraph, Unsloth, vLLM, MLflow, AWS]
 links:
   - label: "Company"
     url: "https://example.com"

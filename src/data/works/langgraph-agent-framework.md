@@ -4,7 +4,7 @@ type: project
 pubDatetime: 2026-01-10T00:00:00Z
 description: "Production agentic RAG system using LangGraph for multi-step reasoning over enterprise knowledge bases. Handles 10K+ queries/day with sub-2s latency."
 featured: true
-tags: [langgraph, langchain, rag, llm, agents, python, vector-db]
+tags: [rag, llm, agents, agentic-workflows, production]
 tech: [Python, LangGraph, LangChain, Qdrant, GPT-4, Claude, FastAPI, MLflow]
 role: "Lead AI Engineer"
 status: active

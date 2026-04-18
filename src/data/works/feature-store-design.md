@@ -3,7 +3,8 @@ title: "Real-Time Feature Store Architecture"
 type: project
 pubDatetime: 2025-02-10T00:00:00Z
 description: "Designed a dual-layer feature store with offline batch features in Parquet/S3 and online real-time features in Redis, serving 50M+ predictions/day."
-tags: [feature-store, mlops, redis, s3, real-time, python]
+tags: [feature-store, mlops, real-time, platform-engineering, data-infra]
+tech: [Python, Redis, S3, Parquet, FastAPI, Kafka]
 role: "ML Platform Engineer"
 organization: "DataCorp"
 organizationUrl: "https://example.com"

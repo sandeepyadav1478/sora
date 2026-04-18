@@ -202,17 +202,6 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
                 </div>
               )}
 
-              {tech.length > 0 && (
-                <div class="modal-tech">
-                  <h3 class="modal-tech-heading">Stack</h3>
-                  <div class="modal-tech-list">
-                    {tech.map(t => (
-                      <span class="tech-pill">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {gallery.length > 0 && (
                 <div class="modal-gallery">
                   {gallery.map(item => (
@@ -257,6 +246,41 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
               <div class="app-prose max-w-none modal-prose">
                 <Content />
               </div>
+
+              {tech.length > 0 && (
+                <div class="modal-tech-showcase">
+                  <h3 class="modal-tech-heading">1. Filled Pills (current)</h3>
+                  <div class="modal-tech-list">
+                    {tech.map(t => <span class="tech-style-1">{t}</span>)}
+                  </div>
+
+                  <h3 class="modal-tech-heading">2. Outlined Chips</h3>
+                  <div class="modal-tech-list">
+                    {tech.map(t => <span class="tech-style-2">{t}</span>)}
+                  </div>
+
+                  <h3 class="modal-tech-heading">3. Muted Badges</h3>
+                  <div class="modal-tech-list">
+                    {tech.map(t => <span class="tech-style-3">{t}</span>)}
+                  </div>
+
+                  <h3 class="modal-tech-heading">4. Inline Comma List</h3>
+                  <p class="tech-style-4"><span class="tech-style-4-label">Tech Stack:</span> {tech.join(", ")}</p>
+
+                  <h3 class="modal-tech-heading">5. Dot-Separated</h3>
+                  <p class="tech-style-5">{tech.join(" · ")}</p>
+
+                  <h3 class="modal-tech-heading">6. Left Border Chips</h3>
+                  <div class="modal-tech-list">
+                    {tech.map(t => <span class="tech-style-6">{t}</span>)}
+                  </div>
+
+                  <h3 class="modal-tech-heading">7. Two-Tone Pills</h3>
+                  <div class="modal-tech-list">
+                    {tech.map(t => <span class="tech-style-7">{t}</span>)}
+                  </div>
+                </div>
+              )}
             </div>
           </article>
         </div>

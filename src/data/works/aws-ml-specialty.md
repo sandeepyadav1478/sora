@@ -3,7 +3,8 @@ title: "AWS Machine Learning — Specialty"
 type: certification
 pubDatetime: 2025-05-10T00:00:00Z
 description: "AWS professional certification covering ML workloads — SageMaker, model training, feature engineering, and ML solution architecture."
-tags: [aws, machine-learning, certification, sagemaker, cloud]
+tags: [machine-learning, certification, cloud, data-engineering]
+tech: [AWS, SageMaker, S3, Glue, Kinesis, Lambda, Step Functions]
 organization: "Amazon Web Services"
 organizationUrl: "https://aws.amazon.com"
 ---

@@ -3,7 +3,8 @@ title: "Production LLM Inference with vLLM"
 type: writing
 pubDatetime: 2025-12-05T00:00:00Z
 description: "How we optimized LLM serving latency by 3x using vLLM's continuous batching, PagedAttention, and quantized model deployment."
-tags: [vllm, inference, llm, optimization, gpu, deployment]
+tags: [inference, llm, optimization, deployment, performance]
+tech: [vLLM, Python, CUDA, Docker, Kubernetes, NVIDIA A100]
 links:
   - label: "Read Article"
     url: "https://example.com"

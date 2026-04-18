@@ -1002,6 +1002,7 @@ html[data-theme="dark"] {
   margin-top: 0.75rem;
 }
 
+
 .modal-link-bar {
   display: flex;
   flex-wrap: wrap;
@@ -1034,11 +1035,14 @@ html[data-theme="dark"] {
   margin: 1.25rem 0;
 }
 
+
 /* ============================================================================
-   Modal Tech Stack — filled pill chips distinct from hashtag tags
+   Modal Tech Stack — showcase of all styles
    ============================================================================ */
-.modal-tech {
-  margin-top: 1.25rem;
+.modal-tech-showcase {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border);
 }
 
 .modal-tech-heading {
@@ -1048,6 +1052,11 @@ html[data-theme="dark"] {
   letter-spacing: 0.04em;
   opacity: 0.5;
   margin-bottom: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.modal-tech-heading:first-child {
+  margin-top: 0;
 }
 
 .modal-tech-list {
@@ -1056,7 +1065,8 @@ html[data-theme="dark"] {
   gap: 0.375rem;
 }
 
-.tech-pill {
+/* Style 1: Filled Pills */
+.tech-style-1 {
   font-size: 0.6875rem;
   font-weight: 500;
   padding: 0.1875rem 0.5rem;
@@ -1064,6 +1074,71 @@ html[data-theme="dark"] {
   background: var(--accent);
   color: var(--background);
   opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* Style 2: Outlined Chips */
+.tech-style-2 {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Style 3: Muted Badges (GitHub-style) */
+.tech-style-3 {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background: var(--muted);
+  color: var(--foreground);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* Style 4: Inline Comma List */
+.tech-style-4 {
+  font-size: 0.8125rem;
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+.tech-style-4-label {
+  font-weight: 600;
+  opacity: 1;
+}
+
+/* Style 5: Dot-Separated */
+.tech-style-5 {
+  font-size: 0.8125rem;
+  opacity: 0.6;
+  letter-spacing: 0.01em;
+}
+
+/* Style 6: Left Border Chips */
+.tech-style-6 {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5rem;
+  border-left: 2px solid var(--accent);
+  background: var(--muted);
+  color: var(--foreground);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* Style 7: Two-Tone Pills */
+.tech-style-7 {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
   white-space: nowrap;
 }
 

@@ -3,7 +3,8 @@ title: "LLM Monitoring Dashboard with W&B"
 type: project
 pubDatetime: 2025-04-20T00:00:00Z
 description: "Real-time LLM monitoring system tracking token costs, latency distributions, hallucination rates, and model drift using Weights & Biases."
-tags: [wandb, monitoring, llm, observability, mlops, python]
+tags: [monitoring, llm, observability, mlops, production]
+tech: [Weights & Biases, Python, FastAPI, PostgreSQL, Grafana]
 role: "ML Platform Engineer"
 organization: "DataCorp"
 organizationUrl: "https://example.com"

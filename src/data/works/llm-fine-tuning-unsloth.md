@@ -4,8 +4,8 @@ type: project
 pubDatetime: 2025-11-20T00:00:00Z
 description: "Fine-tuned Llama 3 and Mistral models for domain-specific tasks using Unsloth + QLoRA, achieving 40% faster training with 60% less VRAM."
 featured: true
-tags: [fine-tuning, unsloth, qlora, lora, llama, mistral, pytorch, peft]
-tech: [PyTorch, Unsloth, PEFT, Hugging Face, Weights & Biases, GGUF, vLLM]
+tags: [fine-tuning, llm, parameter-efficient, model-training, optimization]
+tech: [PyTorch, Unsloth, PEFT, QLoRA, Hugging Face, Weights & Biases, GGUF, vLLM, Llama, Mistral]
 role: "AI Engineer"
 status: maintained
 highlights:

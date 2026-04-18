@@ -3,7 +3,7 @@ title: "API Gateway Redesign — From Monolith to Microservices"
 type: project
 pubDatetime: 2024-01-10T00:00:00Z
 description: "Redesigned the API gateway layer to support 200+ microservices with rate limiting, auth delegation, and circuit breakers."
-tags: [architecture, microservices, api-gateway, go, redis]
+tags: [architecture, microservices, api-gateway, backend, distributed-systems]
 tech: [Go, Redis, Kong, Docker, Kubernetes, gRPC, Prometheus]
 role: "Backend Engineer"
 organization: "TechStart"

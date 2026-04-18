@@ -3,7 +3,8 @@ title: "Evaluating RAG Systems — Beyond Vibes"
 type: talk
 pubDatetime: 2025-10-18T00:00:00Z
 description: "Conference talk on systematic RAG evaluation using RAGAS metrics, human preference ranking, and automated regression testing."
-tags: [rag, evaluation, llm, ragas, testing, conference]
+tags: [rag, evaluation, llm, testing, conference]
+tech: [Python, RAGAS, LangChain, Qdrant, MLflow]
 organization: "AI Engineer Summit"
 organizationUrl: "https://example.com"
 image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80"

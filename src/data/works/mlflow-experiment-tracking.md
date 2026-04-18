@@ -3,7 +3,7 @@ title: "ML Experiment Tracking Platform with MLflow"
 type: project
 pubDatetime: 2025-06-15T00:00:00Z
 description: "Built a centralized MLflow-based experiment tracking and model registry platform serving 15+ ML engineers across 3 teams."
-tags: [mlflow, mlops, experiment-tracking, model-registry, python, docker]
+tags: [mlops, experiment-tracking, model-registry, platform-engineering]
 tech: [MLflow, Python, PostgreSQL, MinIO, Docker, Nginx, Grafana]
 role: "ML Platform Engineer"
 status: in-production

@@ -4,6 +4,7 @@ type: talk
 pubDatetime: 2026-03-05T00:00:00Z
 description: "Workshop on writing reliable, testable prompts for production LLM applications — covering structured outputs, guardrails, and prompt versioning."
 tags: [prompt-engineering, llm, workshop, production, guardrails]
+tech: [Python, OpenAI, Claude, Pydantic, LangChain]
 organization: "MLOps Community"
 organizationUrl: "https://mlops.community"
 ---

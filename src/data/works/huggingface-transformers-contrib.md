@@ -4,7 +4,8 @@ type: oss
 pubDatetime: 2025-09-15T00:00:00Z
 description: "Contributed model implementations and training optimizations to HuggingFace's Transformers library, used by 100K+ developers worldwide."
 featured: true
-tags: [huggingface, transformers, pytorch, llm, open-source, python]
+tags: [llm, open-source, model-implementation, training-optimization]
+tech: [Python, PyTorch, Hugging Face Transformers, CUDA, Accelerate]
 role: "Core Contributor"
 status: active
 links:

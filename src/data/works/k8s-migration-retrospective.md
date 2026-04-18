@@ -3,7 +3,8 @@ title: "Migrating 50 Services to Kubernetes — A Retrospective"
 type: writing
 pubDatetime: 2025-03-20T00:00:00Z
 description: "What went right, what broke, and what we'd do differently migrating a monolith-era fleet to Kubernetes over six months."
-tags: [kubernetes, devops, migration, architecture, docker]
+tags: [devops, migration, architecture, retrospective, platform-engineering]
+tech: [Kubernetes, Docker, Helm, Terraform, ArgoCD, Prometheus]
 links:
   - label: "Read Article"
     url: "https://example.com"

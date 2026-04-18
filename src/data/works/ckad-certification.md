@@ -3,7 +3,8 @@ title: "Certified Kubernetes Application Developer (CKAD)"
 type: certification
 pubDatetime: 2024-09-15T00:00:00Z
 description: "CNCF certification covering Kubernetes application design, deployment, configuration, and observability patterns."
-tags: [kubernetes, cloud-native, certification, cncf, devops]
+tags: [cloud-native, certification, devops, container-orchestration]
+tech: [Kubernetes, Docker, Helm, kubectl]
 organization: "CNCF"
 organizationUrl: "https://www.cncf.io"
 ---

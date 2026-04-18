@@ -4,7 +4,8 @@ type: writing
 pubDatetime: 2025-08-10T00:00:00Z
 description: "A practical guide to building reproducible, version-controlled ML data pipelines using DVC, from dataset versioning to automated retraining."
 featured: true
-tags: [dvc, mlops, data-versioning, reproducibility, python, tutorial]
+tags: [mlops, data-versioning, reproducibility, tutorial, pipelines]
+tech: [DVC, Python, S3, Git, Make]
 links:
   - label: "Read Article"
     url: "https://example.com"

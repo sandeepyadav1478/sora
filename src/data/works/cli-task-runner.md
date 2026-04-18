@@ -3,7 +3,8 @@ title: "taskr — Developer Task Runner CLI"
 type: oss
 pubDatetime: 2024-11-08T00:00:00Z
 description: "A fast, opinionated task runner for monorepos — parallel execution, dependency graphs, and smart caching. Written in Go."
-tags: [go, cli, developer-tools, monorepo, open-source]
+tags: [cli, developer-tools, monorepo, open-source, build-systems]
+tech: [Go, Cobra, DAG, Make, Bash]
 status: active
 links:
   - label: "Source Code"
