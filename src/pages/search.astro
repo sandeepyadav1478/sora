@@ -1,70 +1,58 @@
 ---
 import "@pagefind/default-ui/css/ui.css";
-import Main from "@/layouts/Main.astro";
 import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE } from "@/config";
-
-const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 ---
 
 <Layout title={`Search | ${SITE.title}`}>
-  <Header />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
-    <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
-  </Main>
+  <NavSidebar />
+  <main id="main-content" class="app-layout">
+    <section class="search-section pt-8 pb-12">
+      <div class="search-header mb-8">
+        <h1 class="text-2xl font-bold text-foreground sm:text-3xl">Search</h1>
+        <p class="mt-1 text-sm opacity-60">Find anything across all works</p>
+      </div>
+      <div id="pagefind-search" data-backurl="/"></div>
+    </section>
+  </main>
   <Footer />
 </Layout>
 
 <script>
   function initSearch() {
-    const pageFindSearch: HTMLElement | null =
-      document.querySelector("#pagefind-search");
-
-    if (!pageFindSearch) return;
+    const el = document.querySelector("#pagefind-search");
+    if (!el || (el as HTMLElement).dataset.initialized) return;
+    (el as HTMLElement).dataset.initialized = "true";
 
     const params = new URLSearchParams(window.location.search);
 
-    const onIdle = window.requestIdleCallback || (cb => setTimeout(cb, 1));
+    const onIdle = window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1));
 
     onIdle(async () => {
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
-      // Display warning inn dev mode
-      if (import.meta.env.DEV) {
-        pageFindSearch.innerHTML = `
-            <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
-              <p><strong>DEV mode Warning! </strong>You need to build the project at least once to see the search results during development.</p>
-              <code class="block bg-black text-white px-2 py-1 rounded">pnpm run build</code>
-            </div>
-          `;
-      }
-
-      // Init pagefind ui
       const search = new PagefindUI({
         element: "#pagefind-search",
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
-          params.set("q", term); // Update the `q` parameter in the URL
-          history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading
-
-          const backUrl = pageFindSearch?.dataset?.backurl;
-          sessionStorage.setItem("backUrl", backUrl + "?" + params.toString());
-
+          params.set("q", term);
+          history.replaceState(history.state, "", "?" + params.toString());
           return term;
         },
       });
 
-      // If search param exists (eg: search?q=astro), trigger search
       const query = params.get("q");
       if (query) {
         search.triggerSearch(query);
       }
 
-      // Reset search param if search input is cleared
+      const input = document.querySelector<HTMLInputElement>(".pagefind-ui__search-input");
+      if (input) input.focus();
+
       const searchInput = document.querySelector(".pagefind-ui__search-input");
       const clearButton = document.querySelector(".pagefind-ui__search-clear");
       searchInput?.addEventListener("input", resetSearchParam);
@@ -78,15 +66,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     });
   }
 
-  document.addEventListener("astro:after-swap", () => {
-    const pagefindSearch = document.querySelector("#pagefind-search");
-
-    // if pagefind search form already exists, don't initialize search component
-    if (pagefindSearch && pagefindSearch.querySelector("form")) return;
-
-    initSearch();
-  });
-  initSearch();
+  document.addEventListener("astro:page-load", initSearch);
 </script>
 
 <style is:global>
@@ -101,41 +81,80 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     --pagefind-ui-border-width: 1px;
     --pagefind-ui-image-border-radius: 8px;
     --pagefind-ui-image-box-ratio: 3 / 2;
+    --pagefind-ui-scale: 0.75;
 
-    form::before {
-      background-color: var(--foreground);
+    .pagefind-ui__drawer {
+      margin-top: 1rem;
     }
 
-    input {
-      font-weight: 400;
-      border: 1px solid var(--border);
+    .pagefind-ui__results-area {
+      margin-top: 0.5rem;
     }
 
-    input:focus-visible {
-      outline: 1px solid var(--accent);
+    .pagefind-ui__message {
+      font-size: 0.875rem;
+      opacity: 0.6;
+      padding: 0.5rem 0;
     }
 
-    .pagefind-ui__result-title a {
-      color: var(--accent);
-      outline-offset: 1px;
-      outline-color: var(--accent);
-      text-decoration-style: dashed;
-      text-underline-offset: 4px;
-    }
-
-    .pagefind-ui__result-title a:focus-visible,
-    .pagefind-ui__search-clear:focus-visible {
-      text-decoration-line: none;
-      outline-width: 2px;
-      outline-style: dashed;
+    .pagefind-ui__result {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
     }
 
     .pagefind-ui__result:last-of-type {
       border-bottom: 0;
     }
 
-    .pagefind-ui__result-nested .pagefind-ui__result-link:before {
+    .pagefind-ui__result-title a {
+      color: var(--accent);
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .pagefind-ui__result-title a:hover {
+      opacity: 0.8;
+    }
+
+    .pagefind-ui__result-excerpt {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      opacity: 0.75;
+      margin-top: 0.25rem;
+    }
+
+    .pagefind-ui__result-excerpt mark {
+      background: rgba(var(--accent-rgb, 255, 107, 1), 0.2);
+      color: var(--foreground);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+
+    .pagefind-ui__result-nested {
+      padding-left: 1.5rem;
+    }
+
+    .pagefind-ui__result-nested .pagefind-ui__result-link::before {
       font-family: system-ui;
+      opacity: 0.4;
+    }
+
+    .pagefind-ui__button {
+      margin-top: 1rem;
+      background: var(--muted);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .pagefind-ui__button:hover {
+      border-color: var(--accent);
     }
   }
 </style>

@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from "astro:content";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import { SITE } from "@/config";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+type Props = CollectionEntry<"works">;
+
+const { id, data } = Astro.props;
+const { title, type, pubDatetime, tags, organization, status, description, image } = data;
+const img = typeof image === "object" && image?.src ? image.src : typeof image === "string" ? image : null;
+
+const typeLabelMap: Record<string, string> = {
+  oss: "OSS",
+  project: "Project",
+  writing: "Writing",
+  talk: "Talk",
+  certification: "Cert",
+  experience: "Role",
+};
+
+const statusLabelMap: Record<string, { label: string; cls: string }> = {
+  "active": { label: "Active", cls: "status-active" },
+  "maintained": { label: "Maintained", cls: "status-maintained" },
+  "in-production": { label: "In Production", cls: "status-active" },
+  "archived": { label: "Archived", cls: "status-archived" },
+};
+
+const tz = SITE.timezone;
+const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
+---
+
+<li class="work-item" data-type={type} data-tags={tags.join(",")}>
+  <div
+    class="work-card-trigger compact-card"
+    data-work-id={id}
+    role="button"
+    tabindex="0"
+  >
+    <span class="compact-type-badge">{typeLabelMap[type]}</span>
+    <span class="compact-title">{title}</span>
+    {organization && <span class="compact-org">at {organization}</span>}
+    {status && statusLabelMap[status] && (
+      <span class:list={["status-badge", statusLabelMap[status].cls]}>
+        {statusLabelMap[status].label}
+      </span>
+    )}
+    <span class="compact-date">{dateStr}</span>
+  </div>
+  <template class="compact-preview-tpl">
+    {img && (
+      <div class="compact-preview-thumb">
+        <img src={img} alt="" loading="lazy" />
+        <div class="compact-preview-fade"></div>
+      </div>
+    )}
+    <div class="compact-preview-body">
+      <p class="compact-preview-desc">{description}</p>
+      <div class="compact-preview-tags">
+        {tags.slice(0, 4).map(tag => (
+          <span class="tag-chip" style="font-size:0.625rem">#{tag}</span>
+        ))}
+        {tags.length > 4 && <span class="compact-preview-more">+{tags.length - 4}</span>}
+      </div>
+    </div>
+  </template>
+</li>

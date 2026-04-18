@@ -1,14 +1,20 @@
 ---
 // The <dialog> modal shell. Content is injected by modal.ts from <template> tags.
+// Media lightbox is a child dialog that can overlay the main modal.
 ---
 
 <dialog id="work-modal" class="work-modal">
+  <button id="modal-close" class="modal-close-btn" aria-label="Close modal">
+    &times;
+  </button>
   <div class="modal-inner">
-    <button id="modal-close" class="modal-close-btn" aria-label="Close modal">
-      &times;
-    </button>
     <div id="modal-content">
       <!-- Populated by modal.ts -->
     </div>
   </div>
+</dialog>
+
+<dialog id="media-lightbox" class="media-lightbox">
+  <button class="modal-close-btn lightbox-close" aria-label="Close">&times;</button>
+  <div class="lightbox-content"></div>
 </dialog>

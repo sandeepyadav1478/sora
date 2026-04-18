@@ -1,24 +1,126 @@
 ---
-import { getCollection } from "astro:content";
-import Main from "@/layouts/Main.astro";
+import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Tag from "@/components/Tag.astro";
-import Header from "@/components/Header.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
 import Footer from "@/components/Footer.astro";
+import WorkCard from "@/components/WorkCard.astro";
+import WorkModal from "@/components/WorkModal.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
+import getSortedWorks from "@/utils/getSortedWorks";
 import { SITE } from "@/config";
 
-const works = await getCollection("works");
+const typeLabelMap: Record<string, string> = {
+  oss: "OSS",
+  project: "Project",
+  writing: "Writing",
+  talk: "Talk",
+  certification: "Cert",
+  experience: "Role",
+};
 
-let tags = getUniqueTags(works);
+const allWorks = await getCollection("works");
+const tags = getUniqueTags(allWorks);
+const sortedWorks = getSortedWorks(allWorks);
 ---
 
 <Layout title={`Tags | ${SITE.title}`}>
-  <Header />
-  <Main pageTitle="Tags" pageDesc="All the tags used in works.">
-    <ul class="flex flex-wrap gap-6">
-      {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
+  <NavSidebar />
+  <main id="main-content" class="app-layout pb-4">
+    <nav class="mt-8 mb-1" aria-label="breadcrumb">
+      <ul class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100">
+        <li>
+          <a href="/" class="opacity-80">Home</a>
+          <span aria-hidden="true" class="opacity-80">&raquo;</span>
+        </li>
+        <li>
+          <span class="capitalize opacity-75" aria-current="page">Tags</span>
+        </li>
+      </ul>
+    </nav>
+
+    <h1 class="text-2xl font-semibold sm:text-3xl">Tags</h1>
+    <p class="mt-2 mb-6 italic opacity-60">Select tags to filter works.</p>
+
+    {/* Desktop: fixed right sidebar */}
+    <aside class="tags-sidebar-desktop">
+      <nav class="tags-sidebar-nav">
+        <span class="filter-link active" data-tag-toggle="all" role="button" tabindex="0">All</span>
+        {tags.map(({ tag, tagName }) => (
+          <span class="filter-link" data-tag-toggle={tag} role="button" tabindex="0">#{tagName}</span>
+        ))}
+      </nav>
+    </aside>
+
+    {/* Mobile: horizontal scroll row */}
+    <nav class="filter-mobile">
+      <div class="filter-mobile-scroll">
+        <span class="filter-link active" data-tag-toggle="all" role="button" tabindex="0">All</span>
+        {tags.map(({ tag, tagName }) => (
+          <span class="filter-link" data-tag-toggle={tag} role="button" tabindex="0">#{tagName}</span>
+        ))}
+      </div>
+    </nav>
+
+    <ul>
+      {sortedWorks.map(work => <WorkCard {...work} />)}
     </ul>
-  </Main>
+
+    {sortedWorks.map(async (work) => {
+      const { Content } = await render(work);
+      const img = work.data.image;
+      const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
+      const displayDate = new Date(work.data.modDatetime ?? work.data.pubDatetime)
+        .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      return (
+        <div data-work-template={work.id} class="hidden">
+          <article class="modal-article">
+            {imgSrc && (
+              <div class="modal-cover">
+                <img src={imgSrc} alt={work.data.title} />
+              </div>
+            )}
+            <div class="modal-body">
+              <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
+              <div class="modal-meta">
+                <span class="type-badge">{typeLabelMap[work.data.type]}</span>
+                <span class="text-sm opacity-80">{displayDate}</span>
+                {work.data.organization && (
+                  <span class="modal-org">at {work.data.organization}</span>
+                )}
+              </div>
+              <div class="modal-tags">
+                {work.data.tags.map((t: string) => (
+                  <span class="tag-chip">#{t}</span>
+                ))}
+              </div>
+              <hr class="modal-divider" />
+              <div class="app-prose max-w-none">
+                <Content />
+              </div>
+              {work.data.links && work.data.links.length > 0 && (
+                <div class="modal-actions">
+                  {work.data.links.map((link: { url: string; label: string }) => (
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="modal-action-btn"
+                    >
+                      {link.label} &rarr;
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        </div>
+      );
+    })}
+
+    <WorkModal />
+  </main>
   <Footer />
 </Layout>
+
+<script src="../../scripts/modal.ts"></script>
+<script src="../../scripts/tags-page.ts"></script>

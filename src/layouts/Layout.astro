@@ -31,21 +31,38 @@ const {
 
 const socialImageURL = new URL(ogImage, Astro.url);
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: `${title}`,
-  image: `${socialImageURL}`,
-  datePublished: `${pubDatetime?.toISOString()}`,
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: `${author}`,
-      ...(profile && { url: profile }),
-    },
-  ],
-};
+const isHomepage = Astro.url.pathname === "/" || Astro.url.pathname === "";
+const structuredData = isHomepage
+  ? {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      name: `${title}`,
+      description: `${description}`,
+      url: `${canonicalURL}`,
+      image: `${socialImageURL}`,
+      mainEntity: {
+        "@type": "Person",
+        name: `${author}`,
+        ...(profile && { url: profile }),
+        jobTitle: "AI Engineer",
+        knowsAbout: ["Machine Learning", "LLM", "MLOps", "Deep Learning", "NLP", "Fine-Tuning", "RAG", "AI Agents", "Model Deployment"],
+      },
+    }
+  : {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: `${title}`,
+      image: `${socialImageURL}`,
+      datePublished: `${pubDatetime?.toISOString()}`,
+      ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+      author: [
+        {
+          "@type": "Person",
+          name: `${author}`,
+          ...(profile && { url: profile }),
+        },
+      ],
+    };
 ---
 
 <!doctype html>
@@ -56,7 +73,7 @@ const structuredData = {
 >
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
@@ -72,6 +89,8 @@ const structuredData = {
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
+    <meta name="keywords" content="AI Engineer, Machine Learning, LLM, MLOps, NLP, Deep Learning, Fine-Tuning, RAG, Agents, Model Deployment, Portfolio" />
+    <meta name="robots" content="index, follow" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Open Graph / Facebook -->

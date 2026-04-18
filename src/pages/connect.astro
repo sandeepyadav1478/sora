@@ -1,0 +1,49 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE, CONNECT } from "@/config";
+
+if (!CONNECT.enabled) return Astro.redirect("/");
+---
+
+<Layout title={`Connect | ${SITE.title}`}>
+  <NavSidebar />
+  <main id="main-content" class="app-layout">
+    <section class="connect-section pt-8 pb-12">
+      <div class="connect-header mb-6">
+        <h1 class="text-2xl font-bold text-foreground sm:text-3xl">{CONNECT.heading}</h1>
+        <p class="mt-1 text-sm opacity-60 max-w-lg">{CONNECT.subheading}</p>
+      </div>
+      <div class="connect-embed">
+        <iframe
+          src={CONNECT.calendlyUrl}
+          title="Schedule a meeting"
+          class="connect-iframe"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .connect-embed {
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    min-height: 660px;
+  }
+  .connect-iframe {
+    width: 100%;
+    height: 700px;
+    border: none;
+    background: var(--background);
+  }
+  @media (min-width: 640px) {
+    .connect-iframe {
+      height: 750px;
+    }
+  }
+</style>

@@ -1,7 +1,7 @@
 ---
 import { render, type CollectionEntry, getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
 import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
 import Datetime from "@/components/Datetime.astro";
@@ -31,7 +31,7 @@ const typeLabelMap: Record<string, string> = {
   writing: "Writing",
   talk: "Talk",
   certification: "Cert",
-  experience: "Experience",
+  experience: "Role",
 };
 
 let ogImageUrl: string | undefined;
@@ -57,7 +57,7 @@ const ogImage = ogImageUrl
   ogImage={ogImage}
   scrollSmooth
 >
-  <Header />
+  <NavSidebar />
   <main id="main-content" class="app-layout mt-8 pb-12" data-pagefind-body>
     <div class="mb-2">
       <a href="/" class="text-sm opacity-60 hover:text-accent hover:opacity-100">

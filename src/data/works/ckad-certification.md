@@ -1,37 +1,19 @@
 ---
 title: "Certified Kubernetes Application Developer (CKAD)"
 type: certification
-pubDatetime: 2025-02-10T00:00:00Z
-description: "CNCF certified in designing, building, and deploying cloud-native applications on Kubernetes."
-tags: [kubernetes, cloud-native, certification, cncf]
-links:
-  - label: "Verify"
-    url: "https://www.credly.com"
-  - label: "CNCF Certification"
-    url: "https://www.cncf.io/certification/ckad/"
-organization: "CNCF / Linux Foundation"
-image: "https://images.unsplash.com/photo-1667372393086-9d4001d51cf1?w=800&q=80"
+pubDatetime: 2024-09-15T00:00:00Z
+description: "CNCF certification covering Kubernetes application design, deployment, configuration, and observability patterns."
+tags: [kubernetes, cloud-native, certification, cncf, devops]
+organization: "CNCF"
+organizationUrl: "https://www.cncf.io"
 ---
 
-Passed the Certified Kubernetes Application Developer exam — a hands-on, performance-based certification.
+Hands-on Kubernetes certification focused on application-level concerns — pod design, configuration management, multi-container patterns, and observability.
 
-## Exam Format
+## Topics Covered
 
-- 2 hours, 15-20 hands-on tasks
-- Live Kubernetes cluster (no multiple choice)
-- Scored 91/100
-
-## Skills Validated
-
-- Pod design patterns (init containers, sidecars, ambassadors)
-- Configuration management (ConfigMaps, Secrets, env vars)
-- Multi-container pod design
-- Observability (probes, logging, monitoring)
-- Services and networking
-- State persistence (PVs, PVCs, StorageClasses)
-
-## Preparation
-
-- Practiced daily on killer.sh simulator
-- Built and tore down 50+ practice environments
-- Pro tip: Master `kubectl` imperative commands — they save critical time in the exam
+- Core concepts: Pods, Deployments, Services, ConfigMaps, Secrets
+- Multi-container patterns: sidecar, ambassador, adapter
+- Observability: probes, logging, monitoring
+- Networking: NetworkPolicies, Ingress, DNS
+- State persistence: PVs, PVCs, StorageClasses

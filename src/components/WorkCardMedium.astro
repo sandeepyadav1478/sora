@@ -11,7 +11,7 @@ dayjs.extend(timezone);
 type Props = CollectionEntry<"works">;
 
 const { id, data } = Astro.props;
-const { title, type, description, pubDatetime, modDatetime, endDatetime, ongoing, tags, organization, role, featured, status } = data;
+const { title, type, pubDatetime, modDatetime, endDatetime, ongoing, tags, organization, role, featured, status } = data;
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
   "active": { label: "Active", cls: "status-active" },
@@ -35,15 +35,15 @@ const endDate = ongoing ? "Present" : endDatetime ? dayjs(endDatetime).tz(tz).fo
 const dateDisplay = endDate ? `${startDate} — ${endDate}` : startDate;
 ---
 
-<li class="work-item my-4" data-type={type} data-tags={tags.join(",")}>
+<li class="work-item" data-type={type} data-tags={tags.join(",")}>
   <div
     class:list={[
-      "work-card-trigger w-full cursor-pointer rounded-lg border p-4 text-left transition-colors",
-      featured
-        ? "border-accent/25 bg-accent/5 hover:border-accent/40 hover:bg-accent/10"
-        : "border-transparent hover:border-border hover:bg-muted/30",
+      "work-card-trigger medium-card",
+      featured && "medium-card-featured",
     ]}
     data-work-id={id}
+    data-type={type}
+    data-tags={tags.join(",")}
     role="button"
     tabindex="0"
   >
@@ -67,12 +67,6 @@ const dateDisplay = endDate ? `${startDate} — ${endDate}` : startDate;
           {statusLabelMap[status].label}
         </span>
       )}
-    </div>
-    <p class="mt-1 text-sm opacity-70">{description}</p>
-    <div class="mt-2 flex flex-wrap gap-2">
-      {tags.map(tag => (
-        <a href={`/tags?t=${encodeURIComponent(tag)}`} class="tag-chip tag-link" data-tag={tag}>#{tag}</a>
-      ))}
     </div>
   </div>
 </li>

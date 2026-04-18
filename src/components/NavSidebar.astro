@@ -1,0 +1,100 @@
+---
+import IconSearch from "@/assets/icons/IconSearch.svg";
+import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
+import IconMoon from "@/assets/icons/IconMoon.svg";
+import { SITE, CONNECT } from "@/config";
+---
+
+{/* Desktop: fixed left sidebar */}
+<nav class="nav-sidebar" aria-label="Site navigation">
+  <a href="/" class="nav-sidebar-link nav-back-link" data-back style="display:none">&larr; <span class="nav-back-text">Back</span></a>
+  <a href="/#works" class="nav-sidebar-link">Works <span class="nav-arrow">&rarr;</span></a>
+  <a href="/tags" class="nav-sidebar-link">Tags <span class="nav-arrow">&rarr;</span></a>
+  <a href="/about" class="nav-sidebar-link">About <span class="nav-arrow">&rarr;</span></a>
+  {CONNECT.enabled && (
+    <a href="/connect" class="nav-sidebar-link">1:1 <span class="nav-arrow">&rarr;</span></a>
+  )}
+  <a href="/search" class="nav-sidebar-link nav-sidebar-icon" title="Search" aria-label="Search">
+    <IconSearch class="size-5 stroke-current stroke-2" />
+  </a>
+  {SITE.lightAndDarkMode && (
+    <button
+      id="theme-btn"
+      class="nav-sidebar-link nav-sidebar-icon"
+      title="Toggle theme"
+      aria-label="Toggle theme"
+      aria-live="polite"
+    >
+      <IconMoon class="size-5 stroke-current stroke-2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 absolute" />
+      <IconSunHigh class="size-5 stroke-current stroke-2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 absolute" />
+    </button>
+  )}
+</nav>
+
+{/* Mobile: top bar */}
+<header class="nav-mobile-bar app-layout">
+  <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100" data-back style="display:none">&larr; <span class="nav-back-text">Back</span></a>
+  <a href="/" class="text-lg font-semibold" data-mobile-title>{SITE.title}</a>
+  <div class="flex items-center gap-3">
+    <a href="/#works" class="text-sm opacity-60 hover:opacity-100">Works</a>
+    <a href="/tags" class="text-sm opacity-60 hover:opacity-100">Tags</a>
+    <a href="/about" class="text-sm opacity-60 hover:opacity-100">About</a>
+    {CONNECT.enabled && (
+      <a href="/connect" class="text-sm opacity-60 hover:opacity-100">1:1</a>
+    )}
+    <a href="/search" class="text-sm opacity-60 hover:opacity-100">Search</a>
+    {SITE.lightAndDarkMode && (
+      <button
+        id="theme-btn-mobile"
+        class="relative size-4 opacity-60 hover:opacity-100"
+        title="Toggle theme"
+        aria-label="Toggle theme"
+        aria-live="polite"
+      >
+        <IconMoon class="size-4 stroke-current stroke-2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 absolute top-0 left-0" />
+        <IconSunHigh class="size-4 stroke-current stroke-2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 absolute top-0 left-0" />
+      </button>
+    )}
+  </div>
+</header>
+
+<script>
+  let savedScrollY = 0;
+
+  document.addEventListener("click", e => {
+    const link = (e.target as HTMLElement).closest<HTMLAnchorElement>("a.tag-link");
+    if (link && link.href.includes("/tags?t=")) {
+      savedScrollY = window.scrollY;
+      sessionStorage.setItem("backToWorks", String(savedScrollY));
+    }
+  });
+
+  function initBackNav() {
+    const onTags = window.location.pathname.startsWith("/tags");
+    const hasParam = new URLSearchParams(window.location.search).has("t");
+    const hasBackData = sessionStorage.getItem("backToWorks") !== null;
+    const show = onTags && hasParam && hasBackData;
+
+    if (!onTags) sessionStorage.removeItem("backToWorks");
+
+    document.querySelectorAll<HTMLAnchorElement>("[data-back]").forEach(link => {
+      link.style.display = show ? "" : "none";
+      link.onclick = show ? (e => {
+        e.preventDefault();
+        const scrollY = parseInt(sessionStorage.getItem("backToWorks") || "0", 10);
+        sessionStorage.removeItem("backToWorks");
+        window.location.href = "/";
+        requestAnimationFrame(() => {
+          setTimeout(() => window.scrollTo(0, scrollY), 100);
+        });
+      }) : null;
+    });
+
+    const mobileTitle = document.querySelector<HTMLElement>("[data-mobile-title]");
+    if (mobileTitle) {
+      mobileTitle.style.display = show ? "none" : "";
+    }
+  }
+  initBackNav();
+  document.addEventListener("astro:page-load", initBackNav);
+</script>

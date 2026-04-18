@@ -1,15 +1,25 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import Main from "@/layouts/Main.astro";
 import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
 import Footer from "@/components/Footer.astro";
 import WorkCard from "@/components/WorkCard.astro";
+import WorkModal from "@/components/WorkModal.astro";
 import Pagination from "@/components/Pagination.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getWorksByTag from "@/utils/getWorksByTag";
+import getSortedWorks from "@/utils/getSortedWorks";
 import { SITE } from "@/config";
+
+const typeLabelMap: Record<string, string> = {
+  oss: "OSS",
+  project: "Project",
+  writing: "Writing",
+  talk: "Talk",
+  certification: "Cert",
+  experience: "Role",
+};
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const works = await getCollection("works");
@@ -29,22 +39,100 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const params = Astro.params;
 const { tag } = params;
 const { page, tagName } = Astro.props;
+
+const allWorks = await getCollection("works");
+const sortedWorks = getSortedWorks(allWorks);
 ---
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
-  <Header />
-  <Main
-    pageTitle={[`Tag:`, `${tagName}`]}
-    titleTransition={tag}
-    pageDesc={`All works tagged with "${tagName}".`}
-  >
-    <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
+  <NavSidebar />
+  <main id="main-content" class="app-layout pb-4">
+    <nav class="mt-8 mb-1" aria-label="breadcrumb">
+      <ul class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100">
+        <li>
+          <a href="/" class="opacity-80">Home</a>
+          <span aria-hidden="true" class="opacity-80">&raquo;</span>
+        </li>
+        <li>
+          <a href="/tags/" class="capitalize opacity-70">Tags</a>
+          <span aria-hidden="true">&raquo;</span>
+        </li>
+        <li>
+          <span class="capitalize opacity-75 lowercase" aria-current="page">{tagName}</span>
+        </li>
+      </ul>
+    </nav>
+
+    <h1 class="text-2xl font-semibold sm:text-3xl">
+      Tag: <span transition:name={tag}>{tagName}</span>
+    </h1>
+    <p class="mt-2 mb-2 italic">All works tagged with "{tagName}".</p>
+
+    <div class="active-tags-area"></div>
+
     <ul>
-      {page.data.map(data => <WorkCard {...data} />)}
+      {page.data.map(work => <WorkCard {...work} />)}
     </ul>
-  </Main>
+
+    {/* Pre-rendered work content for modals */}
+    {sortedWorks.map(async (work) => {
+      const { Content } = await render(work);
+      const img = work.data.image;
+      const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
+      const displayDate = new Date(work.data.modDatetime ?? work.data.pubDatetime)
+        .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      return (
+        <div data-work-template={work.id} class="hidden">
+          <article class="modal-article">
+            {imgSrc && (
+              <div class="modal-cover">
+                <img src={imgSrc} alt={work.data.title} />
+              </div>
+            )}
+            <div class="modal-body">
+              <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
+              <div class="modal-meta">
+                <span class="type-badge">{typeLabelMap[work.data.type]}</span>
+                <span class="text-sm opacity-80">{displayDate}</span>
+                {work.data.organization && (
+                  <span class="modal-org">at {work.data.organization}</span>
+                )}
+              </div>
+              <div class="modal-tags">
+                {work.data.tags.map((t: string) => (
+                  <span class="tag-chip">#{t}</span>
+                ))}
+              </div>
+              <hr class="modal-divider" />
+              <div class="app-prose max-w-none">
+                <Content />
+              </div>
+              {work.data.links && work.data.links.length > 0 && (
+                <div class="modal-actions">
+                  {work.data.links.map((link: { url: string; label: string }) => (
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="modal-action-btn"
+                    >
+                      {link.label} &rarr;
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        </div>
+      );
+    })}
+
+    <WorkModal />
+  </main>
 
   <Pagination {page} />
-
   <Footer noMarginTop={page.lastPage > 1} />
 </Layout>
+
+<script src="../../../scripts/modal.ts"></script>
+<script src="../../../scripts/tag-filter.ts"></script>

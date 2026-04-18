@@ -3,9 +3,21 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-Hi, I'm John Doe — a software engineer based in New York.
+Hi, I'm John Doe — an AI Engineer focused on building production intelligent systems, fine-tuning open-weight models, and designing scalable ML infrastructure.
 
-I build developer tools, contribute to open source, and write about distributed systems and web engineering. Currently working on the developer platform team at Acme Corp.
+I work across the full AI/ML lifecycle: training and fine-tuning, building agentic workflows, experiment tracking and MLOps, and deploying models at scale. I contribute to open-source ML tooling and write about practical AI engineering.
+
+## What I'm Working On
+
+- **LLM Applications** — multi-agent systems, RAG pipelines, and conversational AI for enterprise
+- **Model Fine-Tuning** — domain-specific LLMs for specialized tasks using parameter-efficient methods
+- **ML Platform** — experiment tracking, model registries, feature stores, and inference optimization
+- **Infrastructure** — Kubernetes migrations, API gateway design, Terraform modules, CI/CD pipelines
+- **Open Source** — contributing to ML frameworks, building developer tools, and mentoring first-time contributors
+
+## What I Write & Talk About
+
+I write about the engineering side of building software — from AI/ML in production to distributed systems, DevOps practices, and developer experience. Topics include evaluation frameworks, inference optimization, Kubernetes at scale, and open source contribution.
 
 ## About Sora
 
@@ -13,11 +25,13 @@ This site is built with **Sora**, an open-source portfolio template for develope
 
 ### Features
 
-- Single-page board with filter tabs for content types
-- Modal-based UX for viewing work details
+- Single-page board with multiple layout options (two-tier, flat, grid, timeline)
+- Modal-based UX for viewing work details with rich content blocks
 - Multiple content types: OSS, projects, writing, talks, certifications, experience
+- Calendly/booking integration for 1:1 scheduling
 - Dark/light mode with system preference detection
 - Fuzzy search powered by Pagefind
+- ATS-friendly content structure with keyword-rich descriptions
 - Fully configurable from a single config file
 - SEO optimized with dynamic OG image generation
 

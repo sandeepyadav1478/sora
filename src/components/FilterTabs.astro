@@ -6,46 +6,69 @@ const tabs = [
   { filter: "writing", label: "Writing" },
   { filter: "talk", label: "Talks" },
   { filter: "certification", label: "Certs" },
-  { filter: "experience", label: "Experience" },
+  { filter: "experience", label: "Roles" },
 ];
 ---
 
-<aside class="filter-sidebar">
+{/* Desktop: fixed right sidebar */}
+<aside class="filter-sidebar filter-desktop">
   <nav class="filter-nav">
     {
       tabs.map(tab => (
-        <a
-          href="#"
+        <span
           data-filter={tab.filter}
+          role="button"
+          tabindex="0"
           class:list={[
             "filter-link",
             { active: tab.filter === "all" },
           ]}
         >
           {tab.label}
-        </a>
+        </span>
       ))
     }
+    <div class="active-tags-desktop"></div>
   </nav>
 </aside>
 
+{/* Mobile/Tablet: horizontal scroll row */}
+<nav class="filter-mobile">
+  <div class="filter-mobile-scroll">
+    {
+      tabs.map(tab => (
+        <span
+          data-filter={tab.filter}
+          role="button"
+          tabindex="0"
+          class:list={[
+            "filter-link",
+            { active: tab.filter === "all" },
+          ]}
+        >
+          {tab.label}
+        </span>
+      ))
+    }
+  </div>
+  <div class="active-tags-mobile"></div>
+</nav>
+
 <script>
   function initFilterTabs() {
-    const links = document.querySelectorAll<HTMLAnchorElement>(".filter-link");
+    const links = document.querySelectorAll<HTMLElement>(".filter-link");
     const items = document.querySelectorAll<HTMLElement>(".work-item");
 
     links.forEach(link => {
-      link.addEventListener("click", e => {
-        e.preventDefault();
-        const filter = link.dataset.filter;
+      link.addEventListener("click", () => {
+        const filter = link.dataset.filter!;
         links.forEach(l => l.classList.remove("active"));
-        link.classList.add("active");
+        document.querySelectorAll<HTMLElement>(`.filter-link[data-filter="${filter}"]`)
+          .forEach(l => l.classList.add("active"));
+
         items.forEach(item => {
-          if (filter === "all" || item.dataset.type === filter) {
-            item.style.display = "";
-          } else {
-            item.style.display = "none";
-          }
+          const typeMatch = filter === "all" || item.dataset.type === filter;
+          item.style.display = typeMatch ? "" : "none";
         });
       });
     });

@@ -1,0 +1,77 @@
+---
+import type { CollectionEntry } from "astro:content";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import { SITE } from "@/config";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+type Props = CollectionEntry<"works">;
+
+const { id, data } = Astro.props;
+const { title, type, description, pubDatetime, tags, organization, featured, status } = data;
+
+const typeLabelMap: Record<string, string> = {
+  oss: "OSS",
+  project: "Project",
+  writing: "Writing",
+  talk: "Talk",
+  certification: "Cert",
+  experience: "Role",
+};
+
+const statusLabelMap: Record<string, { label: string; cls: string }> = {
+  "active": { label: "Active", cls: "status-active" },
+  "maintained": { label: "Maintained", cls: "status-maintained" },
+  "in-production": { label: "In Production", cls: "status-active" },
+  "archived": { label: "Archived", cls: "status-archived" },
+};
+
+const tz = SITE.timezone;
+const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
+const img = data.image;
+const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
+---
+
+<li class="work-item" data-type={type} data-tags={tags.join(",")}>
+  <div
+    class:list={[
+      "work-card-trigger grid-card",
+      featured && "grid-card-featured",
+    ]}
+    data-work-id={id}
+    role="button"
+    tabindex="0"
+  >
+    {imgSrc && (
+      <div class="grid-card-thumb">
+        <img src={imgSrc} alt="" loading="lazy" />
+      </div>
+    )}
+    <div class="grid-card-body">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span class="compact-type-badge">{typeLabelMap[type]}</span>
+        {featured && <span class="featured-badge">Featured</span>}
+        {status && statusLabelMap[status] && (
+          <span class:list={["status-badge", statusLabelMap[status].cls]}>
+            {statusLabelMap[status].label}
+          </span>
+        )}
+      </div>
+      <h3 class="grid-card-title">{title}</h3>
+      {organization && <span class="text-xs opacity-50">at {organization}</span>}
+      <p class="grid-card-desc">{description}</p>
+      <div class="grid-card-footer">
+        <div class="flex flex-wrap gap-1">
+          {tags.slice(0, 3).map(tag => (
+            <span class="tag-chip" style="font-size:0.6875rem">#{tag}</span>
+          ))}
+          {tags.length > 3 && <span class="text-xs opacity-40">+{tags.length - 3}</span>}
+        </div>
+        <span class="text-xs opacity-40">{dateStr}</span>
+      </div>
+    </div>
+  </div>
+</li>

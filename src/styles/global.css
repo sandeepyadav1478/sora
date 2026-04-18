@@ -59,6 +59,118 @@ html[data-theme="dark"] {
   @apply mx-auto w-full max-w-app px-4;
 }
 
+/* ============================================================================
+   Left Nav Sidebar (landing page only)
+   ============================================================================ */
+.nav-sidebar {
+  display: none;
+}
+
+.nav-mobile-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .nav-mobile-bar {
+    display: none;
+  }
+  .nav-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    position: fixed;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  .nav-sidebar-link {
+    font-size: 0.9375rem;
+    color: var(--foreground);
+    opacity: 0.4;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    white-space: nowrap;
+    line-height: 1.25rem;
+  }
+  .nav-sidebar-link .nav-arrow {
+    font-size: 0.8125rem;
+    opacity: 0;
+    transform: translateX(-2px);
+    transition: all 0.15s;
+  }
+  .nav-sidebar-link:hover {
+    opacity: 1;
+    color: var(--accent);
+  }
+  .nav-sidebar-link:hover .nav-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .nav-sidebar-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+  .nav-back-link {
+    text-decoration: none;
+  }
+  .nav-back-link .nav-back-text {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--accent);
+  }
+}
+
+/* ============================================================================
+   Hero Layout
+   ============================================================================ */
+.hero-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hero-photo-wrap {
+  flex-shrink: 0;
+  width: 9rem;
+  height: 9rem;
+}
+
+.hero-photo-wrap img {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 640px) {
+  .hero-row {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.section-tinted {
+  background: color-mix(in srgb, var(--muted) 30%, transparent);
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
+}
+
 .active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
 }
@@ -75,14 +187,24 @@ html[data-theme="dark"] {
 .work-modal {
   margin: auto;
   max-width: 64rem;
-  width: 92vw;
-  max-height: 90vh;
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  width: 100vw;
+  max-height: 100vh;
+  border: none;
+  border-radius: 0;
   padding: 0;
   background: var(--background);
   color: var(--foreground);
   overflow: hidden;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .work-modal {
+    width: 92vw;
+    max-height: 90vh;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
 }
 
 .work-modal::backdrop {
@@ -92,12 +214,17 @@ html[data-theme="dark"] {
 
 .work-modal .modal-inner {
   overflow-y: auto;
-  max-height: 90vh;
-  padding: 2rem;
-  position: relative;
+  max-height: 100vh;
+  padding: 0;
 }
 
-.work-modal .modal-close-btn {
+@media (min-width: 640px) {
+  .work-modal .modal-inner {
+    max-height: 90vh;
+  }
+}
+
+.modal-close-btn {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
@@ -105,7 +232,7 @@ html[data-theme="dark"] {
   font-size: 1.25rem;
   line-height: 1;
   background: rgba(0, 0, 0, 0.5);
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   width: 2rem;
   height: 2rem;
@@ -117,7 +244,7 @@ html[data-theme="dark"] {
   transition: background 0.15s;
 }
 
-.work-modal .modal-close-btn:hover {
+.modal-close-btn:hover {
   background: rgba(0, 0, 0, 0.8);
 }
 
@@ -134,17 +261,447 @@ html[data-theme="dark"] {
   white-space: nowrap;
 }
 
+.status-badge {
+  font-size: 0.625rem;
+  font-weight: 500;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+}
+
+.status-active {
+  background: rgba(34, 197, 94, 0.1);
+  color: rgb(34, 197, 94);
+}
+
+.status-maintained {
+  background: rgba(59, 130, 246, 0.1);
+  color: rgb(59, 130, 246);
+}
+
+.status-archived {
+  background: rgba(161, 161, 170, 0.15);
+  color: rgb(161, 161, 170);
+}
+
+.featured-badge {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 0.25rem;
+  background: var(--accent);
+  color: var(--background);
+  white-space: nowrap;
+}
+
 .tag-chip {
   font-size: 0.75rem;
   color: var(--accent);
   opacity: 0.8;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.tag-link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.tag-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ============================================================================
-   Filter Sidebar — Fixed on right edge of viewport
+   Compact Work Card — single-line row for minor/non-featured items
    ============================================================================ */
+.compact-list {
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border);
+}
+
+.compact-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+  width: 100%;
+  min-height: 2.25rem;
+  flex-wrap: wrap;
+}
+
+.compact-card:hover {
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--muted) 30%, transparent);
+}
+
+.compact-type-badge {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 0.25rem;
+  background: var(--muted);
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.compact-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact-org {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.compact-date {
+  font-size: 0.6875rem;
+  opacity: 0.4;
+  white-space: nowrap;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.compact-preview {
+  display: none;
+  position: fixed;
+  width: 18rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease-out;
+}
+
+.compact-preview.visible {
+  display: block;
+  opacity: 1;
+}
+
+.compact-preview-thumb {
+  position: relative;
+  width: 100%;
+  height: 4rem;
+  overflow: hidden;
+  background: var(--muted);
+}
+
+.compact-preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.compact-preview-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--background) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.compact-preview-body {
+  padding: 0.625rem 0.75rem;
+}
+
+.compact-preview-desc {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  opacity: 0.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.compact-preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.compact-preview-more {
+  font-size: 0.625rem;
+  opacity: 0.4;
+}
+
+/* ============================================================================
+   Grid Board — responsive card grid with thumbnails
+   ============================================================================ */
+.grid-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+}
+
+.grid-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+  height: 100%;
+}
+
+.grid-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.grid-card-featured {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
+}
+
+.grid-card-thumb {
+  width: 100%;
+  height: 8rem;
+  overflow: hidden;
+  background: var(--muted);
+}
+
+.grid-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grid-card-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.grid-card-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.grid-card-desc {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.grid-card-footer {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* ============================================================================
+   Timeline Board — vertical line with branching cards
+   ============================================================================ */
+.timeline-board {
+  position: relative;
+  list-style: none;
+  padding: 0 0 0 1.5rem;
+}
+
+.timeline-board::before {
+  content: "";
+  position: absolute;
+  left: 0.4375rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.timeline-dot-wrap {
+  position: absolute;
+  left: -1.5rem;
+  top: 0.625rem;
+  width: 0.9375rem;
+  display: flex;
+  justify-content: center;
+}
+
+.timeline-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--muted);
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+.timeline-dot-featured {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.timeline-card {
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.timeline-card:hover {
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--muted) 20%, transparent);
+}
+
+.timeline-card-featured {
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
+}
+
+.timeline-date {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  opacity: 0.4;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.3;
+  margin-top: 0.25rem;
+}
+
+.timeline-desc {
+  font-size: 0.8125rem;
+  opacity: 0.6;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.active-tags-desktop,
+.active-tags-mobile,
+.active-tags-container,
+.active-tags-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.active-tags-desktop:empty,
+.active-tags-mobile:empty,
+.active-tags-container:empty,
+.active-tags-area:empty {
+  display: none;
+}
+
+.active-tags-desktop {
+  margin-top: 0.75rem;
+}
+
+.active-tags-mobile {
+  margin-top: 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
+.active-tags-container,
+.active-tags-area {
+  margin-bottom: 0.75rem;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--background);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.tag-pill:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================================
+   Filter Sidebar — Desktop: fixed right; Mobile: horizontal scroll row
+   ============================================================================ */
+.filter-mobile {
+  display: block;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.filter-mobile::-webkit-scrollbar {
+  display: none;
+}
+.filter-mobile-scroll {
+  display: flex;
+  gap: 1rem;
+  white-space: nowrap;
+  padding-bottom: 0.25rem;
+}
+.filter-desktop {
+  display: none;
+}
+
 @media (min-width: 1024px) {
-  .filter-sidebar {
+  .filter-mobile {
+    display: none;
+  }
+  .filter-desktop {
+    display: block;
     position: fixed;
     right: 1.5rem;
     top: 50%;
@@ -159,10 +716,31 @@ html[data-theme="dark"] {
   }
 }
 
-/* Tablet & below: hide fixed sidebar, show nothing (filters in mobile menu or hidden) */
-@media (max-width: 1023px) {
-  .filter-sidebar {
-    display: none;
+/* ============================================================================
+   Tags Page Sidebar — wrapping compact layout
+   ============================================================================ */
+.tags-sidebar-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .tags-sidebar-desktop {
+    display: block;
+    position: fixed;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    max-width: 14rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .tags-sidebar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.375rem 0.5rem;
   }
 }
 
@@ -202,39 +780,219 @@ html[data-theme="dark"] {
 }
 
 .modal-cover {
-  margin: -2rem -2rem 0 -2rem;
-  border-bottom: 1px solid var(--border);
+  position: relative;
+  margin: 0;
   background: var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  max-height: 12rem;
+  width: 100%;
+  height: 18rem;
+  overflow: hidden;
 }
 
 .modal-cover img {
   display: block;
-  max-width: 100%;
-  max-height: 9rem;
-  height: auto;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--background) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .modal-body {
-  padding-top: 1.25rem;
+  padding: 1.25rem 1rem 1.5rem;
 }
 
-.modal-meta {
+.modal-article .modal-body:first-child {
+  padding-top: 3rem;
+  border-top: 3px solid var(--accent);
+}
+
+.modal-cover + .modal-body {
+  margin-top: -2rem;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .modal-cover {
+    height: 22rem;
+  }
+  .modal-body {
+    padding: 1.5rem 2rem 2rem;
+  }
+  .modal-cover + .modal-body {
+    margin-top: -3rem;
+  }
+}
+
+.modal-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 0.375rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .modal-title {
+    font-size: 1.875rem;
+  }
+}
+
+.modal-subtitle {
+  font-size: 0.9375rem;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.modal-meta-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
-.modal-org {
-  font-size: 0.875rem;
+.modal-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+}
+
+.org-favicon {
+  display: inline-block;
+  width: 0.875em;
+  height: 0.875em;
+  vertical-align: -0.1em;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.modal-meta-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+}
+
+.modal-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.modal-highlight-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--muted) 30%, transparent);
+  text-align: center;
+}
+
+.modal-highlight-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.modal-highlight-label {
+  font-size: 0.6875rem;
   opacity: 0.6;
+  margin-top: 0.25rem;
+}
+
+/* ============================================================================
+   Modal Gallery — horizontal scrollable media collection
+   ============================================================================ */
+.modal-gallery {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.modal-gallery-item {
+  flex: 0 0 auto;
+  width: 14rem;
+  scroll-snap-align: start;
+  margin: 0;
+}
+
+.modal-gallery-item img {
+  width: 100%;
+  height: 10rem;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  transition: transform 0.15s;
+}
+
+.modal-gallery-item img:hover {
+  transform: scale(1.02);
+}
+
+.modal-gallery-video {
+  position: relative;
+  width: 100%;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.modal-gallery-video iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  display: block;
+}
+
+.modal-gallery-video .video-theater-overlay {
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  padding: 0.25rem;
+  gap: 0;
+}
+
+.modal-gallery-video:hover .video-theater-overlay {
+  opacity: 1;
+}
+
+.modal-gallery-item figcaption {
+  font-size: 0.6875rem;
+  opacity: 0.6;
+  margin-top: 0.375rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .modal-tags {
@@ -244,35 +1002,288 @@ html[data-theme="dark"] {
   margin-top: 0.75rem;
 }
 
-.modal-divider {
-  border: none;
-  border-top: 1px dashed var(--border);
-  margin: 1.25rem 0;
-}
-
-.modal-actions {
+.modal-link-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px dashed var(--border);
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .modal-action-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.5rem 1rem;
+  padding: 0.4375rem 0.875rem;
   border-radius: 0.375rem;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
+  text-decoration: none;
   transition: all 0.15s;
 }
 
 .modal-action-btn:hover {
   background: var(--accent);
   color: var(--background);
+}
+
+.modal-divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 1.25rem 0;
+}
+
+/* ============================================================================
+   Modal Tech Stack — filled pill chips distinct from hashtag tags
+   ============================================================================ */
+.modal-tech {
+  margin-top: 1.25rem;
+}
+
+.modal-tech-heading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+  margin-bottom: 0.5rem;
+}
+
+.modal-tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.tech-pill {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--background);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   Modal Timeline — vertical mini-timeline inside modal
+   ============================================================================ */
+.modal-timeline {
+  margin-top: 1.25rem;
+}
+
+.modal-timeline-heading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+.modal-timeline-list {
+  position: relative;
+  list-style: none;
+  padding: 0 0 0 1.25rem;
+  margin: 0;
+}
+
+.modal-timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 0.3125rem;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  width: 2px;
+  background: var(--border);
+}
+
+.modal-timeline-entry {
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.modal-timeline-entry-last {
+  padding-bottom: 0;
+}
+
+.modal-timeline-dot {
+  position: absolute;
+  left: -1.25rem;
+  top: 0.375rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--background);
+  box-shadow: 0 0 0 2px var(--accent);
+  z-index: 1;
+}
+
+.modal-timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.modal-timeline-date {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.modal-timeline-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.modal-timeline-desc {
+  font-size: 0.8125rem;
+  opacity: 0.6;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ============================================================================
+   Modal Prose — richer content styling inside modal
+   ============================================================================ */
+.modal-prose {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.modal-article .app-prose img {
+  border-radius: 0.5rem;
+  margin: 1.25rem 0;
+  max-width: 100%;
+  height: auto;
+  cursor: zoom-in;
+  transition: transform 0.2s;
+  border: 1px solid var(--border);
+}
+
+.modal-article .app-prose img:hover {
+  transform: scale(1.01);
+}
+
+.modal-article .app-prose iframe,
+.modal-article .app-prose video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+}
+
+/* Video theater-mode overlay */
+.video-theater-wrap {
+  position: relative;
+  margin: 1.25rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.video-theater-overlay {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.video-theater-wrap:hover .video-theater-overlay {
+  opacity: 1;
+}
+
+.video-theater-overlay:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.modal-article .app-prose figure {
+  margin: 1.25rem 0;
+}
+
+.modal-article .app-prose figure figcaption {
+  text-align: center;
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+  opacity: 0.6;
+}
+
+.modal-article .app-prose blockquote {
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.375rem 0.375rem 0;
+  margin: 1.25rem 0;
+}
+
+.modal-article .app-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin: 1.25rem 0;
+}
+
+/* ============================================================================
+   Media Lightbox (child modal for images/videos)
+   ============================================================================ */
+.media-lightbox {
+  margin: auto;
+  max-width: 95vw;
+  max-height: 95vh;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.media-lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.media-lightbox .lightbox-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.media-lightbox .lightbox-content img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 0.375rem;
+}
+
+.media-lightbox .lightbox-content iframe,
+.media-lightbox .lightbox-content video {
+  width: 80vw;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.375rem;
+  border: none;
+}
+
+.media-lightbox .lightbox-close {
+  top: 0.5rem;
+  right: 0.5rem;
 }

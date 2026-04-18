@@ -7,7 +7,8 @@ import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
-import { SITE } from "@/config";
+import IconCalendar from "@/assets/icons/IconCalendar.svg";
+import { SITE, CONNECT } from "@/config";
 
 interface Social {
   name: string;
@@ -19,29 +20,39 @@ interface Social {
 export const SOCIALS: Social[] = [
   {
     name: "GitHub",
-    href: "https://github.com/johndoe",
+    href: "https://github.com/johndoe",          // replace with your GitHub
     linkTitle: `${SITE.author} on GitHub`,
     icon: IconGitHub,
   },
   {
     name: "X",
-    href: "https://x.com/johndoe",
+    href: "https://x.com/johndoe",               // replace with your X/Twitter
     linkTitle: `${SITE.author} on X`,
     icon: IconBrandX,
   },
   {
     name: "LinkedIn",
-    href: "https://www.linkedin.com/in/johndoe/",
+    href: "https://www.linkedin.com/in/johndoe/", // replace with your LinkedIn
     linkTitle: `${SITE.author} on LinkedIn`,
     icon: IconLinkedin,
   },
   {
     name: "Mail",
-    href: "mailto:hello@johndoe.dev",
+    href: "mailto:hello@johndoe.dev",             // replace with your email
     linkTitle: `Send an email to ${SITE.author}`,
     icon: IconMail,
   },
-] as const;
+  ...(CONNECT.enabled
+    ? [
+        {
+          name: "Calendly",
+          href: "/connect",
+          linkTitle: `Book a 1:1 with ${SITE.author}`,
+          icon: IconCalendar,
+        },
+      ]
+    : []),
+];
 
 export const SHARE_LINKS: Social[] = [
   {
