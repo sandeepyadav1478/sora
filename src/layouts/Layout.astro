@@ -2,7 +2,7 @@
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
-import { SITE } from "@/config";
+import { SITE, PROFILE } from "@/config";
 import "@/styles/global.css";
 
 type Props = {
@@ -44,8 +44,8 @@ const structuredData = isHomepage
         "@type": "Person",
         name: `${author}`,
         ...(profile && { url: profile }),
-        jobTitle: "AI Engineer",
-        knowsAbout: ["Machine Learning", "LLM", "MLOps", "Deep Learning", "NLP", "Fine-Tuning", "RAG", "AI Agents", "Model Deployment"],
+        jobTitle: PROFILE.role,
+        knowsAbout: PROFILE.keywords,
       },
     }
   : {
@@ -89,7 +89,7 @@ const structuredData = isHomepage
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
-    <meta name="keywords" content="AI Engineer, Machine Learning, LLM, MLOps, NLP, Deep Learning, Fine-Tuning, RAG, Agents, Model Deployment, Portfolio" />
+    <meta name="keywords" content={[PROFILE.role, ...PROFILE.keywords, "Portfolio"].join(", ")} />
     <meta name="robots" content="index, follow" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -157,9 +157,8 @@ const structuredData = isHomepage
     <ClientRouter />
 
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
-    <script is:inline>
+    <script is:inline define:vars={{ initialColorScheme: SITE.initialColorScheme }}>
       (function () {
-        const initialColorScheme = ""; // "light" | "dark"
         const currentTheme = localStorage.getItem("theme");
 
         function getPreferTheme() {

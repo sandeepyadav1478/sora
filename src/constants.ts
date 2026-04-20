@@ -8,7 +8,7 @@ import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import IconCalendar from "@/assets/icons/IconCalendar.svg";
-import { SITE, CONNECT } from "@/config";
+import { SITE, CONNECT, SOCIALS_CONFIG } from "@/config";
 
 interface Social {
   name: string;
@@ -17,31 +17,25 @@ interface Social {
   icon: (_props: Props) => Element;
 }
 
+const ICON_MAP: Record<string, (_props: Props) => Element> = {
+  GitHub: IconGitHub,
+  X: IconBrandX,
+  LinkedIn: IconLinkedin,
+  Mail: IconMail,
+  WhatsApp: IconWhatsapp,
+  Facebook: IconFacebook,
+  Telegram: IconTelegram,
+  Pinterest: IconPinterest,
+  Calendly: IconCalendar,
+};
+
 export const SOCIALS: Social[] = [
-  {
-    name: "GitHub",
-    href: "https://github.com/johndoe",          // replace with your GitHub
-    linkTitle: `${SITE.author} on GitHub`,
-    icon: IconGitHub,
-  },
-  {
-    name: "X",
-    href: "https://x.com/johndoe",               // replace with your X/Twitter
-    linkTitle: `${SITE.author} on X`,
-    icon: IconBrandX,
-  },
-  {
-    name: "LinkedIn",
-    href: "https://www.linkedin.com/in/johndoe/", // replace with your LinkedIn
-    linkTitle: `${SITE.author} on LinkedIn`,
-    icon: IconLinkedin,
-  },
-  {
-    name: "Mail",
-    href: "mailto:hello@johndoe.dev",             // replace with your email
-    linkTitle: `Send an email to ${SITE.author}`,
-    icon: IconMail,
-  },
+  ...SOCIALS_CONFIG.map(s => ({
+    name: s.name,
+    href: s.url,
+    linkTitle: `${SITE.author} on ${s.name}`,
+    icon: ICON_MAP[s.name] ?? IconMail,
+  })),
   ...(CONNECT.enabled
     ? [
         {

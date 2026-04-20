@@ -1,14 +1,16 @@
 // ============================================================================
-// SITE — Template-level settings
+// SITE — Global site settings
 // ============================================================================
 export const SITE = {
-  website: "https://johndoe.github.io/",
-  author: "John Doe",
-  profile: "https://johndoe.github.io/",
+  website: "https://johndoe.github.io/",       // your deployed URL
+  author: "John Doe",                           // used in meta tags, RSS, structured data
+  profile: "https://johndoe.github.io/",        // canonical profile URL
   desc: "AI Engineer building production-grade intelligent systems — from model training and fine-tuning to agentic workflows, ML infrastructure, and scalable inference.",
-  title: "John Doe",
-  ogImage: "sora-og.jpg",
+  title: "John Doe",                            // browser tab / site title
+  ogImage: "sora-og.jpg",                       // default OG image in public/
   lightAndDarkMode: true,
+  // "light" | "dark" | "" (empty = follow system preference)
+  initialColorScheme: "" as "" | "light" | "dark",
   postPerIndex: 6,
   postPerPage: 10,
   scheduledPostMargin: 15 * 60 * 1000,
@@ -20,23 +22,37 @@ export const SITE = {
     url: "",
   },
   dynamicOgImage: true,
-  dir: "ltr",
+  dir: "ltr" as "ltr" | "rtl",
   lang: "en",
   timezone: "America/New_York",
 } as const;
 
 // ============================================================================
-// PROFILE — Your personal information (customize this)
+// PROFILE — Your personal information
 // ============================================================================
 export const PROFILE = {
   name: "John Doe",
   tagline: "AI Engineer building production intelligent systems — LLM applications, model fine-tuning, agentic workflows, and ML infrastructure. Open source contributor and technical writer.",
-  photo: "/profile-photo.svg", // replace with your photo in public/ (.jpg, .png, or .svg)
-  role: "AI Engineer",                      // current role / title
+  photo: "/profile-photo.svg",              // place your photo in public/ (.jpg, .png, or .svg)
+  role: "AI Engineer",                      // current role / title (also used in SEO structured data)
   organization: "Acme AI",                  // current company or affiliation
   organizationUrl: "https://example.com",   // optional link
   location: "San Francisco, USA",           // city / region
+  // SEO keywords for structured data (what you want to be found for)
+  keywords: ["Machine Learning", "LLM", "MLOps", "Deep Learning", "NLP", "Fine-Tuning", "RAG", "AI Agents", "Model Deployment"],
 } as const;
+
+// ============================================================================
+// SOCIALS — Your social links (icons are mapped automatically)
+// Supported names: "GitHub", "X", "LinkedIn", "Mail", "WhatsApp",
+//   "Facebook", "Telegram", "Pinterest", "Calendly"
+// ============================================================================
+export const SOCIALS_CONFIG = [
+  { name: "GitHub", url: "https://github.com/johndoe" },
+  { name: "X", url: "https://x.com/johndoe" },
+  { name: "LinkedIn", url: "https://www.linkedin.com/in/johndoe/" },
+  { name: "Mail", url: "mailto:hello@johndoe.dev" },
+] as const;
 
 // ============================================================================
 // SECTIONS — Toggle optional homepage sections (set to true to show)
