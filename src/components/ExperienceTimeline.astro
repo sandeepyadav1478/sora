@@ -3,32 +3,32 @@ import { EXPERIENCE } from "@/config";
 ---
 
 {EXPERIENCE.length > 0 && (
-  <section id="experience" class="pt-12 pb-8">
-    <h2 class="text-2xl font-semibold tracking-wide">Experience</h2>
-    <div class="mt-6 relative border-l-2 border-border pl-6 space-y-8">
+  <section id="experience" class="experience-section">
+    <h2 class="experience-heading">Experience</h2>
+    <div class="experience-list">
       {EXPERIENCE.map(entry => (
-        <div class="relative">
-          <div class="absolute -left-[1.9rem] top-1.5 size-3 rounded-full border-2 border-accent bg-background" />
-          <div class="flex flex-wrap items-baseline gap-x-2">
-            <h3 class="font-semibold">{entry.role}</h3>
-            <span class="text-sm opacity-50">at</span>
+        <div class="experience-entry">
+          <div class="experience-dot" />
+          <div class="experience-header">
+            <h3 class="experience-role">{entry.role}</h3>
+            <span class="experience-separator">at</span>
             {entry.companyUrl ? (
               <a
                 href={entry.companyUrl}
                 target="_blank"
                 rel="noopener"
-                class="text-accent hover:underline"
+                class="experience-company-link"
               >
                 {entry.company}
               </a>
             ) : (
-              <span class="text-accent">{entry.company}</span>
+              <span class="experience-company-text">{entry.company}</span>
             )}
           </div>
-          <p class="text-xs opacity-50 mt-0.5">
+          <p class="experience-dates">
             {entry.startDate} — {entry.endDate}
           </p>
-          <p class="mt-1.5 text-sm opacity-70 leading-relaxed">{entry.description}</p>
+          <p class="experience-desc">{entry.description}</p>
         </div>
       ))}
     </div>

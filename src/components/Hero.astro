@@ -3,35 +3,35 @@ import Socials from "./Socials.astro";
 import { PROFILE } from "@/config";
 ---
 
-<section id="hero" class="pt-8 pb-6">
+<section id="hero" class="hero-section">
   <div class="hero-row">
     <div class="hero-photo-wrap">
       <img
         src={PROFILE.photo}
         alt={PROFILE.name}
-        class="rounded-full object-cover border-2 border-border"
+        class="hero-photo"
       />
     </div>
-    <div class="hero-info text-center sm:text-left">
-      <h1 class="text-3xl font-bold sm:text-4xl"><a href="/" class="hover:text-accent transition-colors">{PROFILE.name}</a></h1>
+    <div class="hero-info">
+      <h1 class="hero-name"><a href="/">{PROFILE.name}</a></h1>
       {(PROFILE.role || PROFILE.organization) && (
-        <p class="mt-1 text-base">
-          <span class="opacity-80">{PROFILE.role}</span>
+        <p class="hero-role">
+          <span class="hero-role-text">{PROFILE.role}</span>
           {PROFILE.role && PROFILE.organization && (
-            <span class="opacity-50"> at </span>
+            <span class="hero-role-separator"> at </span>
           )}
           {PROFILE.organization && (
             PROFILE.organizationUrl
-              ? <a href={PROFILE.organizationUrl} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">{PROFILE.organization}</a>
-              : <span class="text-accent">{PROFILE.organization}</span>
+              ? <a href={PROFILE.organizationUrl} target="_blank" rel="noopener noreferrer" class="hero-org-link">{PROFILE.organization}</a>
+              : <span class="hero-org-text">{PROFILE.organization}</span>
           )}
         </p>
       )}
       {PROFILE.location && (
-        <p class="mt-0.5 text-sm opacity-50">{PROFILE.location}</p>
+        <p class="hero-location">{PROFILE.location}</p>
       )}
-      <p class="mt-1.5 text-sm opacity-60 max-w-lg">{PROFILE.tagline}</p>
-      <div class="mt-3">
+      <p class="hero-tagline">{PROFILE.tagline}</p>
+      <div class="hero-socials">
         <Socials />
       </div>
     </div>

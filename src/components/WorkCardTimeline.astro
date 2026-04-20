@@ -50,7 +50,7 @@ const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
     tabindex="0"
   >
     <div class="timeline-date">{dateStr}</div>
-    <div class="flex items-center gap-1.5 flex-wrap">
+    <div class="timeline-badges">
       <span class:list={["compact-type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
       {featured && <span class="featured-badge">Featured</span>}
       {status && statusLabelMap[status] && (
@@ -60,11 +60,11 @@ const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
       )}
     </div>
     <h3 class="timeline-title">{title}</h3>
-    {organization && <span class="text-xs opacity-50">at {organization}</span>}
+    {organization && <span class="timeline-org">at {organization}</span>}
     <p class="timeline-desc">{description}</p>
-    <div class="flex flex-wrap gap-1.5 mt-1.5">
+    <div class="timeline-tags">
       {tags.slice(0, 4).map(tag => (
-        <span class="tag-chip" style="font-size:0.6875rem">#{tag}</span>
+        <span class="tag-chip">#{tag}</span>
       ))}
     </div>
   </div>

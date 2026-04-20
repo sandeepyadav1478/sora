@@ -50,20 +50,20 @@ const dateDisplay = endDate ? `${startDate} — ${endDate}` : startDate;
     role="button"
     tabindex="0"
   >
-    <div class="flex flex-wrap items-baseline gap-2">
+    <div class="work-card-header">
       <span class:list={["type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
-      <h3 class="text-lg font-medium text-accent">
+      <h3 class="work-card-title">
         {title}
       </h3>
       {organization && (
-        <span class="text-sm opacity-50">at {organization}</span>
+        <span class="work-card-org">at {organization}</span>
       )}
     </div>
     {role && (
-      <p class="mt-0.5 text-sm font-medium opacity-70">{role}</p>
+      <p class="work-card-role">{role}</p>
     )}
-    <div class="mt-1 flex flex-wrap items-center gap-2">
-      <span class="text-xs opacity-50">{dateDisplay}</span>
+    <div class="work-card-meta">
+      <span class="work-card-date">{dateDisplay}</span>
       {featured && <span class="featured-badge">Featured</span>}
       {status && statusLabelMap[status] && (
         <span class:list={["status-badge", statusLabelMap[status].cls]}>

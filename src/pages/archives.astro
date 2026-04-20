@@ -75,9 +75,9 @@ for (const work of sortedWorks) {
 
 <Layout title={`Archives | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" data-pagefind-body class="app-layout pb-12">
-    <h1 class="mt-8 text-2xl font-semibold sm:text-3xl">Archives</h1>
-    <p class="mt-2 mb-8 italic opacity-60">All works, ordered chronologically.</p>
+  <main id="main-content" data-pagefind-body class="app-layout post-main">
+    <h1 class="page-title main-content">Archives</h1>
+    <p class="page-desc page-desc-muted">All works, ordered chronologically.</p>
 
     {grouped.map(({ year, months }) => (
       <section class="archive-year-section">

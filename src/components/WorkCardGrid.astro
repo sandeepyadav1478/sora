@@ -55,7 +55,7 @@ const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "s
     )}
     <div class="grid-card-body">
       <div class="grid-card-header">
-        <div class="flex items-center gap-1.5 flex-wrap min-w-0">
+        <div class="grid-card-badges">
           <span class:list={["compact-type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
           {featured && <span class="featured-badge">Featured</span>}
           {status && statusLabelMap[status] && (
@@ -67,14 +67,14 @@ const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "s
         <span class="grid-card-date">{dateStr}</span>
       </div>
       <h3 class="grid-card-title">{title}</h3>
-      {organization && <span class="text-xs opacity-50">at {organization}</span>}
+      {organization && <span class="grid-card-org">at {organization}</span>}
       <p class="grid-card-desc">{description}</p>
       <div class="grid-card-footer">
-        <div class="flex flex-wrap gap-1">
+        <div class="grid-card-tags">
           {tags.slice(0, 3).map(tag => (
-            <span class="tag-chip" style="font-size:0.6875rem">#{tag}</span>
+            <span class="tag-chip">#{tag}</span>
           ))}
-          {tags.length > 3 && <span class="text-xs opacity-40">+{tags.length - 3}</span>}
+          {tags.length > 3 && <span class="grid-card-tags-overflow">+{tags.length - 3}</span>}
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@ const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "s
       <p class="compact-preview-desc">{description}</p>
       <div class="compact-preview-tags">
         {tags.slice(0, 4).map(tag => (
-          <span class="tag-chip" style="font-size:0.625rem">#{tag}</span>
+          <span class="tag-chip">#{tag}</span>
         ))}
         {tags.length > 4 && <span class="compact-preview-more">+{tags.length - 4}</span>}
       </div>

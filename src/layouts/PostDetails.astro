@@ -85,38 +85,29 @@ const nextPost =
   <BackButton />
   <main
     id="main-content"
-    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
+    class:list={["app-layout post-main", { "main-content": !SITE.showBackButton }]}
     data-pagefind-body
   >
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+      class="post-title"
     >
       {title}
     </h1>
-    <div class="my-2 flex items-center gap-2">
+    <div class="post-meta">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      <span
-        aria-hidden="true"
-        class:list={[
-          "max-sm:hidden",
-          { hidden: true },
-        ]}>|</span
-      >
-      <EditPost hideEditPost={true} {post} class="max-sm:hidden" />
+      <span aria-hidden="true" class="post-meta-divider">|</span>
+      <EditPost hideEditPost={true} {post} class="post-edit-desktop" />
     </div>
-    <article
-      id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
-    >
+    <article id="article" class="app-prose post-article">
       <Content />
     </article>
 
-    <hr class="my-8 border-dashed" />
+    <hr class="post-divider" />
 
-    <EditPost class="sm:hidden" hideEditPost={true} {post} />
+    <EditPost class="post-edit-mobile" hideEditPost={true} {post} />
 
-    <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+    <ul class="post-tags">
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
     </ul>
 
@@ -124,20 +115,20 @@ const nextPost =
 
     <ShareLinks />
 
-    <hr class="my-6 border-dashed" />
+    <hr class="post-divider-sm" />
 
     <!-- Previous/Next Post Buttons -->
-    <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div data-pagefind-ignore class="post-nav-grid">
       {
         prevPost && (
           <a
             href={getPath(prevPost.id, prevPost.filePath)}
-            class="flex w-full gap-1 hover:opacity-75"
+            class="post-nav-link"
           >
-            <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
+            <IconChevronLeft class="post-nav-icon post-nav-icon-rtl" />
             <div>
               <span>Previous Post</span>
-              <div class="text-sm text-accent/85">{prevPost.title}</div>
+              <div class="post-nav-title">{prevPost.title}</div>
             </div>
           </a>
         )
@@ -146,13 +137,13 @@ const nextPost =
         nextPost && (
           <a
             href={getPath(nextPost.id, nextPost.filePath)}
-            class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+            class="post-nav-link post-nav-link-next"
           >
             <div>
               <span>Next Post</span>
-              <div class="text-sm text-accent/85">{nextPost.title}</div>
+              <div class="post-nav-title">{nextPost.title}</div>
             </div>
-            <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+            <IconChevronRight class="post-nav-icon post-nav-icon-rtl" />
           </a>
         )
       }
@@ -165,20 +156,14 @@ const nextPost =
   /** Create a progress indicator
    *  at the top */
   function createProgressBar() {
-    // Create the main container div
     const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+    progressContainer.className = "progress-container";
 
-    // Create the progress bar div
     const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.className = "progress-bar";
     progressBar.id = "myBar";
 
-    // Append the progress bar to the progress container
     progressContainer.appendChild(progressBar);
-
-    // Append the progress container to the document body or any other desired parent element
     document.body.appendChild(progressContainer);
   }
   createProgressBar();
@@ -212,8 +197,7 @@ const nextPost =
     for (const heading of headings) {
       heading.classList.add("group");
       const link = document.createElement("a");
-      link.className =
-        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.className = "heading-link";
       link.href = "#" + heading.id;
 
       const span = document.createElement("span");
@@ -235,23 +219,20 @@ const nextPost =
       const wrapper = document.createElement("div");
       wrapper.style.position = "relative";
 
-      // Check if --file-name-offset custom property exists
       const computedStyle = getComputedStyle(codeBlock);
       const hasFileNameOffset =
         computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
 
-      // Determine the top positioning class
       const topClass = hasFileNameOffset
-        ? "top-(--file-name-offset)"
-        : "-top-3";
+        ? "copy-code-offset"
+        : "copy-code-top";
 
       const copyButton = document.createElement("button");
-      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.className = `copy-code ${topClass}`;
       copyButton.innerHTML = copyButtonLabel;
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
-      // wrap codebock with relative parent element
       codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
       wrapper.appendChild(codeBlock);
 
@@ -266,7 +247,6 @@ const nextPost =
 
       await navigator.clipboard.writeText(text ?? "");
 
-      // visual feedback that task is completed
       button.innerText = "Copied";
 
       setTimeout(() => {

@@ -10,10 +10,10 @@ if (!CONNECT.enabled) return Astro.redirect("/");
 <Layout title={`Connect | ${SITE.title}`}>
   <NavSidebar />
   <main id="main-content" class="app-layout">
-    <section class="connect-section pt-8 pb-12">
-      <div class="connect-header mb-6">
-        <h1 class="text-2xl font-bold text-foreground sm:text-3xl">{CONNECT.heading}</h1>
-        <p class="mt-1 text-sm opacity-60 max-w-lg">{CONNECT.subheading}</p>
+    <section class="connect-section">
+      <div class="connect-header">
+        <h1 class="page-title">{CONNECT.heading}</h1>
+        <p class="connect-subheading">{CONNECT.subheading}</p>
       </div>
       <div class="connect-embed">
         <iframe

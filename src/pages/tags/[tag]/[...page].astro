@@ -49,11 +49,11 @@ const sortedWorks = getSortedWorks(allWorks);
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" class="app-layout pb-4">
-    <h1 class="mt-8 text-2xl font-semibold sm:text-3xl">
+  <main id="main-content" class="app-layout main-content">
+    <h1 class="page-title">
       Tag: <span transition:name={tag}>{tagName}</span>
     </h1>
-    <p class="mt-2 mb-2 italic">All works tagged with "{tagName}".</p>
+    <p class="page-desc">All works tagged with "{tagName}".</p>
 
     <div class="active-tags-area"></div>
 
@@ -77,10 +77,10 @@ const sortedWorks = getSortedWorks(allWorks);
               </div>
             )}
             <div class="modal-body">
-              <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
+              <h1 class="modal-title">{work.data.title}</h1>
               <div class="modal-meta">
                 <span class="type-badge">{typeLabelMap[work.data.type]}</span>
-                <span class="text-sm opacity-80">{displayDate}</span>
+                <span class="work-card-date">{displayDate}</span>
                 {work.data.organization && (
                   <span class="modal-org">at {work.data.organization}</span>
                 )}

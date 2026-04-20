@@ -16,10 +16,10 @@ import { SITE, CONNECT } from "@/config";
     <a href="/connect" class="nav-sidebar-link">1:1 <span class="nav-arrow">&rarr;</span></a>
   )}
   <a href="/archives" class="nav-sidebar-link nav-sidebar-icon" title="Archives" aria-label="Archives">
-    <IconArchive class="size-5 stroke-current stroke-2" />
+    <IconArchive class="nav-icon-desktop" />
   </a>
   <a href="/search" class="nav-sidebar-link nav-sidebar-icon" title="Search" aria-label="Search">
-    <IconSearch class="size-5 stroke-current stroke-2" />
+    <IconSearch class="nav-icon-desktop" />
   </a>
   {SITE.lightAndDarkMode && (
     <button
@@ -29,15 +29,15 @@ import { SITE, CONNECT } from "@/config";
       aria-label="Toggle theme"
       aria-live="polite"
     >
-      <IconMoon class="size-5 stroke-current stroke-2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 absolute" />
-      <IconSunHigh class="size-5 stroke-current stroke-2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 absolute" />
+      <IconMoon class="nav-theme-icon nav-theme-icon--moon" />
+      <IconSunHigh class="nav-theme-icon nav-theme-icon--sun" />
     </button>
   )}
 </nav>
 
 {/* Mobile: top bar */}
 <header class="nav-mobile-bar app-layout">
-  <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100" data-back style="display:none">&larr; <span class="nav-back-text">Back</span></a>
+  <a href="/" class="nav-back-mobile" data-back style="display:none">&larr; <span class="nav-back-text">Back</span></a>
   <div class="nav-mobile-links">
     <a href="/#works" class="nav-mobile-link">Works</a>
     <a href="/tags" class="nav-mobile-link">Tags</a>
@@ -46,10 +46,10 @@ import { SITE, CONNECT } from "@/config";
       <a href="/connect" class="nav-mobile-link">1:1</a>
     )}
     <a href="/archives" class="nav-mobile-icon" title="Archives" aria-label="Archives">
-      <IconArchive class="size-4 stroke-current stroke-2" />
+      <IconArchive class="nav-icon-mobile" />
     </a>
     <a href="/search" class="nav-mobile-icon" title="Search" aria-label="Search">
-      <IconSearch class="size-4 stroke-current stroke-2" />
+      <IconSearch class="nav-icon-mobile" />
     </a>
     {SITE.lightAndDarkMode && (
       <button
@@ -59,8 +59,8 @@ import { SITE, CONNECT } from "@/config";
         aria-label="Toggle theme"
         aria-live="polite"
       >
-        <IconMoon class="size-4 stroke-current stroke-2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 absolute top-0 left-0" />
-        <IconSunHigh class="size-4 stroke-current stroke-2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 absolute top-0 left-0" />
+        <IconMoon class="nav-theme-icon-mobile--moon" />
+        <IconSunHigh class="nav-theme-icon-mobile--sun" />
       </button>
     )}
   </div>

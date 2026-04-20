@@ -65,7 +65,7 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
     <Hero />
 
     {/* === THE BOARD === */}
-    <section id="works" class="pt-8 pb-6">
+    <section id="works" class="works-section">
       <FilterTabs />
 
       {BOARD.layout === "two-tier" && (() => {
@@ -128,7 +128,7 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
         <ExperienceTimeline />
       </div>
     )}
-    {SECTIONS.showSkills && <div class="mt-8"><SkillsSection /></div>}
+    {SECTIONS.showSkills && <div class="skills-wrapper"><SkillsSection /></div>}
     {SECTIONS.showContact && (
       <div class="section-tinted">
         <ContactSection />

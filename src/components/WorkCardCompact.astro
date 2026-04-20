@@ -65,7 +65,7 @@ const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
       <p class="compact-preview-desc">{description}</p>
       <div class="compact-preview-tags">
         {tags.slice(0, 4).map(tag => (
-          <span class="tag-chip" style="font-size:0.625rem">#{tag}</span>
+          <span class="tag-chip">#{tag}</span>
         ))}
         {tags.length > 4 && <span class="compact-preview-more">+{tags.length - 4}</span>}
       </div>
