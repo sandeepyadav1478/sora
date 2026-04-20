@@ -27,6 +27,9 @@ const typeLabelMap: Record<string, string> = {
   talk: "Talk",
   certification: "Cert",
   experience: "Role",
+  conference: "Conf",
+  hackathon: "Hack",
+  meetup: "Meetup",
 };
 
 const tz = SITE.timezone;
@@ -48,7 +51,7 @@ const dateDisplay = endDate ? `${startDate} — ${endDate}` : startDate;
     tabindex="0"
   >
     <div class="flex flex-wrap items-baseline gap-2">
-      <span class="type-badge">{typeLabelMap[type]}</span>
+      <span class:list={["type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
       <h3 class="text-lg font-medium text-accent">
         {title}
       </h3>

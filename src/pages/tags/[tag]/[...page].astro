@@ -19,6 +19,9 @@ const typeLabelMap: Record<string, string> = {
   talk: "Talk",
   certification: "Cert",
   experience: "Role",
+  conference: "Conf",
+  hackathon: "Hack",
+  meetup: "Meetup",
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -47,23 +50,7 @@ const sortedWorks = getSortedWorks(allWorks);
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
   <NavSidebar />
   <main id="main-content" class="app-layout pb-4">
-    <nav class="mt-8 mb-1" aria-label="breadcrumb">
-      <ul class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100">
-        <li>
-          <a href="/" class="opacity-80">Home</a>
-          <span aria-hidden="true" class="opacity-80">&raquo;</span>
-        </li>
-        <li>
-          <a href="/tags/" class="capitalize opacity-70">Tags</a>
-          <span aria-hidden="true">&raquo;</span>
-        </li>
-        <li>
-          <span class="capitalize opacity-75 lowercase" aria-current="page">{tagName}</span>
-        </li>
-      </ul>
-    </nav>
-
-    <h1 class="text-2xl font-semibold sm:text-3xl">
+    <h1 class="mt-8 text-2xl font-semibold sm:text-3xl">
       Tag: <span transition:name={tag}>{tagName}</span>
     </h1>
     <p class="mt-2 mb-2 italic">All works tagged with "{tagName}".</p>

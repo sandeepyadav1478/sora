@@ -8,7 +8,7 @@ const works = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      type: z.enum(["oss", "project", "writing", "talk", "certification", "experience"]),
+      type: z.enum(["oss", "project", "writing", "talk", "certification", "experience", "conference", "hackathon", "meetup"]),
       pubDatetime: z.date(),
       modDatetime: z.date().optional().nullable(),
       description: z.string(),
@@ -47,6 +47,7 @@ const works = defineCollection({
         }))
         .optional()
         .default([]),
+      cardStyle: z.enum(["default", "glass", "accent-bar", "gradient", "elevated", "outlined", "terminal", "newspaper"]).optional(),
       ogImage: image().or(z.string()).optional(),
       canonicalURL: z.string().optional(),
       timezone: z.string().optional(),

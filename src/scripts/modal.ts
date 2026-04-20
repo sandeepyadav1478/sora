@@ -173,6 +173,14 @@ function initModal() {
     });
   });
 
+  document.querySelectorAll<HTMLElement>("[data-work-trigger]").forEach(trigger => {
+    trigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      const workId = trigger.dataset.workTrigger;
+      if (workId) openModal(workId);
+    });
+  });
+
   closeBtn.addEventListener("click", closeModal);
 
   dialog.addEventListener("click", e => {

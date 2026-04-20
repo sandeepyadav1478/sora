@@ -1,6 +1,7 @@
 ---
 title: "Reproducible ML Pipelines with DVC"
 type: writing
+cardStyle: newspaper
 pubDatetime: 2025-08-10T00:00:00Z
 description: "A practical guide to building reproducible, version-controlled ML data pipelines using DVC, from dataset versioning to automated retraining."
 featured: true

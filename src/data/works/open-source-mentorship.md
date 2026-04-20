@@ -1,6 +1,7 @@
 ---
 title: "Open Source Mentorship — First-Time Contributors Program"
 type: talk
+cardStyle: outlined
 pubDatetime: 2025-05-15T00:00:00Z
 description: "Organized and led a 4-week open source mentorship program helping 20+ developers make their first meaningful contributions to ML/AI projects."
 tags: [open-source, mentorship, community, education]

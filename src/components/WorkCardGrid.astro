@@ -11,7 +11,7 @@ dayjs.extend(timezone);
 type Props = CollectionEntry<"works">;
 
 const { id, data } = Astro.props;
-const { title, type, description, pubDatetime, tags, organization, featured, status } = data;
+const { title, type, description, pubDatetime, tags, organization, featured, status, cardStyle } = data;
 
 const typeLabelMap: Record<string, string> = {
   oss: "OSS",
@@ -20,6 +20,9 @@ const typeLabelMap: Record<string, string> = {
   talk: "Talk",
   certification: "Cert",
   experience: "Role",
+  conference: "Conf",
+  hackathon: "Hack",
+  meetup: "Meetup",
 };
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
@@ -35,7 +38,7 @@ const img = data.image;
 const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
 ---
 
-<li class="work-item" data-type={type} data-tags={tags.join(",")}>
+<li class:list={["work-item", cardStyle && `card-design--${cardStyle}`]} data-type={type} data-tags={tags.join(",")}>
   <div
     class:list={[
       "work-card-trigger grid-card",
@@ -51,14 +54,17 @@ const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "s
       </div>
     )}
     <div class="grid-card-body">
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="compact-type-badge">{typeLabelMap[type]}</span>
-        {featured && <span class="featured-badge">Featured</span>}
-        {status && statusLabelMap[status] && (
-          <span class:list={["status-badge", statusLabelMap[status].cls]}>
-            {statusLabelMap[status].label}
-          </span>
-        )}
+      <div class="grid-card-header">
+        <div class="flex items-center gap-1.5 flex-wrap min-w-0">
+          <span class:list={["compact-type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
+          {featured && <span class="featured-badge">Featured</span>}
+          {status && statusLabelMap[status] && (
+            <span class:list={["status-badge", statusLabelMap[status].cls]}>
+              {statusLabelMap[status].label}
+            </span>
+          )}
+        </div>
+        <span class="grid-card-date">{dateStr}</span>
       </div>
       <h3 class="grid-card-title">{title}</h3>
       {organization && <span class="text-xs opacity-50">at {organization}</span>}
@@ -70,8 +76,24 @@ const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "s
           ))}
           {tags.length > 3 && <span class="text-xs opacity-40">+{tags.length - 3}</span>}
         </div>
-        <span class="text-xs opacity-40">{dateStr}</span>
       </div>
     </div>
   </div>
+  <template class="compact-preview-tpl">
+    {imgSrc && (
+      <div class="compact-preview-thumb">
+        <img src={imgSrc} alt="" loading="lazy" />
+        <div class="compact-preview-fade"></div>
+      </div>
+    )}
+    <div class="compact-preview-body">
+      <p class="compact-preview-desc">{description}</p>
+      <div class="compact-preview-tags">
+        {tags.slice(0, 4).map(tag => (
+          <span class="tag-chip" style="font-size:0.625rem">#{tag}</span>
+        ))}
+        {tags.length > 4 && <span class="compact-preview-more">+{tags.length - 4}</span>}
+      </div>
+    </div>
+  </template>
 </li>

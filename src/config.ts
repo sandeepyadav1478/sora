@@ -12,7 +12,7 @@ export const SITE = {
   postPerIndex: 6,
   postPerPage: 10,
   scheduledPostMargin: 15 * 60 * 1000,
-  showArchives: false,
+  showArchives: true,
   showBackButton: false,
   editPost: {
     enabled: false,
@@ -62,6 +62,16 @@ export const BOARD = {
   // How many recent items to promote to the first tier (two-tier layout only).
   // These are shown alongside featured items as full cards.
   recentCount: 6,
+
+  // Tech stack display style in work modals:
+  //   "muted-badges"    — subtle gray background, square corners (GitHub-style)
+  //   "two-tone"        — light accent background, accent text
+  //   "left-border"     — muted background with accent left border
+  //   "outlined"        — accent border only, no fill
+  //   "dot-separated"   — plain text joined by dots
+  //   "comma-list"      — plain inline text with label prefix
+  //   "filled-pills"    — solid accent background, white text
+  techStyle: "left-border" as "muted-badges" | "two-tone" | "left-border" | "outlined" | "dot-separated" | "comma-list" | "filled-pills",
 } as const;
 
 // ============================================================================

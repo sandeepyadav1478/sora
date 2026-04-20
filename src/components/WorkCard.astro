@@ -11,7 +11,7 @@ dayjs.extend(timezone);
 type Props = CollectionEntry<"works">;
 
 const { id, data } = Astro.props;
-const { title, type, description, pubDatetime, modDatetime, endDatetime, ongoing, tags, organization, role, featured, status } = data;
+const { title, type, description, pubDatetime, modDatetime, endDatetime, ongoing, tags, organization, role, featured, status, cardStyle } = data;
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
   "active": { label: "Active", cls: "status-active" },
@@ -27,6 +27,9 @@ const typeLabelMap: Record<string, string> = {
   talk: "Talk",
   certification: "Cert",
   experience: "Role",
+  conference: "Conf",
+  hackathon: "Hack",
+  meetup: "Meetup",
 };
 
 const tz = SITE.timezone;
@@ -35,7 +38,7 @@ const endDate = ongoing ? "Present" : endDatetime ? dayjs(endDatetime).tz(tz).fo
 const dateDisplay = endDate ? `${startDate} — ${endDate}` : startDate;
 ---
 
-<li class="work-item my-4" data-type={type} data-tags={tags.join(",")}>
+<li class:list={["work-item my-4", cardStyle && `card-design--${cardStyle}`]} data-type={type} data-tags={tags.join(",")}>
   <div
     class:list={[
       "work-card-trigger w-full cursor-pointer rounded-lg border p-4 text-left transition-colors",
@@ -48,7 +51,7 @@ const dateDisplay = endDate ? `${startDate} — ${endDate}` : startDate;
     tabindex="0"
   >
     <div class="flex flex-wrap items-baseline gap-2">
-      <span class="type-badge">{typeLabelMap[type]}</span>
+      <span class:list={["type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
       <h3 class="text-lg font-medium text-accent">
         {title}
       </h3>

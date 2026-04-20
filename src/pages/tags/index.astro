@@ -7,7 +7,7 @@ import WorkCard from "@/components/WorkCard.astro";
 import WorkModal from "@/components/WorkModal.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getSortedWorks from "@/utils/getSortedWorks";
-import { SITE } from "@/config";
+import { SITE, BOARD } from "@/config";
 
 const typeLabelMap: Record<string, string> = {
   oss: "OSS",
@@ -16,6 +16,28 @@ const typeLabelMap: Record<string, string> = {
   talk: "Talk",
   certification: "Cert",
   experience: "Role",
+  conference: "Conf",
+  hackathon: "Hack",
+  meetup: "Meetup",
+};
+
+const typeEyebrowMap: Record<string, string> = {
+  oss: "Open Source",
+  project: "Case Study",
+  writing: "Article",
+  talk: "Talk",
+  certification: "Certification",
+  experience: "Experience",
+  conference: "Conference",
+  hackathon: "Hackathon",
+  meetup: "Meetup",
+};
+
+const statusLabelMap: Record<string, { label: string; cls: string }> = {
+  "active": { label: "Active", cls: "status-active" },
+  "maintained": { label: "Maintained", cls: "status-maintained" },
+  "in-production": { label: "In Production", cls: "status-active" },
+  "archived": { label: "Archived", cls: "status-archived" },
 };
 
 const allWorks = await getCollection("works");
@@ -26,19 +48,7 @@ const sortedWorks = getSortedWorks(allWorks);
 <Layout title={`Tags | ${SITE.title}`}>
   <NavSidebar />
   <main id="main-content" class="app-layout pb-4">
-    <nav class="mt-8 mb-1" aria-label="breadcrumb">
-      <ul class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100">
-        <li>
-          <a href="/" class="opacity-80">Home</a>
-          <span aria-hidden="true" class="opacity-80">&raquo;</span>
-        </li>
-        <li>
-          <span class="capitalize opacity-75" aria-current="page">Tags</span>
-        </li>
-      </ul>
-    </nav>
-
-    <h1 class="text-2xl font-semibold sm:text-3xl">Tags</h1>
+    <h1 class="mt-8 text-2xl font-semibold sm:text-3xl">Tags</h1>
     <p class="mt-2 mb-6 italic opacity-60">Select tags to filter works.</p>
 
     {/* Desktop: fixed right sidebar */}
@@ -61,7 +71,7 @@ const sortedWorks = getSortedWorks(allWorks);
       </div>
     </nav>
 
-    <ul>
+    <ul id="tags-work-list">
       {sortedWorks.map(work => <WorkCard {...work} />)}
     </ul>
 
@@ -71,34 +81,69 @@ const sortedWorks = getSortedWorks(allWorks);
       const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
       const displayDate = new Date(work.data.modDatetime ?? work.data.pubDatetime)
         .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      const eyebrow = typeEyebrowMap[work.data.type] || work.data.type;
+      const statusInfo = work.data.status ? statusLabelMap[work.data.status] : null;
+      const highlights = work.data.highlights ?? [];
+      const tech = work.data.tech ?? [];
+      const gallery = work.data.gallery ?? [];
+      const timeline = work.data.timeline ?? [];
       return (
         <div data-work-template={work.id} class="hidden">
           <article class="modal-article">
             {imgSrc && (
               <div class="modal-cover">
                 <img src={imgSrc} alt={work.data.title} />
+                <div class="modal-cover-overlay"></div>
               </div>
             )}
+
             <div class="modal-body">
-              <h1 class="text-2xl font-bold text-accent">{work.data.title}</h1>
-              <div class="modal-meta">
-                <span class="type-badge">{typeLabelMap[work.data.type]}</span>
-                <span class="text-sm opacity-80">{displayDate}</span>
+              <p class="modal-eyebrow">{eyebrow}</p>
+              <h1 class="modal-title">{work.data.title}</h1>
+              <p class="modal-subtitle">{work.data.description}</p>
+
+              <div class="modal-meta-row">
                 {work.data.organization && (
-                  <span class="modal-org">at {work.data.organization}</span>
+                  <span class="modal-meta-item">
+                    <span class="modal-meta-label">Org</span>
+                    {work.data.organizationUrl && (
+                      <img
+                        src={`https://www.google.com/s2/favicons?domain=${new URL(work.data.organizationUrl).hostname}&sz=32`}
+                        alt=""
+                        class="org-favicon"
+                        width="14"
+                        height="14"
+                        loading="lazy"
+                      />
+                    )}
+                    {work.data.organization}
+                  </span>
+                )}
+                {work.data.role && (
+                  <span class="modal-meta-item">
+                    <span class="modal-meta-label">Role</span>
+                    {work.data.role}
+                  </span>
+                )}
+                <span class="modal-meta-item">
+                  <span class="modal-meta-label">Date</span>
+                  {displayDate}
+                </span>
+                {statusInfo && (
+                  <span class:list={["status-badge", statusInfo.cls]}>
+                    {statusInfo.label}
+                  </span>
                 )}
               </div>
+
               <div class="modal-tags">
                 {work.data.tags.map((t: string) => (
                   <span class="tag-chip">#{t}</span>
                 ))}
               </div>
-              <hr class="modal-divider" />
-              <div class="app-prose max-w-none">
-                <Content />
-              </div>
+
               {work.data.links && work.data.links.length > 0 && (
-                <div class="modal-actions">
+                <div class="modal-link-bar">
                   {work.data.links.map((link: { url: string; label: string }) => (
                     <a
                       href={link.url}
@@ -109,6 +154,73 @@ const sortedWorks = getSortedWorks(allWorks);
                       {link.label} &rarr;
                     </a>
                   ))}
+                </div>
+              )}
+
+              <hr class="modal-divider" />
+
+              {highlights.length > 0 && (
+                <div class="modal-highlights">
+                  {highlights.map(h => (
+                    <div class="modal-highlight-card">
+                      <span class="modal-highlight-value">{h.value}</span>
+                      <span class="modal-highlight-label">{h.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {gallery.length > 0 && (
+                <div class="modal-gallery">
+                  {gallery.map(item => (
+                    <figure class="modal-gallery-item" data-gallery-type={item.type}>
+                      {item.type === "video" ? (
+                        <div class="modal-gallery-video">
+                          <iframe src={item.src} title={item.caption || ""}></iframe>
+                          <div class="video-theater-overlay">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                              <polyline points="17 2 12 7 7 2"></polyline>
+                            </svg>
+                          </div>
+                        </div>
+                      ) : (
+                        <img src={item.src} alt={item.caption || ""} loading="lazy" />
+                      )}
+                      {item.caption && <figcaption>{item.caption}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
+              )}
+
+              {timeline.length > 0 && (
+                <div class="modal-timeline">
+                  <h3 class="modal-timeline-heading">Timeline</h3>
+                  <ol class="modal-timeline-list">
+                    {timeline.map((entry, i) => (
+                      <li class:list={["modal-timeline-entry", i === timeline.length - 1 && "modal-timeline-entry-last"]}>
+                        <div class="modal-timeline-dot"></div>
+                        <div class="modal-timeline-content">
+                          <span class="modal-timeline-date">{entry.date}</span>
+                          <strong class="modal-timeline-title">{entry.title}</strong>
+                          {entry.description && <p class="modal-timeline-desc">{entry.description}</p>}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              <div class="app-prose max-w-none modal-prose">
+                <Content />
+              </div>
+
+              {tech.length > 0 && (
+                <div class="modal-tech">
+                  <h3 class="modal-tech-heading">Tech Stack</h3>
+                  <div class="modal-tech-list">
+                    {tech.map(t => <span class={`tech-chip tech-chip--${BOARD.techStyle}`}>{t}</span>)}
+                  </div>
                 </div>
               )}
             </div>
@@ -124,3 +236,15 @@ const sortedWorks = getSortedWorks(allWorks);
 
 <script src="../../scripts/modal.ts"></script>
 <script src="../../scripts/tags-page.ts"></script>
+
+<script>
+  function alignSidebar() {
+    const list = document.getElementById("tags-work-list");
+    if (!list) return;
+    const top = list.getBoundingClientRect().top + window.scrollY;
+    document.documentElement.style.setProperty("--tags-sidebar-top", top + "px");
+  }
+  alignSidebar();
+  window.addEventListener("resize", alignSidebar);
+  document.addEventListener("astro:page-load", alignSidebar);
+</script>

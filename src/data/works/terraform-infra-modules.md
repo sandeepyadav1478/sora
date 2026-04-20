@@ -1,6 +1,7 @@
 ---
 title: "terraform-modules — Reusable Cloud Infrastructure"
 type: oss
+cardStyle: elevated
 pubDatetime: 2024-04-18T00:00:00Z
 description: "Collection of production-tested Terraform modules for AWS — VPC, ECS, Lambda, IAM, and monitoring with security-first defaults."
 tags: [iac, cloud, devops, infrastructure, open-source]

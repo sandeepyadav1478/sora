@@ -1,6 +1,7 @@
 ---
 title: "Migrating 50 Services to Kubernetes — A Retrospective"
 type: writing
+cardStyle: terminal
 pubDatetime: 2025-03-20T00:00:00Z
 description: "What went right, what broke, and what we'd do differently migrating a monolith-era fleet to Kubernetes over six months."
 tags: [devops, migration, architecture, retrospective, platform-engineering]

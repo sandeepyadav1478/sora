@@ -11,7 +11,7 @@ dayjs.extend(timezone);
 type Props = CollectionEntry<"works">;
 
 const { id, data } = Astro.props;
-const { title, type, pubDatetime, tags, organization, status, description, image } = data;
+const { title, type, pubDatetime, tags, organization, status, description, image, cardStyle } = data;
 const img = typeof image === "object" && image?.src ? image.src : typeof image === "string" ? image : null;
 
 const typeLabelMap: Record<string, string> = {
@@ -21,6 +21,9 @@ const typeLabelMap: Record<string, string> = {
   talk: "Talk",
   certification: "Cert",
   experience: "Role",
+  conference: "Conf",
+  hackathon: "Hack",
+  meetup: "Meetup",
 };
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
@@ -34,14 +37,14 @@ const tz = SITE.timezone;
 const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
 ---
 
-<li class="work-item" data-type={type} data-tags={tags.join(",")}>
+<li class:list={["work-item", cardStyle && `card-design--${cardStyle}`]} data-type={type} data-tags={tags.join(",")}>
   <div
     class="work-card-trigger compact-card"
     data-work-id={id}
     role="button"
     tabindex="0"
   >
-    <span class="compact-type-badge">{typeLabelMap[type]}</span>
+    <span class:list={["compact-type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
     <span class="compact-title">{title}</span>
     {organization && <span class="compact-org">at {organization}</span>}
     {status && statusLabelMap[status] && (
