@@ -47,7 +47,14 @@ import { PROFILE } from "@/config";
     wrap.style.width = h + "px";
     wrap.style.height = h + "px";
   }
+
+  let resizeTimer: ReturnType<typeof setTimeout>;
+  function debouncedSync() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(syncHeroPhoto, 100);
+  }
+
   syncHeroPhoto();
-  window.addEventListener("resize", syncHeroPhoto);
+  window.addEventListener("resize", debouncedSync);
   document.addEventListener("astro:page-load", syncHeroPhoto);
 </script>
