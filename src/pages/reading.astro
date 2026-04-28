@@ -1,0 +1,44 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE, READING } from "@/config";
+
+if (!READING.enabled) return Astro.redirect("/");
+---
+
+<Layout title={`Reading | ${SITE.title}`}>
+  <NavSidebar />
+  <main id="main-content" class="app-layout main-content">
+    <section class="reading-page">
+      <h1 class="page-title">Reading</h1>
+      <p class="reading-intro">Books, papers, and resources that shaped my thinking.</p>
+
+      <div class="reading-categories">
+        {READING.categories.map(category => (
+          <div class="reading-category">
+            <h2 class="reading-category-title">{category.name}</h2>
+            <ul class="reading-list">
+              {category.items.map(item => (
+                <li class="reading-item">
+                  {item.url ? (
+                    <a href={item.url} target="_blank" rel="noopener" class="reading-item-link">
+                      <span class="reading-item-title">{item.title}</span>
+                      {item.author && <span class="reading-item-author">{item.author}</span>}
+                    </a>
+                  ) : (
+                    <div class="reading-item-link">
+                      <span class="reading-item-title">{item.title}</span>
+                      {item.author && <span class="reading-item-author">{item.author}</span>}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

@@ -1,0 +1,32 @@
+---
+import { RESOURCES } from "@/config";
+---
+
+{RESOURCES.length > 0 && (
+  <section id="resources" class="resources-section">
+    <h2 class="section-heading">Resources & Roadmaps</h2>
+    <p class="section-subtext">Curated paths and guides I maintain for the community.</p>
+    <div class="resources-groups">
+      {RESOURCES.map(group => (
+        <div class="resource-group">
+          <h3 class="resource-group-title">{group.name}</h3>
+          <div class="resource-items">
+            {group.items.map(item => (
+              item.url ? (
+                <a href={item.url} target="_blank" rel="noopener noreferrer" class="resource-item">
+                  <h4 class="resource-item-title">{item.title}</h4>
+                  <p class="resource-item-desc">{item.description}</p>
+                </a>
+              ) : (
+                <div class="resource-item">
+                  <h4 class="resource-item-title">{item.title}</h4>
+                  <p class="resource-item-desc">{item.description}</p>
+                </div>
+              )
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

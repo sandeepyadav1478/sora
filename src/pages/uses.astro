@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE, USES } from "@/config";
+
+if (!USES.enabled) return Astro.redirect("/");
+---
+
+<Layout title={`Uses | ${SITE.title}`}>
+  <NavSidebar />
+  <main id="main-content" class="app-layout main-content">
+    <section class="uses-page">
+      <h1 class="page-title">Uses</h1>
+      <p class="uses-intro">Tools, software, and hardware I use daily for AI engineering and development.</p>
+
+      <div class="uses-categories">
+        {USES.categories.map(category => (
+          <div class="uses-category">
+            <h2 class="uses-category-title">{category.name}</h2>
+            <ul class="uses-list">
+              {category.items.map(item => (
+                <li class="uses-item">
+                  <span class="uses-item-name">{item.name}</span>
+                  <span class="uses-item-desc">{item.desc}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

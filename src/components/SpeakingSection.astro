@@ -1,0 +1,49 @@
+---
+import { SPEAKING } from "@/config";
+
+const typeIcon: Record<string, string> = {
+  talk: "Presentation",
+  podcast: "Podcast",
+  workshop: "Workshop",
+  panel: "Panel",
+};
+---
+
+{SPEAKING.length > 0 && (
+  <section id="speaking" class="speaking-section">
+    <h2 class="section-heading">Speaking & Appearances</h2>
+    <div class="speaking-list">
+      {SPEAKING.map(entry => (
+        <div class="speaking-item">
+          <div class="speaking-item-main">
+            <span class="speaking-type-badge">{typeIcon[entry.type]}</span>
+            <div class="speaking-item-body">
+              <h3 class="speaking-title">{entry.title}</h3>
+              <p class="speaking-event">
+                {entry.event}
+                <span class="speaking-date">{entry.date}</span>
+              </p>
+            </div>
+          </div>
+          <div class="speaking-links">
+            {entry.url && (
+              <a href={entry.url} target="_blank" rel="noopener noreferrer" class="speaking-link">
+                Link
+              </a>
+            )}
+            {entry.videoUrl && (
+              <a href={entry.videoUrl} target="_blank" rel="noopener noreferrer" class="speaking-link">
+                Video
+              </a>
+            )}
+            {entry.slidesUrl && (
+              <a href={entry.slidesUrl} target="_blank" rel="noopener noreferrer" class="speaking-link">
+                Slides
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

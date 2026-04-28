@@ -1,0 +1,28 @@
+---
+import { START_HERE } from "@/config";
+---
+
+{START_HERE.length > 0 && (
+  <section id="start-here" class="start-here-section">
+    <h2 class="section-heading">Start Here</h2>
+    <p class="section-subtext">New here? These are the best places to begin.</p>
+    <div class="start-here-grid">
+      {START_HERE.map((item, i) => {
+        const href = item.workSlug ? `#` : item.url || "#";
+        return (
+          <a
+            href={href}
+            class="start-here-card"
+            data-work-id={item.workSlug || undefined}
+            data-start-index={i + 1}
+          >
+            <span class="start-here-index">{String(i + 1).padStart(2, "0")}</span>
+            <h3 class="start-here-label">{item.label}</h3>
+            <p class="start-here-desc">{item.description}</p>
+            <span class="start-here-arrow">&rarr;</span>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+)}

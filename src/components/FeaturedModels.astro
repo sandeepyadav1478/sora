@@ -1,0 +1,37 @@
+---
+import { FEATURED_MODELS } from "@/config";
+---
+
+{FEATURED_MODELS.length > 0 && (
+  <section id="models" class="models-section">
+    <h2 class="section-heading">Featured Models</h2>
+    <div class="models-grid">
+      {FEATURED_MODELS.map(model => (
+        <a href={model.url} target="_blank" rel="noopener noreferrer" class="model-card">
+          <div class="model-card-header">
+            <svg class="model-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5Z" />
+              <path d="m2 17 10 5 10-5" />
+              <path d="m2 12 10 5 10-5" />
+            </svg>
+            <span class="model-name">{model.name}</span>
+          </div>
+          <p class="model-desc">{model.description}</p>
+          <div class="model-card-footer">
+            <span class="model-task">{model.task}</span>
+            {model.downloads && (
+              <span class="model-downloads">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                {model.downloads}
+              </span>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

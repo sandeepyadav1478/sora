@@ -1,0 +1,1108 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import NavSidebar from "@/components/NavSidebar.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE } from "@/config";
+
+if (!SITE.isTemplate) {
+  return Astro.redirect("/");
+}
+---
+
+<Layout title={`Documentation | ${SITE.title}`}>
+  <NavSidebar />
+  <main id="main-content" class="app-layout main-content">
+    <article class="docs-page">
+
+      <header class="docs-hero">
+        <div class="docs-hero-badge">Documentation</div>
+        <h1 class="docs-hero-title">Sora Template</h1>
+        <p class="docs-hero-subtitle">
+          A portfolio template for developers, researchers, and creators.<br/>
+          Configure one file. Add your works. Deploy.
+        </p>
+      </header>
+
+      <!-- Quick Start -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="quick-start">Quick Start</h2>
+        <div class="docs-steps">
+          <div class="docs-step">
+            <span class="docs-step-num">1</span>
+            <div class="docs-step-body">
+              <h3>Clone the template</h3>
+              <pre class="docs-code"><code>git clone https://github.com/sandeepyadav1478/sora.git my-portfolio
+cd my-portfolio && pnpm install</code></pre>
+            </div>
+          </div>
+          <div class="docs-step">
+            <span class="docs-step-num">2</span>
+            <div class="docs-step-body">
+              <h3>Edit <code>src/config.ts</code></h3>
+              <p>All your personal data lives in one file — name, role, socials, skills, experience.</p>
+            </div>
+          </div>
+          <div class="docs-step">
+            <span class="docs-step-num">3</span>
+            <div class="docs-step-body">
+              <h3>Add works to <code>src/data/works/</code></h3>
+              <p>Each work is a markdown file. Delete the sample files and add yours.</p>
+            </div>
+          </div>
+          <div class="docs-step">
+            <span class="docs-step-num">4</span>
+            <div class="docs-step-body">
+              <h3>Deploy</h3>
+              <pre class="docs-code"><code>git push  # GitHub Actions auto-deploys to Pages</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Board Layouts -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="layouts">Board Layouts</h2>
+        <p class="docs-text">Set <code>BOARD.layout</code> in config. Four options available:</p>
+
+        <div class="docs-layout-grid">
+          <div class="docs-layout-card">
+            <div class="docs-layout-preview docs-preview-twotier">
+              <div class="docs-mock-card docs-mock-lg"></div>
+              <div class="docs-mock-card docs-mock-lg"></div>
+              <div class="docs-mock-row"></div>
+              <div class="docs-mock-row"></div>
+              <div class="docs-mock-row"></div>
+            </div>
+            <div class="docs-layout-info">
+              <h3>two-tier</h3>
+              <p>Featured items as rich cards, rest as compact rows</p>
+            </div>
+          </div>
+          <div class="docs-layout-card">
+            <div class="docs-layout-preview docs-preview-flat">
+              <div class="docs-mock-card docs-mock-full"></div>
+              <div class="docs-mock-card docs-mock-full"></div>
+              <div class="docs-mock-card docs-mock-full"></div>
+            </div>
+            <div class="docs-layout-info">
+              <h3>flat</h3>
+              <p>Every item as a full-width card</p>
+            </div>
+          </div>
+          <div class="docs-layout-card">
+            <div class="docs-layout-preview docs-preview-grid">
+              <div class="docs-mock-card docs-mock-sm"></div>
+              <div class="docs-mock-card docs-mock-sm"></div>
+              <div class="docs-mock-card docs-mock-sm"></div>
+              <div class="docs-mock-card docs-mock-sm"></div>
+              <div class="docs-mock-card docs-mock-sm"></div>
+              <div class="docs-mock-card docs-mock-sm"></div>
+            </div>
+            <div class="docs-layout-info">
+              <h3>grid</h3>
+              <p>Responsive thumbnail grid</p>
+            </div>
+          </div>
+          <div class="docs-layout-card">
+            <div class="docs-layout-preview docs-preview-timeline">
+              <div class="docs-mock-timeline-line"></div>
+              <div class="docs-mock-dot"></div>
+              <div class="docs-mock-row docs-mock-tl"></div>
+              <div class="docs-mock-dot"></div>
+              <div class="docs-mock-row docs-mock-tl"></div>
+              <div class="docs-mock-dot"></div>
+              <div class="docs-mock-row docs-mock-tl"></div>
+            </div>
+            <div class="docs-layout-info">
+              <h3>timeline</h3>
+              <p>Vertical chronological timeline</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Card Styles -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="card-styles">Card Styles</h2>
+        <p class="docs-text">Set <code>cardStyle</code> in work frontmatter for per-card visual treatment:</p>
+
+        <div class="docs-card-style-grid">
+          <div class="docs-demo-card-wrap">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Standard appearance</p>
+            </div>
+            <span class="docs-demo-style-label">default</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--glass">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Frosted blur with color glow</p>
+            </div>
+            <span class="docs-demo-style-label">glass</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--accent-bar">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Gradient left bar</p>
+            </div>
+            <span class="docs-demo-style-label">accent-bar</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--gradient">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Aurora mesh gradient</p>
+            </div>
+            <span class="docs-demo-style-label">gradient</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--elevated">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Floating with spotlight glow</p>
+            </div>
+            <span class="docs-demo-style-label">elevated</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--outlined">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Animated gradient border</p>
+            </div>
+            <span class="docs-demo-style-label">outlined</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--terminal">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">IDE with window chrome</p>
+            </div>
+            <span class="docs-demo-style-label">terminal</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--newspaper">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Premium editorial</p>
+            </div>
+            <span class="docs-demo-style-label">newspaper</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--neon">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Cyberpunk glow</p>
+            </div>
+            <span class="docs-demo-style-label">neon</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--holographic">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Rainbow shimmer</p>
+            </div>
+            <span class="docs-demo-style-label">holographic</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--neumorphic">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Soft embossed</p>
+            </div>
+            <span class="docs-demo-style-label">neumorphic</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--spotlight">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Radial light reveal</p>
+            </div>
+            <span class="docs-demo-style-label">spotlight</span>
+          </div>
+          <div class="docs-demo-card-wrap card-design--noise">
+            <div class="grid-card">
+              <h3 class="grid-card-title">Sample Work</h3>
+              <p class="grid-card-desc">Textured grain</p>
+            </div>
+            <span class="docs-demo-style-label">noise</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tech Styles -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="tech-styles">Tech Stack Styles</h2>
+        <p class="docs-text">Set <code>BOARD.techStyle</code> in config. Shown in work modals:</p>
+
+        <div class="docs-tech-demos">
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">muted-badges</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-chip tech-chip--muted-badges">Python</span>
+              <span class="tech-chip tech-chip--muted-badges">FastAPI</span>
+              <span class="tech-chip tech-chip--muted-badges">Docker</span>
+            </div>
+          </div>
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">two-tone</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-chip tech-chip--two-tone">Python</span>
+              <span class="tech-chip tech-chip--two-tone">FastAPI</span>
+              <span class="tech-chip tech-chip--two-tone">Docker</span>
+            </div>
+          </div>
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">left-border</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-chip tech-chip--left-border">Python</span>
+              <span class="tech-chip tech-chip--left-border">FastAPI</span>
+              <span class="tech-chip tech-chip--left-border">Docker</span>
+            </div>
+          </div>
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">outlined</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-chip tech-chip--outlined">Python</span>
+              <span class="tech-chip tech-chip--outlined">FastAPI</span>
+              <span class="tech-chip tech-chip--outlined">Docker</span>
+            </div>
+          </div>
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">filled-pills</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-chip tech-chip--filled-pills">Python</span>
+              <span class="tech-chip tech-chip--filled-pills">FastAPI</span>
+              <span class="tech-chip tech-chip--filled-pills">Docker</span>
+            </div>
+          </div>
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">dot-separated</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-dot-list">Python · FastAPI · Docker</span>
+            </div>
+          </div>
+          <div class="docs-tech-demo">
+            <span class="docs-tech-demo-label">comma-list</span>
+            <div class="docs-tech-demo-chips">
+              <span class="tech-comma-list">Python, FastAPI, Docker</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Work Types -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="work-types">Work Types</h2>
+        <p class="docs-text">Set <code>type</code> in frontmatter. Each type gets a colored badge:</p>
+
+        <div class="docs-types-grid">
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="oss">OSS</span>
+            <span class="docs-type-desc">Open source contributions</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="project">Project</span>
+            <span class="docs-type-desc">Personal or professional projects</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="writing">Writing</span>
+            <span class="docs-type-desc">Blog posts, papers, articles</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="talk">Talk</span>
+            <span class="docs-type-desc">Presentations and workshops</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="certification">Cert</span>
+            <span class="docs-type-desc">Professional certifications</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="experience">Role</span>
+            <span class="docs-type-desc">Job roles and positions</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="conference">Conf</span>
+            <span class="docs-type-desc">Conference attendance</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="hackathon">Hack</span>
+            <span class="docs-type-desc">Hackathons and competitions</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="meetup">Meetup</span>
+            <span class="docs-type-desc">Community events</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="building">Building</span>
+            <span class="docs-type-desc">Things being built</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="learning">Learning</span>
+            <span class="docs-type-desc">Learning journeys</span>
+          </div>
+          <div class="docs-type-item">
+            <span class="type-badge" data-type="reading">Reading</span>
+            <span class="docs-type-desc">Books and reading</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modal Features -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="modal">Modal Features</h2>
+        <p class="docs-text">Click any work card to open a rich detail modal. Add these to frontmatter:</p>
+
+        <div class="docs-features-grid">
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f5bc;</div>
+            <h3>Cover Image</h3>
+            <code>image: "url"</code>
+            <p>Full-width hero image at top of modal</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f4ca;</div>
+            <h3>Highlights</h3>
+            <code>highlights:</code>
+            <p>Metric cards — "50K+ Users", "99.9% Uptime"</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f5bc;</div>
+            <h3>Gallery</h3>
+            <code>gallery:</code>
+            <p>Image gallery with captions</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f3ac;</div>
+            <h3>Video Embed</h3>
+            <code>gallery: [type: video]</code>
+            <p>YouTube/Vimeo embeds in gallery</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f4c5;</div>
+            <h3>Timeline</h3>
+            <code>timeline:</code>
+            <p>Project milestones as vertical timeline</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f517;</div>
+            <h3>Action Links</h3>
+            <code>links:</code>
+            <p>Buttons: "GitHub →", "Live Demo →"</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f6a6;</div>
+            <h3>Status Badge</h3>
+            <code>status: active</code>
+            <p>Active, Maintained, Archived, In Production</p>
+          </div>
+          <div class="docs-feature-card">
+            <div class="docs-feature-icon">&#x1f527;</div>
+            <h3>Tech Stack</h3>
+            <code>tech: [...]</code>
+            <p>Technology tags with configurable style</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Frontmatter -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="frontmatter">Frontmatter Reference</h2>
+        <p class="docs-text">Full list of available fields for each work markdown file:</p>
+
+        <div class="docs-table-wrap">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>title</code></td><td>string</td><td>Yes</td><td>Work title</td></tr>
+              <tr><td><code>type</code></td><td>enum</td><td>Yes</td><td>oss, project, writing, talk, certification, experience, conference, hackathon, meetup</td></tr>
+              <tr><td><code>pubDatetime</code></td><td>date</td><td>Yes</td><td>Publish date (ISO format)</td></tr>
+              <tr><td><code>description</code></td><td>string</td><td>Yes</td><td>One-line summary (shown on cards)</td></tr>
+              <tr><td><code>tags</code></td><td>string[]</td><td>Yes</td><td>Tags for filtering</td></tr>
+              <tr class="docs-table-divider"><td colspan="4"></td></tr>
+              <tr><td><code>featured</code></td><td>boolean</td><td></td><td>Pin to top / first tier</td></tr>
+              <tr><td><code>draft</code></td><td>boolean</td><td></td><td>Hide from production build</td></tr>
+              <tr><td><code>tech</code></td><td>string[]</td><td></td><td>Tech stack tags for modal</td></tr>
+              <tr><td><code>status</code></td><td>enum</td><td></td><td>active, maintained, archived, in-production</td></tr>
+              <tr><td><code>image</code></td><td>string</td><td></td><td>Cover image URL</td></tr>
+              <tr><td><code>organization</code></td><td>string</td><td></td><td>Company or project name</td></tr>
+              <tr><td><code>organizationUrl</code></td><td>string</td><td></td><td>Link for organization</td></tr>
+              <tr><td><code>role</code></td><td>string</td><td></td><td>Your role in this work</td></tr>
+              <tr><td><code>links</code></td><td>array</td><td></td><td>Action buttons: [&#123;label, url&#125;]</td></tr>
+              <tr class="docs-table-divider"><td colspan="4"></td></tr>
+              <tr><td><code>highlights</code></td><td>array</td><td></td><td>Metric cards: [&#123;label, value&#125;]</td></tr>
+              <tr><td><code>gallery</code></td><td>array</td><td></td><td>Media: [&#123;src, caption, type&#125;]</td></tr>
+              <tr><td><code>timeline</code></td><td>array</td><td></td><td>Milestones: [&#123;date, title, description&#125;]</td></tr>
+              <tr><td><code>cardStyle</code></td><td>enum</td><td></td><td>Visual card style (see Card Styles)</td></tr>
+              <tr class="docs-table-divider"><td colspan="4"></td></tr>
+              <tr><td><code>modDatetime</code></td><td>date</td><td></td><td>Last modified date</td></tr>
+              <tr><td><code>ogImage</code></td><td>string</td><td></td><td>Custom OG image</td></tr>
+              <tr><td><code>canonicalURL</code></td><td>string</td><td></td><td>Canonical URL (if cross-posted)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Configuration File -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="config">Configuration</h2>
+        <p class="docs-text">Everything you need to configure lives in <code>src/config.ts</code>:</p>
+
+        <div class="docs-config-grid">
+          <div class="docs-config-card">
+            <h3>SITE</h3>
+            <p>URL, title, author, description, theme settings, OG image, language</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>PROFILE</h3>
+            <p>Name, tagline, photo, role, organization, location, SEO keywords</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>SOCIALS_CONFIG</h3>
+            <p>Social links — icons are mapped automatically from the name</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>SECTIONS</h3>
+            <p>Toggle homepage sections: About, Experience, Skills, Contact</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>BOARD</h3>
+            <p>Board layout, recent count, tech stack display style</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>CONNECT</h3>
+            <p>Calendly/booking page settings (enable/disable)</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>EXPERIENCE</h3>
+            <p>Career timeline entries: role, company, dates, description</p>
+          </div>
+          <div class="docs-config-card">
+            <h3>SKILLS</h3>
+            <p>Grouped skill categories with items</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theming -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="theming">Theming</h2>
+        <p class="docs-text">All colors are CSS custom properties in <code>src/styles/global.css</code>:</p>
+
+        <div class="docs-theme-demo">
+          <div class="docs-color-row">
+            <div class="docs-color-swatch" style="background: var(--background); border: 1px solid var(--border);"></div>
+            <code>--background</code>
+            <span class="docs-color-desc">Page background</span>
+          </div>
+          <div class="docs-color-row">
+            <div class="docs-color-swatch" style="background: var(--foreground);"></div>
+            <code>--foreground</code>
+            <span class="docs-color-desc">Text color</span>
+          </div>
+          <div class="docs-color-row">
+            <div class="docs-color-swatch" style="background: var(--accent);"></div>
+            <code>--accent</code>
+            <span class="docs-color-desc">Brand color (links, badges, highlights)</span>
+          </div>
+          <div class="docs-color-row">
+            <div class="docs-color-swatch" style="background: var(--muted);"></div>
+            <code>--muted</code>
+            <span class="docs-color-desc">Backgrounds for cards, chips</span>
+          </div>
+          <div class="docs-color-row">
+            <div class="docs-color-swatch" style="background: var(--border);"></div>
+            <code>--border</code>
+            <span class="docs-color-desc">Borders and dividers</span>
+          </div>
+        </div>
+
+        <div class="docs-callout">
+          <strong>To change your brand color:</strong> update <code>--accent</code> in both the <code>:root</code> (light) and <code>[data-theme="dark"]</code> blocks.
+        </div>
+      </section>
+
+      <!-- File Structure -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="structure">What You Edit</h2>
+
+        <div class="docs-file-tree">
+          <div class="docs-file-entry docs-file-primary">
+            <span class="docs-file-icon">&#x1f4dd;</span>
+            <code>src/config.ts</code>
+            <span class="docs-file-desc">All personal data & settings</span>
+          </div>
+          <div class="docs-file-entry docs-file-primary">
+            <span class="docs-file-icon">&#x1f4c1;</span>
+            <code>src/data/works/*.md</code>
+            <span class="docs-file-desc">Your work items</span>
+          </div>
+          <div class="docs-file-entry docs-file-primary">
+            <span class="docs-file-icon">&#x1f5bc;</span>
+            <code>public/</code>
+            <span class="docs-file-desc">Profile photo, favicon, images</span>
+          </div>
+          <div class="docs-file-entry docs-file-secondary">
+            <span class="docs-file-icon">&#x1f3a8;</span>
+            <code>src/styles/global.css</code>
+            <span class="docs-file-desc">Visual customization (optional)</span>
+          </div>
+          <div class="docs-file-entry docs-file-secondary">
+            <span class="docs-file-icon">&#x1f4c4;</span>
+            <code>src/pages/about.md</code>
+            <span class="docs-file-desc">About page content (optional)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Deploy -->
+      <section class="docs-section">
+        <h2 class="docs-heading" id="deploy">Deployment</h2>
+        <p class="docs-text">The included GitHub Actions workflow auto-deploys on every push to <code>main</code>.</p>
+
+        <div class="docs-steps">
+          <div class="docs-step">
+            <span class="docs-step-num">1</span>
+            <div class="docs-step-body">
+              <h3>Name repo <code>&lt;username&gt;.github.io</code></h3>
+              <p>For root domain deployment, or any name for a subpath.</p>
+            </div>
+          </div>
+          <div class="docs-step">
+            <span class="docs-step-num">2</span>
+            <div class="docs-step-body">
+              <h3>Settings → Pages → Source: GitHub Actions</h3>
+              <p>One-time setup in your repo settings.</p>
+            </div>
+          </div>
+          <div class="docs-step">
+            <span class="docs-step-num">3</span>
+            <div class="docs-step-body">
+              <h3>Push to main</h3>
+              <p>Done. Your site is live.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="docs-callout">
+          <strong>Other platforms:</strong> Sora builds to a static <code>dist/</code> folder.
+          Deploy on Vercel, Netlify, or Cloudflare Pages with build command <code>pnpm run build</code>.
+        </div>
+      </section>
+
+      <!-- Disable this page -->
+      <section class="docs-section docs-section-last">
+        <h2 class="docs-heading" id="disable">Removing This Page</h2>
+        <p class="docs-text">
+          Once you've configured your site, hide this documentation page by setting:
+        </p>
+        <pre class="docs-code"><code set:html={`// src/config.ts\nexport const SITE = {\n  ...\n  isTemplate: false,  // ← hides /docs page\n};`}></code></pre>
+      </section>
+
+    </article>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .docs-page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 2rem 0 4rem;
+  }
+
+  /* Hero */
+  .docs-hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .docs-hero-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+  }
+  .docs-hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+  }
+  .docs-hero-subtitle {
+    font-size: 1.1rem;
+    color: color-mix(in srgb, var(--foreground) 70%, transparent);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Sections */
+  .docs-section {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .docs-section-last {
+    border-bottom: none;
+  }
+  .docs-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.01em;
+  }
+  .docs-text {
+    color: color-mix(in srgb, var(--foreground) 80%, transparent);
+    line-height: 1.6;
+    margin: 0 0 1.5rem;
+  }
+
+  /* Steps */
+  .docs-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .docs-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .docs-step-num {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--background);
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 50%;
+  }
+  .docs-step-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .docs-step-body h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.15rem 0 0.25rem;
+  }
+  .docs-step-body p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  }
+
+  /* Code blocks */
+  .docs-code {
+    background: color-mix(in srgb, var(--muted) 50%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0 0;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+  .docs-code code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  }
+
+  /* Layout Grid */
+  .docs-layout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1rem;
+  }
+  .docs-layout-card {
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .docs-layout-card:hover {
+    border-color: var(--accent);
+  }
+  .docs-layout-preview {
+    background: color-mix(in srgb, var(--muted) 40%, transparent);
+    padding: 1rem;
+    min-height: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .docs-layout-info {
+    padding: 0.75rem 1rem;
+  }
+  .docs-layout-info h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    margin: 0 0 0.2rem;
+    color: var(--accent);
+  }
+  .docs-layout-info p {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--foreground) 65%, transparent);
+    margin: 0;
+  }
+
+  /* Mock elements */
+  .docs-mock-card {
+    background: color-mix(in srgb, var(--foreground) 12%, transparent);
+    border-radius: 0.35rem;
+  }
+  .docs-mock-lg {
+    width: 90%;
+    height: 2.5rem;
+  }
+  .docs-mock-full {
+    width: 100%;
+    height: 1.8rem;
+  }
+  .docs-mock-sm {
+    width: 100%;
+    height: 2.5rem;
+  }
+  .docs-mock-row {
+    width: 100%;
+    height: 0.8rem;
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+    border-radius: 0.2rem;
+  }
+  .docs-preview-twotier {
+    gap: 0.35rem;
+  }
+  .docs-preview-twotier .docs-mock-lg {
+    width: 45%;
+    display: inline-block;
+  }
+  .docs-preview-twotier {
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+  }
+  .docs-preview-flat {
+    gap: 0.4rem;
+  }
+  .docs-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+    width: 100%;
+  }
+  .docs-preview-timeline {
+    position: relative;
+    align-items: flex-start;
+    padding-left: 1.5rem;
+  }
+  .docs-mock-timeline-line {
+    position: absolute;
+    left: 0.6rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .docs-mock-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    position: absolute;
+    left: calc(0.6rem - 3px);
+  }
+  .docs-mock-dot:nth-of-type(2) { top: 0.5rem; }
+  .docs-mock-dot:nth-of-type(4) { top: 2.8rem; }
+  .docs-mock-dot:nth-of-type(6) { top: 5.1rem; }
+  .docs-mock-tl {
+    width: 80%;
+    margin-left: 0;
+  }
+
+  /* Card Styles Demo */
+  .docs-card-style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+  }
+  .docs-demo-card-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+  }
+  .docs-demo-card-wrap .grid-card {
+    min-height: 7rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .docs-demo-style-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  /* Tech Styles Demo */
+  .docs-tech-demos {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .docs-tech-demo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
+  .docs-tech-demo-label {
+    font-size: 0.75rem;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    color: color-mix(in srgb, var(--foreground) 60%, transparent);
+    min-width: 8rem;
+    flex-shrink: 0;
+  }
+  .docs-tech-demo-chips {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* Types Grid */
+  .docs-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.75rem;
+  }
+  .docs-type-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
+  .docs-type-desc {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  }
+
+  /* Features Grid */
+  .docs-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+  }
+  .docs-feature-card {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    text-align: center;
+  }
+  .docs-feature-card:hover {
+    border-color: var(--accent);
+  }
+  .docs-feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .docs-feature-card h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 0.35rem;
+  }
+  .docs-feature-card code {
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+  }
+  .docs-feature-card p {
+    font-size: 0.78rem;
+    color: color-mix(in srgb, var(--foreground) 65%, transparent);
+    margin: 0.4rem 0 0;
+    line-height: 1.4;
+  }
+
+  /* Table */
+  .docs-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+  }
+  .docs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .docs-table th {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.65rem 0.75rem;
+    background: color-mix(in srgb, var(--muted) 40%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .docs-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+    vertical-align: top;
+  }
+  .docs-table tr:last-child td {
+    border-bottom: none;
+  }
+  .docs-table code {
+    font-size: 0.78rem;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+  }
+  .docs-table-divider td {
+    padding: 0.2rem;
+    border-bottom: 2px solid var(--border) !important;
+  }
+
+  /* Config Grid */
+  .docs-config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.75rem;
+  }
+  .docs-config-card {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--accent);
+  }
+  .docs-config-card h3 {
+    font-size: 0.85rem;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+    color: var(--accent);
+  }
+  .docs-config-card p {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--foreground) 70%, transparent);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Theme Demo */
+  .docs-theme-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .docs-color-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+  .docs-color-swatch {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+  }
+  .docs-color-row code {
+    font-size: 0.8rem;
+    min-width: 8rem;
+    color: var(--foreground);
+  }
+  .docs-color-desc {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  }
+
+  /* Callout */
+  .docs-callout {
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-radius: 0.5rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-top: 1.25rem;
+  }
+  .docs-callout code {
+    font-size: 0.78rem;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+  }
+
+  /* File Tree */
+  .docs-file-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .docs-file-entry {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.5rem;
+  }
+  .docs-file-primary {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+  .docs-file-secondary {
+    background: color-mix(in srgb, var(--muted) 30%, transparent);
+    border: 1px solid var(--border);
+  }
+  .docs-file-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .docs-file-entry code {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--foreground);
+    min-width: 10rem;
+  }
+  .docs-file-desc {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .docs-hero-title { font-size: 1.75rem; }
+    .docs-heading { font-size: 1.25rem; }
+    .docs-layout-grid { grid-template-columns: repeat(2, 1fr); }
+    .docs-card-style-grid { grid-template-columns: repeat(2, 1fr); }
+    .docs-features-grid { grid-template-columns: 1fr; }
+    .docs-config-grid { grid-template-columns: 1fr; }
+    .docs-types-grid { grid-template-columns: 1fr; }
+    .docs-tech-demo {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .docs-tech-demo-label { min-width: auto; }
+    .docs-file-entry { flex-wrap: wrap; }
+  }
+</style>

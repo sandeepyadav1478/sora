@@ -1,0 +1,28 @@
+---
+import { NEWSLETTER } from "@/config";
+import { SOCIALS } from "@/constants";
+const links = SOCIALS.filter(s => s.name !== "Calendly");
+---
+
+{NEWSLETTER.enabled && (
+  <section class="newsletter-section">
+    <div class="newsletter-card">
+      <h2 class="newsletter-heading">{NEWSLETTER.heading}</h2>
+      <p class="newsletter-subheading">{NEWSLETTER.subheading}</p>
+      <div class="newsletter-links">
+        {links.map(social => (
+          <a
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="newsletter-link"
+            title={social.linkTitle}
+          >
+            <social.icon class="newsletter-link-icon" />
+            <span>{social.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

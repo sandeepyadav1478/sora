@@ -3,36 +3,98 @@ import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
-import { SITE, CONNECT } from "@/config";
+import { SITE, SECTIONS, CONNECT, USES, READING } from "@/config";
+const isTemplate = "isTemplate" in SITE && SITE.isTemplate;
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
-{/* Desktop: fixed left sidebar */}
+{/* Desktop: fixed left sidebar — tree navigation */}
 <nav class="nav-sidebar" aria-label="Site navigation">
-  <a href="/" class="nav-sidebar-link nav-back-link" data-back style="display:none">&larr; <span class="nav-back-text">Back</span></a>
-  <a href="/#works" class="nav-sidebar-link">Works <span class="nav-arrow">&rarr;</span></a>
-  <a href="/tags" class="nav-sidebar-link">Tags <span class="nav-arrow">&rarr;</span></a>
-  <a href="/about" class="nav-sidebar-link">About <span class="nav-arrow">&rarr;</span></a>
-  {CONNECT.enabled && (
-    <a href="/connect" class="nav-sidebar-link">1:1 <span class="nav-arrow">&rarr;</span></a>
-  )}
-  <a href="/archives" class="nav-sidebar-link nav-sidebar-icon" title="Archives" aria-label="Archives">
-    <IconArchive class="nav-icon-desktop" />
-  </a>
-  <a href="/search" class="nav-sidebar-link nav-sidebar-icon" title="Search" aria-label="Search">
-    <IconSearch class="nav-icon-desktop" />
-  </a>
-  {SITE.lightAndDarkMode && (
-    <button
-      id="theme-btn"
-      class="nav-sidebar-link nav-sidebar-icon"
-      title="Toggle theme"
-      aria-label="Toggle theme"
-      aria-live="polite"
-    >
-      <IconMoon class="nav-theme-icon nav-theme-icon--moon" />
-      <IconSunHigh class="nav-theme-icon nav-theme-icon--sun" />
-    </button>
-  )}
+  <div class="nav-tree">
+    {/* ── About group ── */}
+    <div class="nav-group" data-nav-group>
+      <a href="/#hero" class="nav-parent" data-nav-for="hero,about,start-here,stats,clients">About</a>
+      <div class="nav-children">
+        <div class="nav-branch-line"></div>
+        {SECTIONS.showAbout && <a href="/#about" class="nav-child" data-nav-id="about">Bio</a>}
+        {SECTIONS.showStartHere && <a href="/#start-here" class="nav-child" data-nav-id="start-here">Start Here</a>}
+        {SECTIONS.showStats && <a href="/#stats" class="nav-child" data-nav-id="stats">Stats</a>}
+        {SECTIONS.showClients && <a href="/#clients" class="nav-child" data-nav-id="clients">Clients</a>}
+      </div>
+    </div>
+
+    {/* ── Work group ── */}
+    <div class="nav-group" data-nav-group>
+      <a href="/#works" class="nav-parent" data-nav-for="works,open-source,models">Work</a>
+      <div class="nav-children">
+        <div class="nav-branch-line"></div>
+        <a href="/#works" class="nav-child" data-nav-id="works">The Board</a>
+        {SECTIONS.showOpenSource && <a href="/#open-source" class="nav-child" data-nav-id="open-source">Open Source</a>}
+        {SECTIONS.showFeaturedModels && <a href="/#models" class="nav-child" data-nav-id="models">Models</a>}
+      </div>
+    </div>
+
+    {/* ── Career group ── */}
+    <div class="nav-group" data-nav-group>
+      <a href="/#experience" class="nav-parent" data-nav-for="experience,skills,education,awards">Career</a>
+      <div class="nav-children">
+        <div class="nav-branch-line"></div>
+        {SECTIONS.showExperience && <a href="/#experience" class="nav-child" data-nav-id="experience">Experience</a>}
+        {SECTIONS.showSkills && <a href="/#skills" class="nav-child" data-nav-id="skills">Skills</a>}
+        {SECTIONS.showEducation && <a href="/#education" class="nav-child" data-nav-id="education">Education</a>}
+        {SECTIONS.showAwards && <a href="/#awards" class="nav-child" data-nav-id="awards">Awards</a>}
+      </div>
+    </div>
+
+    {/* ── Research group ── */}
+    <div class="nav-group" data-nav-group>
+      <a href="/#publications" class="nav-parent" data-nav-for="publications,speaking,resources,curated">Research</a>
+      <div class="nav-children">
+        <div class="nav-branch-line"></div>
+        {SECTIONS.showPublications && <a href="/#publications" class="nav-child" data-nav-id="publications">Papers</a>}
+        {SECTIONS.showSpeaking && <a href="/#speaking" class="nav-child" data-nav-id="speaking">Speaking</a>}
+        {SECTIONS.showResources && <a href="/#resources" class="nav-child" data-nav-id="resources">Resources</a>}
+        {SECTIONS.showCuratedLists && <a href="/#curated" class="nav-child" data-nav-id="curated">Curated</a>}
+      </div>
+    </div>
+
+    {/* ── Connect group ── */}
+    <div class="nav-group" data-nav-group>
+      <a href="/#faq" class="nav-parent" data-nav-for="faq">Connect</a>
+      <div class="nav-children">
+        <div class="nav-branch-line"></div>
+        {SECTIONS.showFAQ && <a href="/#faq" class="nav-child" data-nav-id="faq">FAQ</a>}
+      </div>
+    </div>
+  </div>
+
+  {/* ── Page links & utilities ── */}
+  <div class="nav-utils">
+    {USES.enabled && <a href="/uses" class:list={["nav-page-link", currentPath === "/uses" && "is-active"]}>Uses</a>}
+    {READING.enabled && <a href="/reading" class:list={["nav-page-link", currentPath === "/reading" && "is-active"]}>Reading</a>}
+    {CONNECT.enabled && <a href="/connect" class:list={["nav-page-link", currentPath === "/connect" && "is-active"]}>1:1</a>}
+    {isTemplate && <a href="/docs" class:list={["nav-page-link nav-page-link--docs", currentPath === "/docs" && "is-active"]}>Docs</a>}
+    <div class="nav-icon-row">
+      <a href="/archives" class="nav-sidebar-icon" title="Archives" aria-label="Archives">
+        <IconArchive class="nav-icon-desktop" />
+      </a>
+      <a href="/search" class="nav-sidebar-icon" title="Search" aria-label="Search">
+        <IconSearch class="nav-icon-desktop" />
+      </a>
+      {SITE.lightAndDarkMode && (
+        <button
+          id="theme-btn"
+          class="nav-sidebar-icon"
+          title="Toggle theme"
+          aria-label="Toggle theme"
+          aria-live="polite"
+        >
+          <IconMoon class="nav-theme-icon nav-theme-icon--moon" />
+          <IconSunHigh class="nav-theme-icon nav-theme-icon--sun" />
+        </button>
+      )}
+    </div>
+  </div>
 </nav>
 
 {/* Mobile: top bar */}
@@ -40,10 +102,18 @@ import { SITE, CONNECT } from "@/config";
   <a href="/" class="nav-back-mobile" data-back style="display:none">&larr; <span class="nav-back-text">Back</span></a>
   <div class="nav-mobile-links">
     <a href="/#works" class="nav-mobile-link">Works</a>
-    <a href="/tags" class="nav-mobile-link">Tags</a>
     <a href="/about" class="nav-mobile-link">About</a>
+    {USES.enabled && (
+      <a href="/uses" class="nav-mobile-link">Uses</a>
+    )}
+    {READING.enabled && (
+      <a href="/reading" class="nav-mobile-link">Reading</a>
+    )}
     {CONNECT.enabled && (
       <a href="/connect" class="nav-mobile-link">1:1</a>
+    )}
+    {isTemplate && (
+      <a href="/docs" class="nav-mobile-link nav-mobile-link--docs">Docs</a>
     )}
     <a href="/archives" class="nav-mobile-icon" title="Archives" aria-label="Archives">
       <IconArchive class="nav-icon-mobile" />
@@ -67,38 +137,83 @@ import { SITE, CONNECT } from "@/config";
 </header>
 
 <script>
-  let savedScrollY = 0;
+  function initNavTree() {
+    const children = document.querySelectorAll<HTMLElement>(".nav-child[data-nav-id]");
+    const parents = document.querySelectorAll<HTMLElement>(".nav-parent[data-nav-for]");
+    const groups = document.querySelectorAll<HTMLElement>("[data-nav-group]");
 
-  document.addEventListener("click", e => {
-    const link = (e.target as HTMLElement).closest<HTMLAnchorElement>("a.tag-link");
-    if (link && link.href.includes("/tags?t=")) {
-      savedScrollY = window.scrollY;
-      sessionStorage.setItem("backToWorks", String(savedScrollY));
+    // On non-homepage pages, collapse all tree groups
+    if (window.location.pathname !== "/") {
+      children.forEach(c => c.classList.remove("is-active"));
+      parents.forEach(p => p.classList.remove("is-active"));
+      groups.forEach(g => g.classList.remove("is-expanded"));
+      return;
     }
-  });
 
-  function initBackNav() {
-    const onTags = window.location.pathname.startsWith("/tags");
-    const hasParam = new URLSearchParams(window.location.search).has("t");
-    const hasBackData = sessionStorage.getItem("backToWorks") !== null;
-    const show = onTags && hasParam && hasBackData;
-
-    if (!onTags) sessionStorage.removeItem("backToWorks");
-
-    document.querySelectorAll<HTMLAnchorElement>("[data-back]").forEach(link => {
-      link.style.display = show ? "" : "none";
-      link.onclick = show ? (e => {
-        e.preventDefault();
-        const scrollY = parseInt(sessionStorage.getItem("backToWorks") || "0", 10);
-        sessionStorage.removeItem("backToWorks");
-        window.location.href = "/";
-        requestAnimationFrame(() => {
-          setTimeout(() => window.scrollTo(0, scrollY), 100);
-        });
-      }) : null;
+    const sectionMap = new Map<string, HTMLElement>();
+    children.forEach(child => {
+      const id = child.dataset.navId!;
+      const el = document.getElementById(id);
+      if (el) sectionMap.set(id, el);
     });
 
+    let activeChild: HTMLElement | null = null;
+    let activeGroup: HTMLElement | null = null;
+
+    function updateActiveSection() {
+      let topId = "";
+
+      // Pick the last section whose top has scrolled past the threshold.
+      // Works correctly in both scroll directions.
+      const threshold = 140;
+      sectionMap.forEach((el, id) => {
+        if (el.getBoundingClientRect().top <= threshold) {
+          topId = id;
+        }
+      });
+
+      // If nothing has passed the threshold (very top of page), pick the first section
+      if (!topId) {
+        const first = sectionMap.keys().next().value;
+        if (first) topId = first;
+      }
+
+      if (!topId) return;
+
+      children.forEach(c => c.classList.remove("is-active"));
+      parents.forEach(p => p.classList.remove("is-active"));
+      groups.forEach(g => g.classList.remove("is-expanded"));
+
+      const child = document.querySelector<HTMLElement>(`.nav-child[data-nav-id="${topId}"]`);
+      if (child) {
+        child.classList.add("is-active");
+        activeChild = child;
+
+        const group = child.closest<HTMLElement>("[data-nav-group]");
+        if (group) {
+          group.classList.add("is-expanded");
+          activeGroup = group;
+          const parent = group.querySelector<HTMLElement>(".nav-parent");
+          if (parent) parent.classList.add("is-active");
+        }
+      }
+    }
+
+    let scrollRaf = 0;
+    function onScroll() {
+      cancelAnimationFrame(scrollRaf);
+      scrollRaf = requestAnimationFrame(updateActiveSection);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    updateActiveSection();
+
+    return () => window.removeEventListener("scroll", onScroll);
   }
-  initBackNav();
-  document.addEventListener("astro:page-load", initBackNav);
+
+  let cleanup = initNavTree();
+  document.addEventListener("astro:page-load", () => {
+    if (cleanup) cleanup();
+    cleanup = initNavTree();
+  });
 </script>

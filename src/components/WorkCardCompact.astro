@@ -11,7 +11,7 @@ dayjs.extend(timezone);
 type Props = CollectionEntry<"works">;
 
 const { id, data } = Astro.props;
-const { title, type, pubDatetime, tags, organization, status, description, image, cardStyle } = data;
+const { title, type, pubDatetime, tags, organization, status, description, image, cardStyle, badgeColor } = data;
 const img = typeof image === "object" && image?.src ? image.src : typeof image === "string" ? image : null;
 
 const typeLabelMap: Record<string, string> = {
@@ -24,6 +24,9 @@ const typeLabelMap: Record<string, string> = {
   conference: "Conf",
   hackathon: "Hack",
   meetup: "Meetup",
+  building: "Building",
+  learning: "Learning",
+  reading: "Reading",
 };
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
@@ -44,7 +47,7 @@ const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
     role="button"
     tabindex="0"
   >
-    <span class:list={["compact-type-badge", `type-badge--${type}`]}>{typeLabelMap[type]}</span>
+    <span class:list={["compact-type-badge", `type-badge--${type}`]} style={badgeColor ? `--badge-color:${badgeColor};background:color-mix(in srgb,var(--badge-color) 12%,transparent);color:var(--badge-color)` : undefined}>{typeLabelMap[type]}</span>
     <span class="compact-title">{title}</span>
     {organization && <span class="compact-org">at {organization}</span>}
     {status && statusLabelMap[status] && (

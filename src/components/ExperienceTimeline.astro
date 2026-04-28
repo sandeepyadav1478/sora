@@ -1,36 +1,96 @@
 ---
 import { EXPERIENCE } from "@/config";
+
+const zapIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
 ---
 
 {EXPERIENCE.length > 0 && (
   <section id="experience" class="experience-section">
-    <h2 class="experience-heading">Experience</h2>
+    <h2 class="experience-heading">Work Experience</h2>
     <div class="experience-list">
-      {EXPERIENCE.map(entry => (
-        <div class="experience-entry">
-          <div class="experience-dot" />
-          <div class="experience-header">
-            <h3 class="experience-role">{entry.role}</h3>
-            <span class="experience-separator">at</span>
-            {entry.companyUrl ? (
-              <a
-                href={entry.companyUrl}
-                target="_blank"
-                rel="noopener"
-                class="experience-company-link"
-              >
-                {entry.company}
-              </a>
-            ) : (
-              <span class="experience-company-text">{entry.company}</span>
+      {EXPERIENCE.map((entry) => {
+        const isCurrent = entry.endDate === "Present";
+        const faviconUrl = entry.companyUrl
+          ? `https://www.google.com/s2/favicons?domain=${new URL(entry.companyUrl).hostname}&sz=64`
+          : null;
+        const logoSrc = entry.companyLogo || faviconUrl;
+        return (
+          <div class:list={["exp-card", isCurrent && "exp-card--current"]}>
+            <div class="exp-card-header">
+              {logoSrc ? (
+                <div class="exp-logo">
+                  <img src={logoSrc} alt="" width="40" height="40" loading="lazy" />
+                </div>
+              ) : (
+                <div class="exp-logo exp-logo--fallback">
+                  <span>{entry.company.charAt(0)}</span>
+                </div>
+              )}
+              <div class="exp-card-title">
+                <h3 class="exp-role">{entry.role}</h3>
+                <div class="exp-company-row">
+                  {entry.companyUrl ? (
+                    <a href={entry.companyUrl} target="_blank" rel="noopener" class="exp-company-link">
+                      {entry.company}
+                    </a>
+                  ) : (
+                    <span class="exp-company-text">{entry.company}</span>
+                  )}
+                  <span class="exp-dates">{entry.startDate} — {entry.endDate}</span>
+                </div>
+              </div>
+              {isCurrent && <span class="exp-current-badge">Current</span>}
+            </div>
+
+            <p class="exp-desc">{entry.description}</p>
+
+            {/* Case study highlight cards */}
+            {entry.caseStudies && entry.caseStudies.length > 0 && (
+              <div class="exp-case-studies">
+                {entry.caseStudies.map(cs => (
+                  <div class="exp-case-card">
+                    <div class="exp-case-header">
+                      <svg class="exp-case-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M7 7h10" /><path d="M7 12h10" /><path d="M7 17h10" />
+                      </svg>
+                      <span class="exp-case-title">{cs.title}</span>
+                    </div>
+                    <p class="exp-case-desc">{cs.description}</p>
+                    {cs.tech && cs.tech.length > 0 && (
+                      <div class="exp-case-tech">
+                        {cs.tech.map(t => (
+                          <span class="exp-case-tech-pill">{t}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Achievement mini cards with zap icon */}
+            {entry.achievements && entry.achievements.length > 0 && (
+              <div class="exp-achievements">
+                {entry.achievements.map(a => (
+                  <div class="exp-achievement-card">
+                    <span class="exp-zap" set:html={zapIcon} />
+                    <span>{a}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {entry.skills && entry.skills.length > 0 && (
+              <div class="exp-skills">
+                {entry.skills.map(s => (
+                  <span class="exp-skill-pill">{s}</span>
+                ))}
+              </div>
             )}
           </div>
-          <p class="experience-dates">
-            {entry.startDate} — {entry.endDate}
-          </p>
-          <p class="experience-desc">{entry.description}</p>
-        </div>
-      ))}
+        );
+      })}
     </div>
   </section>
 )}

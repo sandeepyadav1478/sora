@@ -1,0 +1,16 @@
+---
+import { STATS } from "@/config";
+---
+
+{STATS.length > 0 && (
+  <section id="stats" class="stats-section">
+    <div class="stats-grid">
+      {STATS.map(stat => (
+        <div class="stat-card">
+          <span class="stat-value">{stat.value}</span>
+          <span class="stat-label">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

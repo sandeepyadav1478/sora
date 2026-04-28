@@ -1,0 +1,46 @@
+---
+import { AWARDS } from "@/config";
+---
+
+{AWARDS.length > 0 && (
+  <section id="awards" class="awards-section">
+    <h2 class="section-heading">Awards & Recognition</h2>
+    <div class="awards-list">
+      {AWARDS.map(award => {
+        const faviconUrl = award.issuerUrl
+          ? `https://www.google.com/s2/favicons?domain=${new URL(award.issuerUrl).hostname}&sz=64`
+          : null;
+        return (
+          <div class="award-entry">
+            <div class="award-icon">
+              {faviconUrl ? (
+                <img src={faviconUrl} alt="" width="20" height="20" loading="lazy" />
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="6" />
+                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                </svg>
+              )}
+            </div>
+            <div class="award-content">
+              <div class="award-header">
+                {award.url ? (
+                  <a href={award.url} target="_blank" rel="noopener noreferrer" class="award-title-link">
+                    {award.title}
+                  </a>
+                ) : (
+                  <h3 class="award-title">{award.title}</h3>
+                )}
+                <span class="award-year">{award.year}</span>
+              </div>
+              <span class="award-issuer">{award.issuer}</span>
+              {award.description && (
+                <p class="award-desc">{award.description}</p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+)}

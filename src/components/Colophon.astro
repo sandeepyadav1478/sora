@@ -1,0 +1,14 @@
+---
+import { COLOPHON } from "@/config";
+---
+
+{COLOPHON.enabled && (
+  <div class="colophon">
+    <p class="colophon-text">{COLOPHON.text}</p>
+    <div class="colophon-stack">
+      {COLOPHON.stack.map(item => (
+        <span class="colophon-tag">{item}</span>
+      ))}
+    </div>
+  </div>
+)}

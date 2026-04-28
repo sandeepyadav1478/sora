@@ -1,0 +1,28 @@
+---
+import { CURATED_LISTS } from "@/config";
+---
+
+{CURATED_LISTS.length > 0 && (
+  <section id="curated" class="curated-section">
+    <h2 class="section-heading">Curated Lists</h2>
+    <div class="curated-groups">
+      {CURATED_LISTS.map(list => (
+        <div class="curated-group">
+          <h3 class="curated-group-title">{list.name}</h3>
+          <ul class="curated-items">
+            {list.items.map(item => (
+              <li class="curated-item">
+                <a href={item.url} target="_blank" rel="noopener noreferrer" class="curated-link">
+                  <span class="curated-item-title">{item.title}</span>
+                  {item.description && (
+                    <span class="curated-item-desc">{item.description}</span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

@@ -1,0 +1,17 @@
+---
+import { FAQ } from "@/config";
+---
+
+{FAQ.length > 0 && (
+  <section id="faq" class="faq-section">
+    <h2 class="section-heading">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      {FAQ.map(item => (
+        <details class="faq-item">
+          <summary class="faq-question">{item.question}</summary>
+          <p class="faq-answer">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+)}

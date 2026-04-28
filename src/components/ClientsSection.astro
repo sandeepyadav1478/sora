@@ -1,0 +1,34 @@
+---
+import { CLIENTS } from "@/config";
+
+const items = CLIENTS.items;
+---
+
+{items.length > 0 && (
+  <section id="clients" class="clients-section">
+    <p class="clients-label">{CLIENTS.heading}</p>
+    <div class="clients-track">
+      {items.map(client => {
+        const inner = client.hideWordmark ? (
+          <span class="client-lockup">
+            <img src={client.logo} alt={client.name} class="client-logo-full" loading="lazy" />
+          </span>
+        ) : (
+          <span class="client-lockup">
+            <img src={client.logo} alt="" class="client-icon" loading="lazy" width="24" height="24" />
+            <span class="client-wordmark">{client.name}</span>
+          </span>
+        );
+        return client.url ? (
+          <a href={client.url} target="_blank" rel="noopener noreferrer" class="client-item" title={client.name}>
+            {inner}
+          </a>
+        ) : (
+          <span class="client-item" title={client.name}>
+            {inner}
+          </span>
+        );
+      })}
+    </div>
+  </section>
+)}

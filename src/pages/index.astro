@@ -10,8 +10,24 @@ import WorkCardCompact from "@/components/WorkCardCompact.astro";
 import WorkCardGrid from "@/components/WorkCardGrid.astro";
 import WorkCardTimeline from "@/components/WorkCardTimeline.astro";
 import WorkModal from "@/components/WorkModal.astro";
+import AboutSection from "@/components/AboutSection.astro";
+import StartHere from "@/components/StartHere.astro";
+import StatsBar from "@/components/StatsBar.astro";
 import ExperienceTimeline from "@/components/ExperienceTimeline.astro";
 import SkillsSection from "@/components/SkillsSection.astro";
+import Publications from "@/components/Publications.astro";
+import OpenSourceSection from "@/components/OpenSourceSection.astro";
+import SpeakingSection from "@/components/SpeakingSection.astro";
+import FeaturedModels from "@/components/FeaturedModels.astro";
+import ResourcesSection from "@/components/ResourcesSection.astro";
+import CuratedLists from "@/components/CuratedLists.astro";
+import FAQSection from "@/components/FAQSection.astro";
+import ClientsSection from "@/components/ClientsSection.astro";
+import EducationSection from "@/components/EducationSection.astro";
+import AwardsSection from "@/components/AwardsSection.astro";
+import Testimonials from "@/components/Testimonials.astro";
+import HighlightCards from "@/components/HighlightCards.astro";
+import Newsletter from "@/components/Newsletter.astro";
 import ContactSection from "@/components/ContactSection.astro";
 import getSortedWorks from "@/utils/getSortedWorks";
 import { SECTIONS, BOARD } from "@/config";
@@ -36,6 +52,9 @@ const typeLabelMap: Record<string, string> = {
   conference: "Conference",
   hackathon: "Hackathon",
   meetup: "Meetup",
+  building: "Building",
+  learning: "Learning",
+  reading: "Reading",
 };
 
 const typeEyebrowMap: Record<string, string> = {
@@ -48,6 +67,9 @@ const typeEyebrowMap: Record<string, string> = {
   conference: "Conference",
   hackathon: "Hackathon",
   meetup: "Meetup",
+  building: "Building",
+  learning: "Learning",
+  reading: "Reading",
 };
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
@@ -64,8 +86,13 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
   <main id="main-content" data-pagefind-body class="app-layout">
     <Hero />
 
+    {SECTIONS.showAbout && <AboutSection />}
+    {SECTIONS.showStartHere && <StartHere />}
+    {SECTIONS.showStats && <StatsBar />}
+    {SECTIONS.showClients && <ClientsSection />}
+
     {/* === THE BOARD === */}
-    <section id="works" class="works-section">
+    <section id="works" class:list={["works-section", BOARD.badgeStyle === "uniform" && "badges-uniform"]}>
       <FilterTabs />
 
       {BOARD.layout === "two-tier" && (() => {
@@ -129,6 +156,30 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
       </div>
     )}
     {SECTIONS.showSkills && <div class="skills-wrapper"><SkillsSection /></div>}
+    {SECTIONS.showEducation && (
+      <div class="section-tinted">
+        <EducationSection />
+      </div>
+    )}
+    {SECTIONS.showAwards && <AwardsSection />}
+    {SECTIONS.showPublications && <Publications />}
+    {SECTIONS.showOpenSource && (
+      <div class="section-tinted">
+        <OpenSourceSection />
+      </div>
+    )}
+    {SECTIONS.showSpeaking && <SpeakingSection />}
+    {SECTIONS.showFeaturedModels && (
+      <div class="section-tinted">
+        <FeaturedModels />
+      </div>
+    )}
+    {SECTIONS.showResources && <ResourcesSection />}
+    {SECTIONS.showCuratedLists && <CuratedLists />}
+    <Testimonials />
+    <HighlightCards />
+    {SECTIONS.showFAQ && <FAQSection />}
+    <Newsletter />
     {SECTIONS.showContact && (
       <div class="section-tinted">
         <ContactSection />

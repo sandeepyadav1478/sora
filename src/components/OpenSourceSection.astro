@@ -1,0 +1,55 @@
+---
+import { OPEN_SOURCE } from "@/config";
+---
+
+{OPEN_SOURCE.length > 0 && (
+  <section id="open-source" class="oss-section">
+    <h2 class="section-heading">Open Source</h2>
+    <div class="oss-grid">
+      {OPEN_SOURCE.map(project => {
+        const domain = new URL(project.url).hostname;
+        return (
+          <a href={project.url} target="_blank" rel="noopener noreferrer" class="oss-card">
+            <div class="oss-card-header">
+              <img
+                src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
+                alt=""
+                class="oss-favicon"
+                width="16"
+                height="16"
+                loading="lazy"
+              />
+              <span class="oss-name">{project.name}</span>
+              <span class="oss-role-badge">{project.role}</span>
+            </div>
+            <p class="oss-desc">{project.description}</p>
+            <div class="oss-card-footer">
+              {project.language && (
+                <span class="oss-language">
+                  <span class="oss-lang-dot" />
+                  {project.language}
+                </span>
+              )}
+              {project.stars && (
+                <span class="oss-stars">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
+                  </svg>
+                  {project.stars}
+                </span>
+              )}
+              {project.forks && (
+                <span class="oss-forks">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 0-1.5 0v.878H6.75v-.878a2.25 2.25 0 1 0-1.5 0ZM8 1.25a.75.75 0 0 0-.75.75v.878a2.25 2.25 0 1 0 1.5 0V2a.75.75 0 0 0-.75-.75Zm-2.75 4a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Zm5.5 0a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM8 13.25a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 0-1.5 0v.878c0 .414.336.75.75.75Zm0-2.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                  </svg>
+                  {project.forks}
+                </span>
+              )}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+)}

@@ -1,0 +1,30 @@
+---
+import { TESTIMONIALS } from "@/config";
+---
+
+{TESTIMONIALS.enabled && (
+  <section class="testimonials-section">
+    <h2 class="section-title">What People Say</h2>
+    <div class="testimonials-grid">
+      {TESTIMONIALS.items.map(t => {
+        const faviconUrl = "companyUrl" in t && t.companyUrl
+          ? `https://www.google.com/s2/favicons?domain=${new URL(t.companyUrl).hostname}&sz=32`
+          : null;
+        return (
+          <blockquote class="testimonial-card">
+            <p class="testimonial-quote">{t.quote}</p>
+            <footer class="testimonial-footer">
+              {faviconUrl && (
+                <img src={faviconUrl} alt="" class="testimonial-favicon" width="16" height="16" loading="lazy" />
+              )}
+              <div class="testimonial-info">
+                <span class="testimonial-author">{t.author}</span>
+                <span class="testimonial-role">{t.role}</span>
+              </div>
+            </footer>
+          </blockquote>
+        );
+      })}
+    </div>
+  </section>
+)}

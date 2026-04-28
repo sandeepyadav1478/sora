@@ -1,0 +1,36 @@
+---
+import { PUBLICATIONS } from "@/config";
+---
+
+{PUBLICATIONS.items.length > 0 && (
+  <section id="publications" class="publications-section">
+    <div class="publications-header">
+      <h2 class="section-heading">Publications</h2>
+      {PUBLICATIONS.scholarUrl && (
+        <a href={PUBLICATIONS.scholarUrl} target="_blank" rel="noopener noreferrer" class="publications-scholar-link">
+          Google Scholar &rarr;
+        </a>
+      )}
+    </div>
+    <ol class="publications-list">
+      {PUBLICATIONS.items.map(pub => (
+        <li class="publication-item">
+          <div class="publication-body">
+            {pub.url ? (
+              <a href={pub.url} target="_blank" rel="noopener noreferrer" class="publication-title-link">
+                {pub.title}
+              </a>
+            ) : (
+              <h3 class="publication-title">{pub.title}</h3>
+            )}
+            <p class="publication-authors">{pub.authors}</p>
+            <div class="publication-meta">
+              <span class="publication-venue">{pub.venue}</span>
+              <span class="publication-year">{pub.year}</span>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+)}

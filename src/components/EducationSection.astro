@@ -1,0 +1,43 @@
+---
+import { EDUCATION } from "@/config";
+---
+
+{EDUCATION.length > 0 && (
+  <section id="education" class="education-section">
+    <h2 class="section-heading">Education</h2>
+    <div class="education-list">
+      {EDUCATION.map(entry => {
+        const faviconUrl = entry.url
+          ? `https://www.google.com/s2/favicons?domain=${new URL(entry.url).hostname}&sz=64`
+          : null;
+        return (
+          <div class="education-entry">
+            {faviconUrl ? (
+              <div class="education-logo">
+                <img src={faviconUrl} alt="" width="20" height="20" loading="lazy" />
+              </div>
+            ) : (
+              <div class="education-dot" />
+            )}
+            <div class="education-content">
+              <div class="education-header">
+                <h3 class="education-degree">{entry.degree}</h3>
+                <span class="education-year">{entry.year}</span>
+              </div>
+              {entry.url ? (
+                <a href={entry.url} target="_blank" rel="noopener noreferrer" class="education-institution-link">
+                  {entry.institution}
+                </a>
+              ) : (
+                <span class="education-institution">{entry.institution}</span>
+              )}
+              {entry.description && (
+                <p class="education-desc">{entry.description}</p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+)}
