@@ -12,10 +12,13 @@ image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
 highlights:
   - label: "Services"
     value: "200+"
+    icon: layers
   - label: "p99 Latency"
     value: "<15ms"
+    icon: rocket
   - label: "Uptime"
     value: "99.99%"
+    icon: shield
 ---
 
 Led the redesign of a monolithic API layer into a scalable gateway supporting 200+ downstream microservices.

@@ -12,10 +12,13 @@ image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
 highlights:
   - label: "Predictions/Day"
     value: "50M+"
+    icon: trending
   - label: "Feature Freshness"
     value: "<100ms"
+    icon: clock
   - label: "Features"
     value: "300+"
+    icon: database
 ---
 
 Built the team's first feature store to solve the train-serve skew problem — ensuring ML models see the same features in training and production.

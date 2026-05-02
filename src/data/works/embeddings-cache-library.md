@@ -1,6 +1,7 @@
 ---
 title: "embed-cache — Persistent Embedding Cache"
 type: oss
+cardStyle: borderless
 pubDatetime: 2025-07-12T00:00:00Z
 description: "Python library that caches OpenAI/Cohere embedding API calls to SQLite, cutting costs by 80% for iterative RAG development."
 tags: [embeddings, cache, rag, open-source, developer-tools]

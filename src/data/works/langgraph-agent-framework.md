@@ -11,12 +11,16 @@ status: active
 highlights:
   - label: "Queries/Day"
     value: "10K+"
+    icon: chart
   - label: "Accuracy"
     value: "94.2%"
+    icon: target
   - label: "Latency p95"
     value: "<2s"
+    icon: rocket
   - label: "Knowledge Sources"
     value: "50+"
+    icon: database
 links:
   - label: "Architecture Doc"
     url: "https://example.com"

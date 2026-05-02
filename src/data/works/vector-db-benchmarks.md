@@ -1,6 +1,7 @@
 ---
 title: "Vector Database Benchmarks — Qdrant vs Pinecone vs Weaviate"
 type: writing
+cardStyle: borderless
 pubDatetime: 2026-01-25T00:00:00Z
 description: "Comprehensive benchmark comparing vector databases for production RAG workloads — latency, recall, cost, and operational complexity."
 tags: [vector-db, rag, benchmarks, performance, comparison]

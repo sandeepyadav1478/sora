@@ -11,10 +11,13 @@ status: maintained
 highlights:
   - label: "Training Speedup"
     value: "40%"
+    icon: rocket
   - label: "VRAM Savings"
     value: "60%"
+    icon: cpu
   - label: "Models Shipped"
     value: "3"
+    icon: bot
 links:
   - label: "Training Notebooks"
     url: "https://example.com"

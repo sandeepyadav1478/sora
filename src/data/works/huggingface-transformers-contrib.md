@@ -19,10 +19,13 @@ image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
 highlights:
   - label: "PRs Merged"
     value: "12"
+    icon: git
   - label: "Downloads Impacted"
     value: "2M+"
+    icon: download
   - label: "Models Touched"
     value: "5"
+    icon: bot
 ---
 
 Contributed to HuggingFace Transformers, the most widely-used library for state-of-the-art NLP and LLM inference.

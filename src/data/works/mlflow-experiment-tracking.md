@@ -10,10 +10,13 @@ status: in-production
 highlights:
   - label: "Engineers Served"
     value: "15+"
+    icon: users
   - label: "Experiments/Week"
     value: "200+"
+    icon: chart
   - label: "Models in Registry"
     value: "40+"
+    icon: layers
 links:
   - label: "Internal Docs"
     url: "https://example.com"

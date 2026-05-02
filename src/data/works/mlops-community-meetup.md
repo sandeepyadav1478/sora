@@ -17,10 +17,13 @@ links:
 highlights:
   - label: "Attendees"
     value: "85"
+    icon: users
   - label: "Talk Duration"
     value: "30 min"
+    icon: clock
   - label: "Monthly Edition"
     value: "#24"
+    icon: trending
 ---
 
 ## Talk: "Beyond Accuracy — Monitoring LLMs in Production"

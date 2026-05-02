@@ -17,10 +17,13 @@ links:
 highlights:
   - label: "Attendees"
     value: "16,000+"
+    icon: globe
   - label: "Poster Session"
     value: "Spotlight"
+    icon: star
   - label: "Citations"
     value: "12"
+    icon: book
 timeline:
   - date: "Jun 2024"
     title: "Paper submitted"

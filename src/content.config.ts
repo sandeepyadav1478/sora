@@ -28,7 +28,7 @@ const works = defineCollection({
       ongoing: z.boolean().optional().default(false),
       status: z.enum(["active", "maintained", "archived", "in-production"]).optional(),
       highlights: z
-        .array(z.object({ label: z.string(), value: z.string() }))
+        .array(z.object({ label: z.string(), value: z.string(), icon: z.string().optional() }))
         .optional()
         .default([]),
       gallery: z
@@ -47,7 +47,7 @@ const works = defineCollection({
         }))
         .optional()
         .default([]),
-      cardStyle: z.enum(["default", "glass", "accent-bar", "gradient", "elevated", "outlined", "terminal", "newspaper", "neon", "holographic", "neumorphic", "spotlight", "noise"]).optional(),
+      cardStyle: z.enum(["default", "glass", "accent-bar", "gradient", "elevated", "outlined", "terminal", "newspaper", "neon", "holographic", "neumorphic", "spotlight", "noise", "borderless"]).optional(),
       badgeColor: z.string().optional(),
       ogImage: image().or(z.string()).optional(),
       canonicalURL: z.string().optional(),

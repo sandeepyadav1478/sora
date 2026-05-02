@@ -18,12 +18,16 @@ links:
 highlights:
   - label: "Placement"
     value: "2nd / 200+"
+    icon: award
   - label: "Duration"
     value: "48 hrs"
+    icon: clock
   - label: "Team Size"
     value: "3"
+    icon: users
   - label: "Prize"
     value: "$5,000"
+    icon: star
 timeline:
   - date: "Day 1 — Morning"
     title: "Ideation & architecture"

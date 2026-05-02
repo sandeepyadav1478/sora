@@ -10,10 +10,13 @@ status: in-production
 highlights:
   - label: "Events/Day"
     value: "2M+"
+    icon: chart
   - label: "Active Teams"
     value: "3"
+    icon: users
   - label: "Avg Latency"
     value: "<50ms"
+    icon: rocket
 links:
   - label: "Source Code"
     url: "https://github.com/example/dashflow"
