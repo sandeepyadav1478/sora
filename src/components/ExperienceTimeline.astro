@@ -1,12 +1,29 @@
 ---
-import { EXPERIENCE } from "@/config";
+import { EXPERIENCE, CLIENTS, SECTIONS, COMPETENCY_AREAS } from "@/config";
 
 const zapIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+const areaIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+
+const showClients = SECTIONS.showClients && CLIENTS.items.length > 0;
 ---
 
 {EXPERIENCE.length > 0 && (
   <section id="experience" class="experience-section">
     <h2 class="experience-heading">Work Experience</h2>
+
+    {/* Competency areas grid */}
+    {COMPETENCY_AREAS.length > 0 && (
+      <div class="comp-grid">
+        {COMPETENCY_AREAS.map(area => (
+          <div class="comp-card">
+            <div class="comp-card-icon" set:html={areaIcon} />
+            <h3 class="comp-card-title">{area.title}</h3>
+            <p class="comp-card-desc">{area.description}</p>
+          </div>
+        ))}
+      </div>
+    )}
+
     <div class="experience-list">
       {EXPERIENCE.map((entry) => {
         const isCurrent = entry.endDate === "Present";
@@ -44,7 +61,6 @@ const zapIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" str
 
             <p class="exp-desc">{entry.description}</p>
 
-            {/* Case study highlight cards */}
             {entry.caseStudies && entry.caseStudies.length > 0 && (
               <div class="exp-case-studies">
                 {entry.caseStudies.map(cs => (
@@ -69,7 +85,6 @@ const zapIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" str
               </div>
             )}
 
-            {/* Achievement mini cards with zap icon */}
             {entry.achievements && entry.achievements.length > 0 && (
               <div class="exp-achievements">
                 {entry.achievements.map(a => (
@@ -92,5 +107,29 @@ const zapIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" str
         );
       })}
     </div>
+
+    {/* Trusted clients inline in experience section */}
+    {showClients && (
+      <div class="exp-clients" id="clients">
+        <span class="exp-clients-label">{CLIENTS.heading}</span>
+        <div class="exp-clients-row">
+          {CLIENTS.items.map(client => (
+            <div class="exp-client-item">
+              {client.url ? (
+                <a href={client.url} target="_blank" rel="noopener noreferrer" class="exp-client-link" title={client.name}>
+                  <img src={client.logo} alt={client.name} class="exp-client-logo" loading="lazy" />
+                  {!client.hideWordmark && <span class="exp-client-name">{client.name}</span>}
+                </a>
+              ) : (
+                <span class="exp-client-link" title={client.name}>
+                  <img src={client.logo} alt={client.name} class="exp-client-logo" loading="lazy" />
+                  {!client.hideWordmark && <span class="exp-client-name">{client.name}</span>}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
   </section>
 )}

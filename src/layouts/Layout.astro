@@ -185,7 +185,7 @@ const structuredData = isHomepage
       })();
     </script>
   </head>
-  <body>
+  <body class:list={[SITE.backgroundPattern === "dot-grid" && "bg-dot-grid"]}>
     <slot />
 
     <!-- Load full theme logic -->

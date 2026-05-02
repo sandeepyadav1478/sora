@@ -9,6 +9,7 @@ import WorkCard from "@/components/WorkCard.astro";
 import WorkCardCompact from "@/components/WorkCardCompact.astro";
 import WorkCardGrid from "@/components/WorkCardGrid.astro";
 import WorkCardTimeline from "@/components/WorkCardTimeline.astro";
+import WorkCardFeatured from "@/components/WorkCardFeatured.astro";
 import WorkModal from "@/components/WorkModal.astro";
 import AboutSection from "@/components/AboutSection.astro";
 import StartHere from "@/components/StartHere.astro";
@@ -89,42 +90,37 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
     {SECTIONS.showAbout && <AboutSection />}
     {SECTIONS.showStartHere && <StartHere />}
     {SECTIONS.showStats && <StatsBar />}
-    {SECTIONS.showClients && <ClientsSection />}
+    <HighlightCards />
 
     {/* === THE BOARD === */}
     <section id="works" class:list={["works-section", BOARD.badgeStyle === "uniform" && "badges-uniform"]}>
       <FilterTabs />
 
       {BOARD.layout === "two-tier" && (() => {
-        const tier1 = sortedWorks.filter(w => firstTier.has(w.id));
-        const tier1Sorted = [
-          ...tier1.filter(w => w.data.featured),
-          ...tier1.filter(w => !w.data.featured),
-        ];
-        const tier1Grid = tier1Sorted.slice(0, 4);
-        const tier1Rest = tier1Sorted.slice(4);
-        const tier2 = sortedWorks.filter(w => !firstTier.has(w.id));
-        const tier2List = tier2.slice(0, -6);
-        const tier2Grid = tier2.slice(-6);
+        const featuredWorks = sortedWorks.filter(w => w.data.featured);
+        const recentWorks = sortedWorks.filter(w => !w.data.featured).slice(0, BOARD.recentCount);
+        const showcaseWorks = sortedWorks.filter(w => !w.data.featured).slice(BOARD.recentCount, BOARD.recentCount + 4);
+        const restWorks = sortedWorks.filter(w => !w.data.featured).slice(BOARD.recentCount + 4);
 
         return (
           <>
-            <ul class="grid-board grid-board--2x2">
-              {tier1Grid.map(work => <WorkCardGrid {...work} />)}
+            {/* Featured + recent in a 3-column grid */}
+            <ul class="grid-board grid-board--3col">
+              {featuredWorks.map(work => <WorkCardFeatured {...work} />)}
+              {recentWorks.map(work => <WorkCardGrid {...work} />)}
             </ul>
-            {tier1Rest.length > 0 && (
-              <ul>
-                {tier1Rest.map(work => <WorkCard {...work} />)}
+
+            {/* 2×2 showcase row */}
+            {showcaseWorks.length > 0 && (
+              <ul class="grid-board grid-board--2x2">
+                {showcaseWorks.map(work => <WorkCardGrid {...work} />)}
               </ul>
             )}
-            {tier2List.length > 0 && (
+
+            {/* Rest as compact rows */}
+            {restWorks.length > 0 && (
               <ul class="compact-list">
-                {tier2List.map(work => <WorkCardCompact {...work} />)}
-              </ul>
-            )}
-            {tier2Grid.length > 0 && (
-              <ul class="grid-board grid-board--2x3">
-                {tier2Grid.map(work => <WorkCardGrid {...work} />)}
+                {restWorks.map(work => <WorkCardCompact {...work} />)}
               </ul>
             )}
           </>
@@ -150,34 +146,39 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
       )}
     </section>
 
+    {/* === WORK GROUP: Open Source + Models === */}
+    {SECTIONS.showOpenSource && (
+      <div class="section-tinted">
+        <OpenSourceSection />
+      </div>
+    )}
+    {SECTIONS.showFeaturedModels && (
+      <div class="section-tinted">
+        <FeaturedModels />
+      </div>
+    )}
+
+    {/* === CAREER GROUP: Experience + Skills + Education + Awards === */}
     {SECTIONS.showExperience && (
       <div class="section-tinted">
         <ExperienceTimeline />
       </div>
     )}
     {SECTIONS.showSkills && <div class="skills-wrapper"><SkillsSection /></div>}
-    {SECTIONS.showEducation && (
+    {(SECTIONS.showEducation || SECTIONS.showAwards) && (
       <div class="section-tinted">
         <EducationSection />
       </div>
     )}
-    {SECTIONS.showAwards && <AwardsSection />}
+
+    {/* === RESEARCH GROUP: Publications + Speaking + Resources + Curated === */}
     {SECTIONS.showPublications && <Publications />}
-    {SECTIONS.showOpenSource && (
-      <div class="section-tinted">
-        <OpenSourceSection />
-      </div>
-    )}
     {SECTIONS.showSpeaking && <SpeakingSection />}
-    {SECTIONS.showFeaturedModels && (
-      <div class="section-tinted">
-        <FeaturedModels />
-      </div>
-    )}
     {SECTIONS.showResources && <ResourcesSection />}
     {SECTIONS.showCuratedLists && <CuratedLists />}
+
+    {/* === CONNECT + EXTRAS === */}
     <Testimonials />
-    <HighlightCards />
     {SECTIONS.showFAQ && <FAQSection />}
     <Newsletter />
     {SECTIONS.showContact && (

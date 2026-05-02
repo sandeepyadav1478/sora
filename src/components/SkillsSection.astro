@@ -1,25 +1,67 @@
 ---
 import { SKILLS } from "@/config";
+
+// Separate special categories from tech categories
+const specialCategories = ["Spoken Languages", "Soft Skills"];
+const leftGroups = SKILLS.filter(g => specialCategories.includes(g.category));
+const techGroups = SKILLS.filter(g => !specialCategories.includes(g.category));
 ---
 
 {SKILLS.length > 0 && (
   <section id="skills" class="skills-section">
     <h2 class="skills-heading">Skills & Stack</h2>
-    <div class="skills-groups">
-      {SKILLS.map(group => (
-        <div>
-          <h3 class="skills-category">
-            {group.category}
-          </h3>
-          <div class="skills-items">
-            {group.items.map(skill => (
-              <span class="skill-chip">
-                {skill}
-              </span>
+
+    <div class="skills-layout">
+      {/* Left column: Languages + Soft Skills */}
+      {leftGroups.length > 0 && (
+        <div class="skills-left">
+          {leftGroups.map(group => (
+            <div class="skills-left-group">
+              <h3 class="skills-left-label">{group.category}</h3>
+              {group.category === "Spoken Languages" ? (
+                <div class="skills-lang-list">
+                  {group.items.map(item => {
+                    const parts = item.split("(");
+                    const name = parts[0].trim();
+                    const level = parts[1] ? parts[1].replace(")", "").trim() : "";
+                    return (
+                      <div class="skills-lang-item">
+                        <span class="skills-lang-name">{name}</span>
+                        {level && <span class="skills-lang-level">{level}</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div class="skills-soft-list">
+                  {group.items.map(skill => (
+                    <span class="skills-soft-pill">{skill}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Right column: Tech Stack in category cards */}
+      {techGroups.length > 0 && (
+        <div class="skills-right">
+          <h3 class="skills-right-label">Tech Stack</h3>
+          <div class="skills-tech-grid">
+            {techGroups.map(group => (
+              <div class="skills-tech-card">
+                <h4 class="skills-tech-cat">{group.category}</h4>
+                <div class="skills-tech-items">
+                  {group.items.map(skill => (
+                    <span class="skill-chip">{skill}</span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
-      ))}
+      )}
     </div>
   </section>
 )}

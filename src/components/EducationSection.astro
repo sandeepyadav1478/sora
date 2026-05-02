@@ -1,43 +1,97 @@
 ---
-import { EDUCATION } from "@/config";
+import { EDUCATION, AWARDS } from "@/config";
+import { SECTIONS } from "@/config";
+const showAwards = SECTIONS.showAwards && AWARDS.length > 0;
 ---
 
-{EDUCATION.length > 0 && (
+{(EDUCATION.length > 0 || showAwards) && (
   <section id="education" class="education-section">
-    <h2 class="section-heading">Education</h2>
-    <div class="education-list">
-      {EDUCATION.map(entry => {
-        const faviconUrl = entry.url
-          ? `https://www.google.com/s2/favicons?domain=${new URL(entry.url).hostname}&sz=64`
-          : null;
-        return (
-          <div class="education-entry">
-            {faviconUrl ? (
-              <div class="education-logo">
-                <img src={faviconUrl} alt="" width="20" height="20" loading="lazy" />
-              </div>
-            ) : (
-              <div class="education-dot" />
-            )}
-            <div class="education-content">
-              <div class="education-header">
-                <h3 class="education-degree">{entry.degree}</h3>
-                <span class="education-year">{entry.year}</span>
-              </div>
-              {entry.url ? (
-                <a href={entry.url} target="_blank" rel="noopener noreferrer" class="education-institution-link">
-                  {entry.institution}
-                </a>
-              ) : (
-                <span class="education-institution">{entry.institution}</span>
-              )}
-              {entry.description && (
-                <p class="education-desc">{entry.description}</p>
-              )}
-            </div>
+    <h2 class="section-heading">Education & Certifications</h2>
+    <div class="edu-awards-grid">
+      {/* Education column */}
+      {EDUCATION.length > 0 && (
+        <div class="edu-column">
+          <h3 class="edu-column-label">Education</h3>
+          <div class="education-list">
+            {EDUCATION.map(entry => {
+              const faviconUrl = entry.url
+                ? `https://www.google.com/s2/favicons?domain=${new URL(entry.url).hostname}&sz=64`
+                : null;
+              return (
+                <div class="education-entry">
+                  {faviconUrl ? (
+                    <div class="education-logo">
+                      <img src={faviconUrl} alt="" width="20" height="20" loading="lazy" />
+                    </div>
+                  ) : (
+                    <div class="education-dot" />
+                  )}
+                  <div class="education-content">
+                    <div class="education-header">
+                      <h4 class="education-degree">{entry.degree}</h4>
+                      <span class="education-year">{entry.year}</span>
+                    </div>
+                    {entry.url ? (
+                      <a href={entry.url} target="_blank" rel="noopener noreferrer" class="education-institution-link">
+                        {entry.institution}
+                      </a>
+                    ) : (
+                      <span class="education-institution">{entry.institution}</span>
+                    )}
+                    {entry.description && (
+                      <p class="education-desc">{entry.description}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
+        </div>
+      )}
+
+      {/* Awards / Certifications column */}
+      {showAwards && (
+        <div class="edu-column" id="awards">
+          <h3 class="edu-column-label">Awards & Certifications</h3>
+          <div class="awards-list">
+            {AWARDS.map(award => {
+              const faviconUrl = award.issuerUrl
+                ? `https://www.google.com/s2/favicons?domain=${new URL(award.issuerUrl).hostname}&sz=64`
+                : null;
+              return (
+                <div class="award-entry">
+                  <div class="award-icon">
+                    {faviconUrl ? (
+                      <img src={faviconUrl} alt="" width="20" height="20" loading="lazy" />
+                    ) : (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="6" />
+                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                      </svg>
+                    )}
+                  </div>
+                  <div class="award-content">
+                    <div class="award-header">
+                      {award.url ? (
+                        <a href={award.url} target="_blank" rel="noopener noreferrer" class="award-title-link">
+                          {award.title}
+                        </a>
+                      ) : (
+                        <h4 class="award-title">{award.title}</h4>
+                      )}
+                      <span class="award-year">{award.year}</span>
+                    </div>
+                    <span class="award-issuer">{award.issuer}</span>
+                    {award.description && (
+                      <p class="award-desc">{award.description}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   </section>
 )}

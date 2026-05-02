@@ -1,8 +1,34 @@
 ---
 import { ABOUT } from "@/config";
+
+const lines = ABOUT.bio.split("\n").filter(l => l.trim());
 ---
 
 <section id="about" class="about-section">
-  <h2 class="about-heading">About</h2>
-  <p class="about-body">{ABOUT.bio}</p>
+  <div class="about-body">
+    {lines.map(line => {
+      const isMuted = line.startsWith("~") && line.endsWith("~");
+      const isItalic = line.startsWith("_") && line.endsWith("_");
+      const isBig = line.startsWith("##");
+      const cleaned = isMuted ? line.slice(1, -1)
+        : isItalic ? line.slice(1, -1)
+        : isBig ? line.slice(2).trim()
+        : line;
+      const parts = cleaned.split(/\*\*(.*?)\*\*/g);
+      const cls = ["about-line",
+        isMuted && "about-line--muted",
+        isItalic && "about-line--italic",
+        isBig && "about-line--big",
+      ].filter(Boolean).join(" ");
+      return (
+        <p class={cls}>
+          {parts.map((part, i) =>
+            i % 2 === 1
+              ? <span class="text-highlight">{part}</span>
+              : part
+          )}
+        </p>
+      );
+    })}
+  </div>
 </section>

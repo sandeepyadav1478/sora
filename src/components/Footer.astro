@@ -1,9 +1,6 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
-import Colophon from "./Colophon.astro";
-
-const currentYear = new Date().getFullYear();
 
 type Props = {
   noMarginTop?: boolean;
@@ -17,12 +14,6 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
   {...attrs}
 >
   <div class="footer-inner">
-    <Colophon />
-    <div class="footer-copy">
-      <span>Copyright &#169; {currentYear}</span>
-      <span class="footer-divider">&nbsp;|&nbsp;</span>
-      <span>All rights reserved.</span>
-    </div>
     <Socials />
   </div>
 </footer>
