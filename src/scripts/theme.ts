@@ -76,7 +76,7 @@ function setThemeFeature(): void {
   reflectPreference();
 
   // now this script can find and listen for clicks on the control
-  document.querySelectorAll("#theme-btn, #theme-btn-mobile").forEach(btn => {
+  document.querySelectorAll("#theme-btn, #theme-btn-mobile, #theme-btn-hero").forEach(btn => {
     btn.addEventListener("click", () => {
       themeValue = themeValue === LIGHT ? DARK : LIGHT;
       window.theme?.setTheme(themeValue);

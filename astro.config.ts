@@ -42,6 +42,7 @@ export default defineConfig({
     // See: https://github.com/withastro/astro/issues/14030
     plugins: [tailwindcss()],
     optimizeDeps: {
+      include: ["@pagefind/default-ui"],
       exclude: ["@resvg/resvg-js"],
     },
   },

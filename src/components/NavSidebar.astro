@@ -8,64 +8,15 @@ const isTemplate = "isTemplate" in SITE && SITE.isTemplate;
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
-{/* Desktop: fixed left sidebar — tree navigation */}
+{/* Desktop: fixed left sidebar — flat dot navigation */}
 <nav class="nav-sidebar" aria-label="Site navigation">
-  <div class="nav-tree">
-    {/* ── About group ── */}
-    <div class="nav-group" data-nav-group>
-      <a href="/#hero" class="nav-parent" data-nav-for="hero,about,start-here,stats,clients">About</a>
-      <div class="nav-children">
-        <div class="nav-branch-line"></div>
-        {SECTIONS.showAbout && <a href="/#about" class="nav-child" data-nav-id="about">Bio</a>}
-        {SECTIONS.showStartHere && <a href="/#start-here" class="nav-child" data-nav-id="start-here">Start Here</a>}
-        {SECTIONS.showStats && <a href="/#stats" class="nav-child" data-nav-id="stats">Stats</a>}
-        {SECTIONS.showClients && <a href="/#clients" class="nav-child" data-nav-id="clients">Clients</a>}
-      </div>
-    </div>
-
-    {/* ── Work group ── */}
-    <div class="nav-group" data-nav-group>
-      <a href="/#works" class="nav-parent" data-nav-for="works,open-source,models">Work</a>
-      <div class="nav-children">
-        <div class="nav-branch-line"></div>
-        <a href="/#works" class="nav-child" data-nav-id="works">The Board</a>
-        {SECTIONS.showOpenSource && <a href="/#open-source" class="nav-child" data-nav-id="open-source">Open Source</a>}
-        {SECTIONS.showFeaturedModels && <a href="/#models" class="nav-child" data-nav-id="models">Models</a>}
-      </div>
-    </div>
-
-    {/* ── Career group ── */}
-    <div class="nav-group" data-nav-group>
-      <a href="/#experience" class="nav-parent" data-nav-for="experience,skills,education,awards">Career</a>
-      <div class="nav-children">
-        <div class="nav-branch-line"></div>
-        {SECTIONS.showExperience && <a href="/#experience" class="nav-child" data-nav-id="experience">Experience</a>}
-        {SECTIONS.showSkills && <a href="/#skills" class="nav-child" data-nav-id="skills">Skills</a>}
-        {SECTIONS.showEducation && <a href="/#education" class="nav-child" data-nav-id="education">Education</a>}
-        {SECTIONS.showAwards && <a href="/#awards" class="nav-child" data-nav-id="awards">Awards</a>}
-      </div>
-    </div>
-
-    {/* ── Research group ── */}
-    <div class="nav-group" data-nav-group>
-      <a href="/#publications" class="nav-parent" data-nav-for="publications,speaking,resources,curated">Research</a>
-      <div class="nav-children">
-        <div class="nav-branch-line"></div>
-        {SECTIONS.showPublications && <a href="/#publications" class="nav-child" data-nav-id="publications">Papers</a>}
-        {SECTIONS.showSpeaking && <a href="/#speaking" class="nav-child" data-nav-id="speaking">Speaking</a>}
-        {SECTIONS.showResources && <a href="/#resources" class="nav-child" data-nav-id="resources">Resources</a>}
-        {SECTIONS.showCuratedLists && <a href="/#curated" class="nav-child" data-nav-id="curated">Curated</a>}
-      </div>
-    </div>
-
-    {/* ── Connect group ── */}
-    <div class="nav-group" data-nav-group>
-      <a href="/#faq" class="nav-parent" data-nav-for="faq">Connect</a>
-      <div class="nav-children">
-        <div class="nav-branch-line"></div>
-        {SECTIONS.showFAQ && <a href="/#faq" class="nav-child" data-nav-id="faq">FAQ</a>}
-      </div>
-    </div>
+  <div class="nav-dots" id="nav-dots">
+    <a href="/#works" class="nav-dot-item" data-nav-id="works">Projects</a>
+    {SECTIONS.showExperience && <a href="/#experience" class="nav-dot-item" data-nav-id="experience">Experience</a>}
+    {SECTIONS.showSkills && <a href="/#skills" class="nav-dot-item" data-nav-id="skills">Skills</a>}
+    {(SECTIONS.showEducation || SECTIONS.showAwards) && <a href="/#education" class="nav-dot-item" data-nav-id="education">Education</a>}
+    <a href="/#testimonials" class="nav-dot-item" data-nav-id="testimonials">Testimonials</a>
+    <a href="/#sharing" class="nav-dot-item" data-nav-id="sharing">Contact</a>
   </div>
 
   {/* ── Page links & utilities ── */}
@@ -93,9 +44,48 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
           <IconSunHigh class="nav-theme-icon nav-theme-icon--sun" />
         </button>
       )}
+      {isTemplate && (
+        <button
+          id="shuffle-btn"
+          class="nav-sidebar-icon"
+          title="Shuffle hero style"
+          aria-label="Shuffle hero style"
+        >
+          <svg class="nav-icon-desktop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
+        </button>
+      )}
     </div>
   </div>
 </nav>
+
+{/* Hero floating icons — visible before sidebar appears, homepage only */}
+{currentPath === "/" && <div class="hero-float-icons" id="hero-float-icons">
+  <a href="/search" class="hero-float-icon" title="Search" aria-label="Search">
+    <IconSearch class="hero-float-svg" />
+  </a>
+  {SITE.lightAndDarkMode && (
+    <button
+      id="theme-btn-hero"
+      class="hero-float-icon"
+      title="Toggle theme"
+      aria-label="Toggle theme"
+      aria-live="polite"
+    >
+      <IconMoon class="hero-float-theme--moon" />
+      <IconSunHigh class="hero-float-theme--sun" />
+    </button>
+  )}
+  {isTemplate && (
+    <button
+      id="shuffle-btn-hero"
+      class="hero-float-icon"
+      title="Shuffle hero style"
+      aria-label="Shuffle hero style"
+    >
+      <svg class="hero-float-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
+    </button>
+  )}
+</div>}
 
 {/* Mobile: top bar */}
 <header class="nav-mobile-bar app-layout">
@@ -113,7 +103,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
       <a href="/connect" class="nav-mobile-link">1:1</a>
     )}
     {isTemplate && (
-      <a href="/docs" class="nav-mobile-link nav-mobile-link--docs">Docs</a>
+      <a href="/docs" class:list={["nav-mobile-link nav-mobile-link--docs", currentPath === "/docs" && "is-active"]}>Docs</a>
     )}
     <a href="/archives" class="nav-mobile-icon" title="Archives" aria-label="Archives">
       <IconArchive class="nav-icon-mobile" />
@@ -137,34 +127,41 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 </header>
 
 <script>
-  function initNavTree() {
-    const children = document.querySelectorAll<HTMLElement>(".nav-child[data-nav-id]");
-    const parents = document.querySelectorAll<HTMLElement>(".nav-parent[data-nav-for]");
-    const groups = document.querySelectorAll<HTMLElement>("[data-nav-group]");
+  function initNavDots() {
+    const sidebar = document.querySelector<HTMLElement>(".nav-sidebar");
+    const dotsWrap = document.getElementById("nav-dots");
+    const items = document.querySelectorAll<HTMLElement>(".nav-dot-item[data-nav-id]");
 
-    // On non-homepage pages, collapse all tree groups
+    const heroFloatIcons = document.getElementById("hero-float-icons");
+
     if (window.location.pathname !== "/") {
-      children.forEach(c => c.classList.remove("is-active"));
-      parents.forEach(p => p.classList.remove("is-active"));
-      groups.forEach(g => g.classList.remove("is-expanded"));
+      items.forEach(i => i.classList.remove("is-active"));
+      if (heroFloatIcons) heroFloatIcons.classList.add("is-hidden");
       return;
     }
 
     const sectionMap = new Map<string, HTMLElement>();
-    children.forEach(child => {
-      const id = child.dataset.navId!;
+    items.forEach(item => {
+      const id = item.dataset.navId!;
       const el = document.getElementById(id);
       if (el) sectionMap.set(id, el);
     });
 
-    let activeChild: HTMLElement | null = null;
-    let activeGroup: HTMLElement | null = null;
+    const aboutEl = document.getElementById("about");
 
-    function updateActiveSection() {
+    function updateActive() {
+      if (aboutEl && sidebar) {
+        const aboutBottom = aboutEl.getBoundingClientRect().bottom;
+        if (aboutBottom > 0) {
+          sidebar.classList.add("nav-hidden");
+          if (heroFloatIcons) heroFloatIcons.classList.remove("is-hidden");
+        } else {
+          sidebar.classList.remove("nav-hidden");
+          if (heroFloatIcons) heroFloatIcons.classList.add("is-hidden");
+        }
+      }
+
       let topId = "";
-
-      // Pick the last section whose top has scrolled past the threshold.
-      // Works correctly in both scroll directions.
       const threshold = 140;
       sectionMap.forEach((el, id) => {
         if (el.getBoundingClientRect().top <= threshold) {
@@ -172,48 +169,29 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
         }
       });
 
-      // If nothing has passed the threshold (very top of page), pick the first section
-      if (!topId) {
-        const first = sectionMap.keys().next().value;
-        if (first) topId = first;
-      }
+      items.forEach(i => i.classList.remove("is-active"));
 
-      if (!topId) return;
-
-      children.forEach(c => c.classList.remove("is-active"));
-      parents.forEach(p => p.classList.remove("is-active"));
-      groups.forEach(g => g.classList.remove("is-expanded"));
-
-      const child = document.querySelector<HTMLElement>(`.nav-child[data-nav-id="${topId}"]`);
-      if (child) {
-        child.classList.add("is-active");
-        activeChild = child;
-
-        const group = child.closest<HTMLElement>("[data-nav-group]");
-        if (group) {
-          group.classList.add("is-expanded");
-          activeGroup = group;
-          const parent = group.querySelector<HTMLElement>(".nav-parent");
-          if (parent) parent.classList.add("is-active");
-        }
+      if (topId) {
+        const active = document.querySelector<HTMLElement>(`.nav-dot-item[data-nav-id="${topId}"]`);
+        if (active) active.classList.add("is-active");
       }
     }
 
-    let scrollRaf = 0;
+    let raf = 0;
     function onScroll() {
-      cancelAnimationFrame(scrollRaf);
-      scrollRaf = requestAnimationFrame(updateActiveSection);
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(updateActive);
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    updateActiveSection();
+    updateActive();
 
     return () => window.removeEventListener("scroll", onScroll);
   }
 
-  let cleanup = initNavTree();
+  let cleanup = initNavDots();
   document.addEventListener("astro:page-load", () => {
     if (cleanup) cleanup();
-    cleanup = initNavTree();
+    cleanup = initNavDots();
   });
 </script>
