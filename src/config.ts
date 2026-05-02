@@ -25,6 +25,28 @@ export const SITE = {
     url: "",
   },
   favicon: "/favicon.svg",                       // path to site favicon in public/
+  // Background pattern: "dot-grid" | "none"
+  // dot-grid: subtle repeating dot matrix (like santifer.io)
+  backgroundPattern: "dot-grid" as "dot-grid" | "none",
+  // Hero section background style:
+  // "dot-grid"   — subtle dot matrix with tinted base (no gradient)
+  // "dual-glow"  — soft accent+primary blobs on left/right
+  // "mesh"       — multiple soft color blobs like a modern SaaS page
+  // "aurora"     — horizontal northern-lights color bands
+  // "spotlight"  — single bright glow from center, fading to edges
+  // "sunset"     — warm-to-cool diagonal sweep
+  // "frosted"    — very subtle single-tint frosted glass
+  heroBackground: "dot-grid" as "dot-grid" | "dual-glow" | "mesh" | "aurora" | "spotlight" | "sunset" | "frosted" | "cyber" | "gradient-mesh" | "none",
+  // Hero section canvas animation:
+  // "snake"           — glowing lines traversing the dot grid
+  // "aurora"          — slow-drifting translucent color blobs
+  // "constellation"   — floating particles with connection lines
+  // "wave-field"      — grid of dots rippling in sine waves
+  // "mesh-gradient"   — animated color anchors with smooth fills
+  // "noise-flow"      — particles streaming along noise currents
+  // "geometric-pulse" — concentric rings expanding from center
+  // "none"            — no animation
+  heroAnimation: "neural-pulse" as "snake" | "aurora" | "constellation" | "wave-field" | "mesh-gradient" | "noise-flow" | "warp-starfield" | "neural-pulse" | "morph-blobs" | "silk-waves" | "floating-orbs" | "none",
   dynamicOgImage: true,
   dir: "ltr" as "ltr" | "rtl",
   lang: "en",
@@ -36,7 +58,7 @@ export const SITE = {
 // ============================================================================
 export const PROFILE = {
   name: "John Doe",
-  tagline: "AI Engineer building production intelligent systems — LLM applications, model fine-tuning, agentic workflows, and ML infrastructure. Open source contributor and technical writer.",
+  tagline: "Building production-grade intelligent systems — from research to deployment.",
   photo: "/profile-photo.svg",              // place your photo in public/ (.jpg, .png, or .svg)
   role: "AI Engineer",                      // current role / title (also used in SEO structured data)
   organization: "Acme AI",                  // current company or affiliation
@@ -44,6 +66,17 @@ export const PROFILE = {
   location: "San Francisco, USA",           // city / region
   // SEO keywords for structured data (what you want to be found for)
   keywords: ["Machine Learning", "LLM", "MLOps", "Deep Learning", "NLP", "Fine-Tuning", "RAG", "AI Agents", "Model Deployment"],
+  // Phrases that cycle with a typing animation as the main headline
+  typedPhrases: [
+    "AI Systems Builder",
+    "ML Infrastructure Engineer",
+    "Open Source Contributor",
+    "LLM Applications Developer",
+    "Agentic Workflows Designer",
+  ],
+  // First 3 keywords appear as bold headline text ("with X + Y + Z")
+  // Remaining appear as subtle muted pills below
+  trendingKeywords: ["Evals", "LLMOps", "HITL", "RAG", "Agents", "LoRA"],
 } as const;
 
 // ============================================================================
@@ -235,7 +268,7 @@ export const READING = {
 // COLOPHON — How this site was built (shown in footer or /colophon)
 // ============================================================================
 export const COLOPHON = {
-  enabled: true,
+  enabled: false,
   text: "Built with Astro, Tailwind CSS, and TypeScript. Styled with semantic CSS. Search by Pagefind. Deployed on GitHub Pages.",
   stack: ["Astro v5", "Tailwind CSS v4", "TypeScript", "Pagefind", "GitHub Pages"],
 } as const;
@@ -255,7 +288,16 @@ export const CONNECT = {
 // ABOUT — Short bio (shown on homepage only if SECTIONS.showAbout is true)
 // ============================================================================
 export const ABOUT = {
-  bio: "I'm an AI Engineer focused on taking models from research to production. I work across the full ML lifecycle — training and fine-tuning, building agentic workflows, experiment tracking, and deploying scalable inference pipelines. I contribute to open-source ML tooling and write about practical AI engineering.",
+  // Each line = own <p>. Decorators: **bold accent**, ~muted~, _italic_, ## big heading line
+  bio: `## **4+** years building everything from scratch.
+From fine-tuning LLMs to shipping **agentic workflows** handling real-world traffic — I've owned the full lifecycle.
+~One day, I stopped chasing titles. I started chasing clarity.~
+_What drives me doesn't fit on a resume._
+## **Building systems that last.**
+**12+ open-source contributions**. **3 production ML pipelines**. **Millions of inference requests** served.
+Training, experiment tracking, inference at scale, and the tooling that holds it all together.
+~Bigger problems. Harder systems. End-to-end.~
+## **Ready for what's next.**`,
 } as const;
 
 // ============================================================================
@@ -267,6 +309,38 @@ export interface CaseStudy {
   tech?: string[];
   url?: string;
 }
+
+export interface CompetencyArea {
+  title: string;
+  description: string;
+}
+
+export const COMPETENCY_AREAS: CompetencyArea[] = [
+  {
+    title: "LLM Application Development",
+    description: "RAG pipelines, prompt engineering, multi-model orchestration, production inference",
+  },
+  {
+    title: "Model Fine-Tuning & Training",
+    description: "LoRA/QLoRA, domain adaptation, dataset curation, distributed training",
+  },
+  {
+    title: "Agentic Workflows",
+    description: "Multi-agent systems, tool use, HITL handoff, orchestration with LangGraph",
+  },
+  {
+    title: "ML Infrastructure & MLOps",
+    description: "Feature stores, experiment tracking, model registry, CI/CD for ML",
+  },
+  {
+    title: "Production Inference",
+    description: "vLLM, quantization, batching strategies, latency optimization, autoscaling",
+  },
+  {
+    title: "Technical Leadership",
+    description: "Architecture design, code review, mentoring, cross-team collaboration",
+  },
+];
 
 export interface ExperienceEntry {
   role: string;
@@ -289,22 +363,16 @@ export const EXPERIENCE: ExperienceEntry[] = [
     startDate: "Jan 2024",
     endDate: "Present",
     description:
-      "Building LLM-powered applications and agentic workflows. Fine-tuning domain-specific models with Unsloth and deploying inference pipelines on AWS.",
+      "Building LLM-powered applications and agentic workflows. Deploying inference pipelines on AWS.",
     achievements: [
-      "Shipped 3 production LLM applications serving 100K+ daily users",
+      "Shipped 3 production LLM apps serving 100K+ daily users",
       "Reduced inference latency by 40% with custom vLLM deployment",
-      "Built multi-agent document understanding pipeline",
     ],
     caseStudies: [
       {
         title: "Multi-Agent Document Understanding",
-        description: "End-to-end pipeline for extracting structured data from unstructured documents using specialized LLM agents.",
+        description: "Extracting structured data from unstructured documents using specialized LLM agents.",
         tech: ["LangGraph", "GPT-4", "FastAPI"],
-      },
-      {
-        title: "Real-Time Inference Platform",
-        description: "Custom vLLM deployment with auto-scaling, serving 100K+ daily requests at <200ms p99 latency.",
-        tech: ["vLLM", "Kubernetes", "Prometheus"],
       },
     ],
     skills: ["PyTorch", "vLLM", "LangGraph", "AWS SageMaker"],
@@ -316,18 +384,10 @@ export const EXPERIENCE: ExperienceEntry[] = [
     startDate: "Mar 2022",
     endDate: "Dec 2023",
     description:
-      "Designed ML pipelines with MLflow and DVC. Built real-time feature stores and model monitoring dashboards serving 50M+ predictions/day.",
+      "Designed ML pipelines and built real-time feature stores serving 50M+ predictions/day.",
     achievements: [
       "Built real-time feature store serving 50M+ predictions/day",
       "Reduced model training time by 60% with distributed training",
-      "Designed A/B testing framework for ML model evaluation",
-    ],
-    caseStudies: [
-      {
-        title: "Feature Store at Scale",
-        description: "Real-time feature computation and serving layer handling 50M+ predictions daily with sub-10ms latency.",
-        tech: ["Redis", "Feast", "Kafka"],
-      },
     ],
     skills: ["MLflow", "DVC", "Ray", "Kubernetes"],
   },
@@ -364,12 +424,20 @@ export const SKILLS: SkillGroup[] = [
     items: ["MLflow", "DVC", "Weights & Biases", "Ray", "Airflow", "Kubeflow", "Feature Stores", "Vector DBs"],
   },
   {
-    category: "Languages",
+    category: "Programming",
     items: ["Python", "TypeScript", "Go", "SQL", "Bash", "C++"],
   },
   {
     category: "Infra & Cloud",
     items: ["Docker", "Kubernetes", "AWS", "GCP", "Terraform", "GitHub Actions", "FastAPI", "gRPC"],
+  },
+  {
+    category: "Soft Skills",
+    items: ["Technical Writing", "System Design", "Team Leadership", "Mentoring", "Cross-functional Collaboration", "Agile / Scrum"],
+  },
+  {
+    category: "Spoken Languages",
+    items: ["English (Fluent)", "Hindi (Native)"],
   },
 ];
 
