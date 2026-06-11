@@ -92,18 +92,27 @@ export async function fetch(cfg) {      // cfg = the source's config object from
 
 Adding a 12th source later = drop in one file + add one `SOURCES` entry. No orchestrator changes.
 
-### 4.1 GitHub adapter — commit cap (keeps the feed elegant)
+### 4.1 GitHub adapter — two purposes, two endpoints
 
-A repo can have hundreds of commits; dumping them all would bloat the cache and clutter the feed. The GitHub adapter caps commits **at normalize time**, before they ever reach the cache. The anchor is the **default branch (main/master)** — the published truth of the project — never an enumeration of all branches.
+The GitHub adapter does two distinct jobs. Conflating them is what made earlier drafts complex; separating them makes both simple.
 
-**Commits first, branches second:**
-1. Fetch the commit history of the **default branch only** (one API call per repo, no per-branch fan-out).
-2. **Sort newest-first** and **keep the latest `maxCommitsPerRepo` (default 25)**. Hard upper bound per repo.
-3. **Then derive the related branch for each kept commit** — a merge commit on main records the branch it was merged from (e.g. `Merge pull request #42 from user/feature-x`, or the PR's head ref). That branch name becomes an *attribute* of the commit (`payload.branch`), surfaced when available.
-4. We **never** list all branches or fetch commits per branch. A branch is only ever known *through* a commit that reached main — unmerged/WIP/stale branches never appear.
-5. Releases are separate and not subject to this cap (releases are inherently sparse).
+**(a) Activity feed → the user public-events API (`GET /users/{handle}/events/public`)**
 
-This keeps `sources-cache.json` lean at the source (not just hidden at render), keeps the public feed to merged/published work, and stays well under API limits. Configurable via `SOURCES.github.maxCommitsPerRepo`.
+This is the GitHub profile activity stream — the honest record of what the owner is actually doing.
+
+- **One call for the whole account** — no per-repo or per-branch fan-out.
+- Captures **PushEvents to *any* branch**, merged or not — so work on an unmerged `feature/x` branch shows up immediately. This is the decisive reason for using events over default-branch commit history: a project never looks stale just because active work isn't merged yet.
+- Also surfaces release and PR events from the same stream.
+- The branch is read straight from the PushEvent `ref` (e.g. `refs/heads/feature-x`) → stored as `payload.branch`. No branch enumeration, no merge-message parsing.
+- Each event carries its repo name, so feed items still associate to the right project card via `projectSlug`.
+- **Cap:** keep the latest `maxCommits` (default **25**) push/commit items overall. A hard upper bound that keeps `sources-cache.json` lean and the feed elegant.
+- **Known bound:** the events API reaches back ~90 days / ~300 events. That is exactly right for a *recent-activity* feed — all-time facts come from (b).
+
+**(b) Per-project enrichment → per-repo metadata**
+
+For the work-card enrichment (live star count, latest release, last-push freshness), the adapter reads repo metadata for the specific repos referenced by works' `repo:` frontmatter. This is repo-specific, all-time data the events stream can't give. Releases here are sparse and not subject to the commit cap.
+
+Two endpoints, two purposes: events for "what I'm doing now" (recency, any branch), repo metadata for "the state of this project" (stars, releases). Both zero-secret; both use the workflow `GITHUB_TOKEN` when present. Configurable via `SOURCES.github.maxCommits`.
 
 ---
 
@@ -168,7 +177,7 @@ Single source of truth, consistent with the existing config-driven design.
 ```ts
 export const SOURCES = {
   github:       { enabled: true,  handle: "" /* gh username */, includeCommits: true, includeReleases: true,
-                  maxCommitsPerRepo: 25 /* latest commits on the default branch only */ },
+                  maxCommits: 25 /* latest activity items from the public-events stream */ },
   pypi:         { enabled: false, packages: [] as string[] },
   npm:          { enabled: false, user: "" },
   rss:          { enabled: false, feeds: [] as string[] },
@@ -300,7 +309,8 @@ docs/                            # world-facing: how to enable each source, hand
 ## 12. Acceptance criteria
 
 1. `node scripts/sync-sources.mjs` with only GitHub enabled produces a valid `sources-cache.json` with real commits/releases.
-1a. A repo with >25 commits on its default branch yields exactly the 25 latest from that branch — never more, never any per-branch fan-out. A merge commit among them surfaces its merged-from branch as `payload.branch`; unmerged/WIP branches never appear.
+1a. The activity feed is built from `/users/{handle}/events/public` (one call, no per-branch fan-out) and capped at the 25 latest commit/push items. A push to an unmerged branch appears, with its branch in `payload.branch` (from the PushEvent `ref`).
+1b. Per-project enrichment reads per-repo metadata for repos named in works' `repo:` frontmatter, yielding live star count + latest release independent of the events window.
 2. Disabling a source (or blanking its handle) cleanly omits it — no crash, no error.
 3. A simulated adapter failure (bad handle) keeps last-cached entries, sets `status: "error"`, and the build still passes.
 4. After `threshold` consecutive simulated failures, exactly one issue opens; recovery closes it; no duplicates in between.
