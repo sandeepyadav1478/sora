@@ -8,6 +8,11 @@ export const SOURCES = {
     handle: "", // GitHub username, e.g. "octocat"
     maxCommits: 25, // latest activity items kept in the feed
   },
-  // Plan 2 adds: pypi, npm, rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
+  pypi: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // PyPI project name, e.g. "requests"
+    maxPackages: 25, // releases kept (this adapter emits the latest release)
+  },
+  // Plan 2 adds: npm, rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
   // Plan 3 adds: manual, issueOnFailure
 };

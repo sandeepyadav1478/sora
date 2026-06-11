@@ -4,13 +4,14 @@ import { SOURCES } from "../src/config.sources.mjs";
 import { readCache, mergeSources, writeCache } from "./lib/cache.mjs";
 import { collectSecrets, assertNoSecrets, sanitize } from "./lib/redact.mjs";
 import * as github from "./adapters/github.mjs";
+import * as pypi from "./adapters/pypi.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_PATH = resolve(__dirname, "../src/data/sources-cache.json");
 const DRY_RUN = process.argv.includes("--dry-run");
 
 // Adapter registry. Plan 2 appends more entries here.
-const ADAPTERS = { github };
+const ADAPTERS = { github, pypi };
 
 /** A source runs when it is enabled. Each adapter validates its own required
  *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */
