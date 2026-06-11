@@ -1,4 +1,6 @@
 // Leak-guard (spec §2.5): the repo is public, so nothing secret may reach a committed file.
+// Note: exact case-sensitive substring matching of known env values; encoded or
+// case-changed forms are out of scope (suitable for typical API tokens in JSON).
 const MIN_SECRET_LEN = 6; // ignore short/empty values that would match innocuous text
 
 /** Collect candidate secret values from env var NAMES the run was given. */
