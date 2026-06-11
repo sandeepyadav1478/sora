@@ -23,6 +23,11 @@ export const SOURCES = {
     feeds: [], // e.g. ["https://overreacted.io/rss.xml", "https://blog.rust-lang.org/feed.xml"]
     maxPosts: 50, // newest posts kept across ALL feeds combined
   },
-  // Plan 2 adds: bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
+  youtube: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // YouTube CHANNEL id, must start with "UC…" (NOT an @handle). Find it via the channel page source / a UC-id lookup.
+    maxVideos: 15, // latest videos kept in the feed
+  },
+  // Plan 2 adds: bluesky, mastodon, codeforces, wakatime, huggingface, stackoverflow
   // Plan 3 adds: manual, issueOnFailure
 };
