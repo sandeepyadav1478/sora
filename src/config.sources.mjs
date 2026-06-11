@@ -18,6 +18,11 @@ export const SOURCES = {
     packages: [], // e.g. ["your-package"] — npm package names you publish
     maxPackages: 25, // latest releases kept
   },
-  // Plan 2 adds: rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
+  rss: {
+    enabled: false, // forker: set true + add at least one feed URL
+    feeds: [], // e.g. ["https://overreacted.io/rss.xml", "https://blog.rust-lang.org/feed.xml"]
+    maxPosts: 50, // newest posts kept across ALL feeds combined
+  },
+  // Plan 2 adds: bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
   // Plan 3 adds: manual, issueOnFailure
 };
