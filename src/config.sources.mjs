@@ -43,6 +43,12 @@ export const SOURCES = {
     handle: "", // Bluesky handle or DID, e.g. "bsky.app" (no @)
     maxPosts: 25, // latest original posts kept (reposts + replies excluded)
   },
-  // Plan 2 adds: mastodon, wakatime, huggingface
+  mastodon: {
+    enabled: false, // forker: set true + fill instance & user
+    instance: "", // Mastodon instance host, e.g. "mastodon.social"
+    user: "", // local username (acct), e.g. "Gargron"
+    maxPosts: 25, // latest original posts kept (boosts & replies dropped)
+  },
+  // Plan 2 adds: wakatime, huggingface
   // Plan 3 adds: manual, issueOnFailure
 };
