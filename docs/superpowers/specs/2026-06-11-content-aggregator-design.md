@@ -94,15 +94,16 @@ Adding a 12th source later = drop in one file + add one `SOURCES` entry. No orch
 
 ### 4.1 GitHub adapter — commit cap (keeps the feed elegant)
 
-A repo can have hundreds of commits; dumping them all would bloat the cache and clutter the feed. The GitHub adapter therefore caps commits **at normalize time**, before they ever reach the cache:
+A repo can have hundreds of commits; dumping them all would bloat the cache and clutter the feed. The GitHub adapter caps commits **at normalize time**, before they ever reach the cache. The anchor is the **default branch (main/master)** — the published truth of the project — never an enumeration of all branches.
 
-- For each tracked repo: gather commits from **all branches** (`branches: "all"`, default) or just the default branch (`branches: "default"`).
-- **Dedup by SHA** — a commit on two branches counts once.
-- **Sort newest-first**, then **keep the latest `maxCommitsPerRepo` (default 25)**.
-- **Branches are derived from the kept commits, not the other way around.** Only branches that contribute at least one of those 25 latest commits are "related" and retained — a branch with no commit in the latest-25 window is irrelevant and dropped entirely (not tracked, not shown). We never carry a branch just because it exists.
-- Releases are separate and not subject to this cap (releases are inherently sparse).
+**Commits first, branches second:**
+1. Fetch the commit history of the **default branch only** (one API call per repo, no per-branch fan-out).
+2. **Sort newest-first** and **keep the latest `maxCommitsPerRepo` (default 25)**. Hard upper bound per repo.
+3. **Then derive the related branch for each kept commit** — a merge commit on main records the branch it was merged from (e.g. `Merge pull request #42 from user/feature-x`, or the PR's head ref). That branch name becomes an *attribute* of the commit (`payload.branch`), surfaced when available.
+4. We **never** list all branches or fetch commits per branch. A branch is only ever known *through* a commit that reached main — unmerged/WIP/stale branches never appear.
+5. Releases are separate and not subject to this cap (releases are inherently sparse).
 
-This is a hard upper bound per repo, applied in the adapter — so `sources-cache.json` stays lean at the source, not just hidden at render. Configurable via `SOURCES.github.maxCommitsPerRepo`.
+This keeps `sources-cache.json` lean at the source (not just hidden at render), keeps the public feed to merged/published work, and stays well under API limits. Configurable via `SOURCES.github.maxCommitsPerRepo`.
 
 ---
 
@@ -127,7 +128,7 @@ interface Envelope {
 ```ts
 // PAYLOAD — discriminated union keyed by `kind`. Each source emits only what it has.
 type Payload =
-  | { kind: "commit";  repo: string; sha: string; additions?: number; deletions?: number; message: string }
+  | { kind: "commit";  repo: string; sha: string; branch?: string; additions?: number; deletions?: number; message: string }
   | { kind: "release"; repo?: string; pkg?: string; version: string; downloads?: number; notes?: string }
   | { kind: "post";    feed: string; excerpt?: string; readingTime?: number; tags?: string[] }
   | { kind: "video";   channel: string; duration?: number; views?: number; thumbnail?: string }
@@ -167,7 +168,7 @@ Single source of truth, consistent with the existing config-driven design.
 ```ts
 export const SOURCES = {
   github:       { enabled: true,  handle: "" /* gh username */, includeCommits: true, includeReleases: true,
-                  maxCommitsPerRepo: 25, branches: "all" /* "all" | "default" */ },
+                  maxCommitsPerRepo: 25 /* latest commits on the default branch only */ },
   pypi:         { enabled: false, packages: [] as string[] },
   npm:          { enabled: false, user: "" },
   rss:          { enabled: false, feeds: [] as string[] },
@@ -299,7 +300,7 @@ docs/                            # world-facing: how to enable each source, hand
 ## 12. Acceptance criteria
 
 1. `node scripts/sync-sources.mjs` with only GitHub enabled produces a valid `sources-cache.json` with real commits/releases.
-1a. A repo with >25 commits across branches yields exactly the 25 latest, deduped by SHA — never more — in the cache. Only branches contributing at least one of those 25 commits are retained; a branch with no commit in the latest-25 window is dropped.
+1a. A repo with >25 commits on its default branch yields exactly the 25 latest from that branch — never more, never any per-branch fan-out. A merge commit among them surfaces its merged-from branch as `payload.branch`; unmerged/WIP branches never appear.
 2. Disabling a source (or blanking its handle) cleanly omits it — no crash, no error.
 3. A simulated adapter failure (bad handle) keeps last-cached entries, sets `status: "error"`, and the build still passes.
 4. After `threshold` consecutive simulated failures, exactly one issue opens; recovery closes it; no duplicates in between.
