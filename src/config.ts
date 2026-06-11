@@ -1,6 +1,8 @@
 // ============================================================================
 // SITE — Global site settings
 // ============================================================================
+export { SOURCES } from "./config.sources.mjs";
+
 export const SITE = {
   website: "https://johndoe.github.io/",       // your deployed URL
   author: "John Doe",                           // used in meta tags, RSS, structured data
@@ -111,6 +113,7 @@ export const SECTIONS = {
   showAwards: true,
   showFAQ: true,
   showContact: false,
+  showActivity: false,   // GitHub/social activity feed (content aggregator)
 } as const;
 
 // ============================================================================
