@@ -54,6 +54,11 @@ export const SOURCES = {
     handle: "", // HF org/user, e.g. "google" — author= on both endpoints
     maxBadges: 50, // model+dataset badges kept (per-endpoint API limit too)
   },
-  // Plan 2 adds: wakatime
+  wakatime: {
+    enabled: false, // forker: set true; key comes from the WAKATIME_API_KEY env/secret, NOT here
+    handle: "", // WakaTime username (display only)
+    profileUrl: "", // public profile, e.g. "https://wakatime.com/@yourname" — used as the item url
+    range: "last_7_days", // WakaTime stats range; part of the dedup id (wakatime:rating:<range>)
+  },
   // Plan 3 adds: manual, issueOnFailure
 };

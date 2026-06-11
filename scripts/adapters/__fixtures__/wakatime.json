@@ -1,0 +1,19 @@
+{
+  "data": {
+    "total_seconds": 144123.0,
+    "human_readable_total": "40 hrs 2 mins",
+    "daily_average": 20589.0,
+    "human_readable_daily_average": "5 hrs 43 mins",
+    "range": "last_7_days",
+    "human_readable_range": "Last 7 Days",
+    "start_date": "2026-06-04",
+    "end_date": "2026-06-10",
+    "languages": [
+      { "name": "TypeScript", "total_seconds": 61234.0, "percent": 42.49, "digital": "17:00", "text": "17 hrs" },
+      { "name": "Python", "total_seconds": 39870.0, "percent": 27.66, "digital": "11:04", "text": "11 hrs 4 mins" },
+      { "name": "Astro", "total_seconds": 18900.0, "percent": 13.11, "digital": "5:15", "text": "5 hrs 15 mins" }
+    ]
+  },
+  "start": "2026-06-04T00:00:00Z",
+  "end": "2026-06-10T23:59:59Z"
+}
