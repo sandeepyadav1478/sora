@@ -99,6 +99,7 @@ A repo can have hundreds of commits; dumping them all would bloat the cache and 
 - For each tracked repo: gather commits from **all branches** (`branches: "all"`, default) or just the default branch (`branches: "default"`).
 - **Dedup by SHA** — a commit on two branches counts once.
 - **Sort newest-first**, then **keep the latest `maxCommitsPerRepo` (default 25)**.
+- **Branches are derived from the kept commits, not the other way around.** Only branches that contribute at least one of those 25 latest commits are "related" and retained — a branch with no commit in the latest-25 window is irrelevant and dropped entirely (not tracked, not shown). We never carry a branch just because it exists.
 - Releases are separate and not subject to this cap (releases are inherently sparse).
 
 This is a hard upper bound per repo, applied in the adapter — so `sources-cache.json` stays lean at the source, not just hidden at render. Configurable via `SOURCES.github.maxCommitsPerRepo`.
@@ -298,7 +299,7 @@ docs/                            # world-facing: how to enable each source, hand
 ## 12. Acceptance criteria
 
 1. `node scripts/sync-sources.mjs` with only GitHub enabled produces a valid `sources-cache.json` with real commits/releases.
-1a. A repo with >25 commits across branches yields exactly the 25 latest, deduped by SHA — never more — in the cache.
+1a. A repo with >25 commits across branches yields exactly the 25 latest, deduped by SHA — never more — in the cache. Only branches contributing at least one of those 25 commits are retained; a branch with no commit in the latest-25 window is dropped.
 2. Disabling a source (or blanking its handle) cleanly omits it — no crash, no error.
 3. A simulated adapter failure (bad handle) keeps last-cached entries, sets `status: "error"`, and the build still passes.
 4. After `threshold` consecutive simulated failures, exactly one issue opens; recovery closes it; no duplicates in between.
