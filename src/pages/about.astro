@@ -4,275 +4,413 @@ import NavSidebar from "@/components/NavSidebar.astro";
 import Footer from "@/components/Footer.astro";
 import Socials from "@/components/Socials.astro";
 import {
-  SITE, ABOUT, PROFILE, SOCIALS_CONFIG,
-  EXPERIENCE, SKILLS, EDUCATION, AWARDS,
-  STATS, FAQ, SPEAKING, OPEN_SOURCE,
-  TESTIMONIALS, SECTIONS, START_HERE,
+  SITE,
+  ABOUT,
+  PROFILE,
+  EXPERIENCE,
+  SKILLS,
+  EDUCATION,
+  AWARDS,
+  STATS,
+  FAQ,
+  SPEAKING,
+  OPEN_SOURCE,
+  TESTIMONIALS,
+  START_HERE,
 } from "@/config";
 
-const highlights = "highlights" in ABOUT ? (ABOUT.highlights as readonly { value: string; label: string }[]) : [];
+const highlights =
+  "highlights" in ABOUT
+    ? (ABOUT.highlights as readonly { value: string; label: string }[])
+    : [];
 const bio = ABOUT.bio;
 const lines = bio.split("\n").filter(l => l.trim());
 ---
 
 <Layout title={`About | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" class="app-layout main-content">
+  <main id="main-content" class="main-content app-layout">
     <article class="about-page-content">
-
       {/* ── Header ── */}
       <div class="about-pg-header">
         <img src={PROFILE.photo} alt={PROFILE.name} class="about-pg-avatar" />
         <div class="about-pg-intro">
           <h1 class="about-pg-name">{PROFILE.name}</h1>
-          <p class="about-pg-role">{PROFILE.role}{PROFILE.organization && <> · <a href={PROFILE.organizationUrl} target="_blank" rel="noopener noreferrer">{PROFILE.organization}</a></>}</p>
-          {PROFILE.location && <p class="about-pg-location">{PROFILE.location}</p>}
+          <p class="about-pg-role">
+            {PROFILE.role}{
+              PROFILE.organization && (
+                <>
+                  {" "}
+                  ·{" "}
+                  <a
+                    href={PROFILE.organizationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {PROFILE.organization}
+                  </a>
+                </>
+              )
+            }
+          </p>
+          {
+            PROFILE.location && (
+              <p class="about-pg-location">{PROFILE.location}</p>
+            )
+          }
         </div>
       </div>
 
       {/* ── Highlight cards ── */}
-      {highlights.length > 0 && (
-        <div class="about-pg-highlights">
-          {highlights.map(h => (
-            <div class="about-pg-stat">
-              <span class="about-pg-stat-value">{h.value}</span>
-              <span class="about-pg-stat-label">{h.label}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      {
+        highlights.length > 0 && (
+          <div class="about-pg-highlights">
+            {highlights.map(h => (
+              <div class="about-pg-stat">
+                <span class="about-pg-stat-value">{h.value}</span>
+                <span class="about-pg-stat-label">{h.label}</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
 
       {/* ── Bio ── */}
       <div class="about-pg-bio">
-        {lines.map(line => {
-          const isMuted = line.startsWith("~") && line.endsWith("~");
-          const isItalic = line.startsWith("_") && line.endsWith("_");
-          const isBig = line.startsWith("##");
-          const cleaned = isMuted ? line.slice(1, -1)
-            : isItalic ? line.slice(1, -1)
-            : isBig ? line.slice(2).trim()
-            : line;
-          const parts = cleaned.split(/\*\*(.*?)\*\*/g);
-          const cls = ["about-pg-bio-line",
-            isMuted && "about-pg-bio--muted",
-            isItalic && "about-pg-bio--italic",
-            isBig && "about-pg-bio--big",
-          ].filter(Boolean).join(" ");
-          return (
-            <p class={cls}>
-              {parts.map((part, i) =>
-                i % 2 === 1
-                  ? <span class="text-highlight">{part}</span>
-                  : part
-              )}
-            </p>
-          );
-        })}
+        {
+          lines.map(line => {
+            const isMuted = line.startsWith("~") && line.endsWith("~");
+            const isItalic = line.startsWith("_") && line.endsWith("_");
+            const isBig = line.startsWith("##");
+            const cleaned = isMuted
+              ? line.slice(1, -1)
+              : isItalic
+                ? line.slice(1, -1)
+                : isBig
+                  ? line.slice(2).trim()
+                  : line;
+            const parts = cleaned.split(/\*\*(.*?)\*\*/g);
+            const cls = [
+              "about-pg-bio-line",
+              isMuted && "about-pg-bio--muted",
+              isItalic && "about-pg-bio--italic",
+              isBig && "about-pg-bio--big",
+            ]
+              .filter(Boolean)
+              .join(" ");
+            return (
+              <p class={cls}>
+                {parts.map((part, i) =>
+                  i % 2 === 1 ? (
+                    <span class="text-highlight">{part}</span>
+                  ) : (
+                    part
+                  )
+                )}
+              </p>
+            );
+          })
+        }
       </div>
 
       {/* ── Start Here ── */}
-      {START_HERE.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Start Here</h2>
-          <p class="about-pg-section-sub">New here? These are the best places to begin.</p>
-          <div class="about-pg-start-list">
-            {START_HERE.map((item, i) => {
-              const href = item.url || (item.workSlug ? `/works/${item.workSlug}` : "#");
-              return (
-                <a href={href} class="about-pg-start-item">
-                  <span class="about-pg-start-num">{String(i + 1).padStart(2, "0")}</span>
-                  <div class="about-pg-start-body">
-                    <strong class="about-pg-start-label">{item.label}</strong>
-                    <p class="about-pg-start-desc">{item.description}</p>
-                  </div>
-                  <span class="about-pg-start-arrow">&rarr;</span>
-                </a>
-              );
-            })}
-          </div>
-        </section>
-      )}
+      {
+        START_HERE.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Start Here</h2>
+            <p class="about-pg-section-sub">
+              New here? These are the best places to begin.
+            </p>
+            <div class="about-pg-start-list">
+              {START_HERE.map((item, i) => {
+                const href =
+                  item.url || (item.workSlug ? `/works/${item.workSlug}` : "#");
+                return (
+                  <a href={href} class="about-pg-start-item">
+                    <span class="about-pg-start-num">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div class="about-pg-start-body">
+                      <strong class="about-pg-start-label">{item.label}</strong>
+                      <p class="about-pg-start-desc">{item.description}</p>
+                    </div>
+                    <span class="about-pg-start-arrow">&rarr;</span>
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Stats ── */}
-      {STATS.length > 0 && (
-        <section class="about-pg-section">
-          <div class="about-pg-highlights">
-            {STATS.map(s => (
-              <div class="about-pg-stat">
-                <span class="about-pg-stat-value">{s.value}</span>
-                <span class="about-pg-stat-label">{s.label}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {
+        STATS.length > 0 && (
+          <section class="about-pg-section">
+            <div class="about-pg-highlights">
+              {STATS.map(s => (
+                <div class="about-pg-stat">
+                  <span class="about-pg-stat-value">{s.value}</span>
+                  <span class="about-pg-stat-label">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Experience ── */}
-      {EXPERIENCE.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Experience</h2>
-          <div class="about-pg-cards">
-            {EXPERIENCE.map(exp => (
-              <div class="about-pg-card">
-                <div class="about-pg-card-head">
-                  <span class="about-pg-card-date">{exp.startDate} – {exp.endDate}</span>
-                  <strong class="about-pg-card-title">{exp.role}</strong>
-                  <span class="about-pg-card-sub">
-                    {exp.companyUrl
-                      ? <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer">{exp.company}</a>
-                      : exp.company}
-                  </span>
+      {
+        EXPERIENCE.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Experience</h2>
+            <div class="about-pg-cards">
+              {EXPERIENCE.map(exp => (
+                <div class="about-pg-card">
+                  <div class="about-pg-card-head">
+                    <span class="about-pg-card-date">
+                      {exp.startDate} – {exp.endDate}
+                    </span>
+                    <strong class="about-pg-card-title">{exp.role}</strong>
+                    <span class="about-pg-card-sub">
+                      {exp.companyUrl ? (
+                        <a
+                          href={exp.companyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {exp.company}
+                        </a>
+                      ) : (
+                        exp.company
+                      )}
+                    </span>
+                  </div>
+                  <p class="about-pg-card-desc">{exp.description}</p>
+                  {exp.achievements && exp.achievements.length > 0 && (
+                    <ul class="about-pg-card-list">
+                      {exp.achievements.map(a => (
+                        <li>{a}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-                <p class="about-pg-card-desc">{exp.description}</p>
-                {exp.achievements && exp.achievements.length > 0 && (
-                  <ul class="about-pg-card-list">
-                    {exp.achievements.map(a => <li>{a}</li>)}
-                  </ul>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Open Source ── */}
-      {OPEN_SOURCE.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Open Source</h2>
-          <div class="about-pg-cards">
-            {OPEN_SOURCE.map(proj => (
-              <div class="about-pg-card about-pg-card--row">
-                <div class="about-pg-card-head">
-                  <strong class="about-pg-card-title">
-                    <a href={proj.url} target="_blank" rel="noopener noreferrer">{proj.name}</a>
-                  </strong>
-                  <span class="about-pg-card-sub">{proj.role}{proj.language && <> · {proj.language}</>}</span>
-                </div>
-                <p class="about-pg-card-desc">{proj.description}</p>
-                {(proj.stars || proj.forks) && (
-                  <div class="about-pg-card-metrics">
-                    {proj.stars && <span>★ {proj.stars}</span>}
-                    {proj.forks && <span>⑂ {proj.forks}</span>}
+      {
+        OPEN_SOURCE.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Open Source</h2>
+            <div class="about-pg-cards">
+              {OPEN_SOURCE.map(proj => (
+                <div class="about-pg-card about-pg-card--row">
+                  <div class="about-pg-card-head">
+                    <strong class="about-pg-card-title">
+                      <a
+                        href={proj.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {proj.name}
+                      </a>
+                    </strong>
+                    <span class="about-pg-card-sub">
+                      {proj.role}
+                      {proj.language && <> · {proj.language}</>}
+                    </span>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+                  <p class="about-pg-card-desc">{proj.description}</p>
+                  {(proj.stars || proj.forks) && (
+                    <div class="about-pg-card-metrics">
+                      {proj.stars && <span>★ {proj.stars}</span>}
+                      {proj.forks && <span>⑂ {proj.forks}</span>}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Speaking ── */}
-      {SPEAKING.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Speaking</h2>
-          <div class="about-pg-cards">
-            {SPEAKING.map(talk => (
-              <div class="about-pg-card about-pg-card--row">
-                <div class="about-pg-card-head">
-                  <span class="about-pg-card-date">{talk.date}</span>
-                  <strong class="about-pg-card-title">{talk.url ? <a href={talk.url} target="_blank" rel="noopener noreferrer">{talk.title}</a> : talk.title}</strong>
-                  <span class="about-pg-card-sub">{talk.event} · {talk.type}</span>
+      {
+        SPEAKING.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Speaking</h2>
+            <div class="about-pg-cards">
+              {SPEAKING.map(talk => (
+                <div class="about-pg-card about-pg-card--row">
+                  <div class="about-pg-card-head">
+                    <span class="about-pg-card-date">{talk.date}</span>
+                    <strong class="about-pg-card-title">
+                      {talk.url ? (
+                        <a
+                          href={talk.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {talk.title}
+                        </a>
+                      ) : (
+                        talk.title
+                      )}
+                    </strong>
+                    <span class="about-pg-card-sub">
+                      {talk.event} · {talk.type}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Skills ── */}
-      {SKILLS.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Skills</h2>
-          <div class="about-pg-skill-groups">
-            {SKILLS.map(group => (
-              <div class="about-pg-skill-group">
-                <h3 class="about-pg-skill-cat">{group.category}</h3>
-                <div class="about-pg-skill-pills">
-                  {group.items.map(item => <span class="about-pg-skill-pill">{item}</span>)}
+      {
+        SKILLS.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Skills</h2>
+            <div class="about-pg-skill-groups">
+              {SKILLS.map(group => (
+                <div class="about-pg-skill-group">
+                  <h3 class="about-pg-skill-cat">{group.category}</h3>
+                  <div class="about-pg-skill-pills">
+                    {group.items.map(item => (
+                      <span class="about-pg-skill-pill">{item}</span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Education ── */}
-      {EDUCATION.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Education</h2>
-          <div class="about-pg-cards">
-            {EDUCATION.map(edu => (
-              <div class="about-pg-card about-pg-card--row">
-                <div class="about-pg-card-head">
-                  <span class="about-pg-card-date">{edu.year}</span>
-                  <strong class="about-pg-card-title">{edu.degree}</strong>
-                  <span class="about-pg-card-sub">
-                    {edu.url
-                      ? <a href={edu.url} target="_blank" rel="noopener noreferrer">{edu.institution}</a>
-                      : edu.institution}
-                  </span>
+      {
+        EDUCATION.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Education</h2>
+            <div class="about-pg-cards">
+              {EDUCATION.map(edu => (
+                <div class="about-pg-card about-pg-card--row">
+                  <div class="about-pg-card-head">
+                    <span class="about-pg-card-date">{edu.year}</span>
+                    <strong class="about-pg-card-title">{edu.degree}</strong>
+                    <span class="about-pg-card-sub">
+                      {edu.url ? (
+                        <a
+                          href={edu.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {edu.institution}
+                        </a>
+                      ) : (
+                        edu.institution
+                      )}
+                    </span>
+                  </div>
+                  {edu.description && (
+                    <p class="about-pg-card-desc">{edu.description}</p>
+                  )}
                 </div>
-                {edu.description && <p class="about-pg-card-desc">{edu.description}</p>}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Awards ── */}
-      {AWARDS.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Awards</h2>
-          <div class="about-pg-cards">
-            {AWARDS.map(award => (
-              <div class="about-pg-card about-pg-card--row">
-                <div class="about-pg-card-head">
-                  <span class="about-pg-card-date">{award.year}</span>
-                  <strong class="about-pg-card-title">{award.url ? <a href={award.url} target="_blank" rel="noopener noreferrer">{award.title}</a> : award.title}</strong>
-                  <span class="about-pg-card-sub">
-                    {award.issuerUrl
-                      ? <a href={award.issuerUrl} target="_blank" rel="noopener noreferrer">{award.issuer}</a>
-                      : award.issuer}
-                  </span>
+      {
+        AWARDS.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Awards</h2>
+            <div class="about-pg-cards">
+              {AWARDS.map(award => (
+                <div class="about-pg-card about-pg-card--row">
+                  <div class="about-pg-card-head">
+                    <span class="about-pg-card-date">{award.year}</span>
+                    <strong class="about-pg-card-title">
+                      {award.url ? (
+                        <a
+                          href={award.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {award.title}
+                        </a>
+                      ) : (
+                        award.title
+                      )}
+                    </strong>
+                    <span class="about-pg-card-sub">
+                      {award.issuerUrl ? (
+                        <a
+                          href={award.issuerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {award.issuer}
+                        </a>
+                      ) : (
+                        award.issuer
+                      )}
+                    </span>
+                  </div>
+                  {award.description && (
+                    <p class="about-pg-card-desc">{award.description}</p>
+                  )}
                 </div>
-                {award.description && <p class="about-pg-card-desc">{award.description}</p>}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Testimonials ── */}
-      {TESTIMONIALS.enabled && TESTIMONIALS.items.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">Testimonials</h2>
-          <div class="about-pg-cards">
-            {TESTIMONIALS.items.map(t => (
-              <div class="about-pg-card about-pg-testimonial">
-                <blockquote class="about-pg-quote">"{t.quote}"</blockquote>
-                <p class="about-pg-quote-author">
-                  — {t.author}, <span class="about-pg-quote-role">{t.role}</span>
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {
+        TESTIMONIALS.enabled && TESTIMONIALS.items.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">Testimonials</h2>
+            <div class="about-pg-cards">
+              {TESTIMONIALS.items.map(t => (
+                <div class="about-pg-card about-pg-testimonial">
+                  <blockquote class="about-pg-quote">"{t.quote}"</blockquote>
+                  <p class="about-pg-quote-author">
+                    — {t.author},{" "}
+                    <span class="about-pg-quote-role">{t.role}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── FAQ ── */}
-      {FAQ.length > 0 && (
-        <section class="about-pg-section">
-          <h2 class="about-pg-section-title">FAQ</h2>
-          <div class="about-pg-cards">
-            {FAQ.map(item => (
-              <div class="about-pg-card">
-                <strong class="about-pg-faq-q">{item.question}</strong>
-                <p class="about-pg-card-desc">{item.answer}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {
+        FAQ.length > 0 && (
+          <section class="about-pg-section">
+            <h2 class="about-pg-section-title">FAQ</h2>
+            <div class="about-pg-cards">
+              {FAQ.map(item => (
+                <div class="about-pg-card">
+                  <strong class="about-pg-faq-q">{item.question}</strong>
+                  <p class="about-pg-card-desc">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {/* ── Connect ── */}
       <section class="about-pg-section">
@@ -281,7 +419,6 @@ const lines = bio.split("\n").filter(l => l.trim());
           <Socials />
         </div>
       </section>
-
     </article>
   </main>
   <Footer />

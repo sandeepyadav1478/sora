@@ -85,7 +85,10 @@ const nextPost =
   <BackButton />
   <main
     id="main-content"
-    class:list={["app-layout post-main", { "main-content": !SITE.showBackButton }]}
+    class:list={[
+      "post-main app-layout",
+      { "main-content": !SITE.showBackButton },
+    ]}
     data-pagefind-body
   >
     <h1
@@ -223,9 +226,7 @@ const nextPost =
       const hasFileNameOffset =
         computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
 
-      const topClass = hasFileNameOffset
-        ? "copy-code-offset"
-        : "copy-code-top";
+      const topClass = hasFileNameOffset ? "copy-code-offset" : "copy-code-top";
 
       const copyButton = document.createElement("button");
       copyButton.className = `copy-code ${topClass}`;

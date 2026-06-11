@@ -59,6 +59,7 @@ We built **ReviewBot** — a multi-agent system that:
 ## Architecture
 
 The system uses a LangGraph state machine with four specialized agents:
+
 - **Analyst** — parses diffs and builds dependency graphs
 - **Reviewer** — identifies potential issues using RAG over best practices
 - **Fixer** — generates code suggestions using few-shot examples

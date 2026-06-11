@@ -9,43 +9,67 @@ const iconSvgs: Record<string, string> = {
 };
 ---
 
-{HIGHLIGHTS.length > 0 && (
-  <div class="highlights-section">
-    {HIGHLIGHTS.map(card => (
-      <div class="highlight-card">
-        <div class="highlight-header">
-          <div class="highlight-icon" set:html={iconSvgs[card.icon || "sparkles"]} />
-          <div class="highlight-title-block">
-            <div class="highlight-title-row">
-              <h3 class="highlight-title">{card.title}</h3>
-              {card.badge && <span class="highlight-badge">{card.badge}</span>}
+{
+  HIGHLIGHTS.length > 0 && (
+    <div class="highlights-section">
+      {HIGHLIGHTS.map(card => (
+        <div class="highlight-card">
+          <div class="highlight-header">
+            <div
+              class="highlight-icon"
+              set:html={iconSvgs[card.icon || "sparkles"]}
+            />
+            <div class="highlight-title-block">
+              <div class="highlight-title-row">
+                <h3 class="highlight-title">{card.title}</h3>
+                {card.badge && (
+                  <span class="highlight-badge">{card.badge}</span>
+                )}
+              </div>
+              <p class="highlight-desc">{card.description}</p>
             </div>
-            <p class="highlight-desc">{card.description}</p>
           </div>
+
+          {card.bullets && card.bullets.length > 0 && (
+            <ul class="highlight-bullets">
+              {card.bullets.map(b => (
+                <li class="highlight-bullet">
+                  <span class="highlight-bullet-marker">&rsaquo;</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {card.certLinks && card.certLinks.length > 0 && (
+            <div class="highlight-certs">
+              {card.certLinks.map(link => (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="highlight-cert-link"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                  <span>{link.label}</span>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
-
-        {card.bullets && card.bullets.length > 0 && (
-          <ul class="highlight-bullets">
-            {card.bullets.map(b => (
-              <li class="highlight-bullet">
-                <span class="highlight-bullet-marker">&rsaquo;</span>
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {card.certLinks && card.certLinks.length > 0 && (
-          <div class="highlight-certs">
-            {card.certLinks.map(link => (
-              <a href={link.url} target="_blank" rel="noopener noreferrer" class="highlight-cert-link">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>
-                <span>{link.label}</span>
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-)}
+      ))}
+    </div>
+  )
+}

@@ -52,7 +52,7 @@ const sortedWorks = getSortedWorks(allWorks);
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" class="app-layout main-content">
+  <main id="main-content" class="main-content app-layout">
     <h1 class="page-title">
       Tag: <span transition:name={tag}>{tagName}</span>
     </h1>
@@ -65,57 +65,71 @@ const sortedWorks = getSortedWorks(allWorks);
     </ul>
 
     {/* Pre-rendered work content for modals */}
-    {sortedWorks.map(async (work) => {
-      const { Content } = await render(work);
-      const img = work.data.image;
-      const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
-      const displayDate = new Date(work.data.modDatetime ?? work.data.pubDatetime)
-        .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-      return (
-        <div data-work-template={work.id} class="hidden">
-          <article class="modal-article">
-            {imgSrc && (
-              <div class="modal-cover">
-                <img src={imgSrc} alt={work.data.title} />
-              </div>
-            )}
-            <div class="modal-body">
-              <h1 class="modal-title">{work.data.title}</h1>
-              <div class="modal-meta">
-                <span class="type-badge">{typeLabelMap[work.data.type]}</span>
-                <span class="work-card-date">{displayDate}</span>
-                {work.data.organization && (
-                  <span class="modal-org">at {work.data.organization}</span>
-                )}
-              </div>
-              <div class="modal-tags">
-                {work.data.tags.map((t: string) => (
-                  <span class="tag-chip">#{t}</span>
-                ))}
-              </div>
-              <hr class="modal-divider" />
-              <div class="app-prose max-w-none">
-                <Content />
-              </div>
-              {work.data.links && work.data.links.length > 0 && (
-                <div class="modal-actions">
-                  {work.data.links.map((link: { url: string; label: string }) => (
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="modal-action-btn"
-                    >
-                      {link.label} &rarr;
-                    </a>
-                  ))}
+    {
+      sortedWorks.map(async work => {
+        const { Content } = await render(work);
+        const img = work.data.image;
+        const imgSrc =
+          typeof img === "object" && img?.src
+            ? img.src
+            : typeof img === "string"
+              ? img
+              : null;
+        const displayDate = new Date(
+          work.data.modDatetime ?? work.data.pubDatetime
+        ).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+        return (
+          <div data-work-template={work.id} class="hidden">
+            <article class="modal-article">
+              {imgSrc && (
+                <div class="modal-cover">
+                  <img src={imgSrc} alt={work.data.title} />
                 </div>
               )}
-            </div>
-          </article>
-        </div>
-      );
-    })}
+              <div class="modal-body">
+                <h1 class="modal-title">{work.data.title}</h1>
+                <div class="modal-meta">
+                  <span class="type-badge">{typeLabelMap[work.data.type]}</span>
+                  <span class="work-card-date">{displayDate}</span>
+                  {work.data.organization && (
+                    <span class="modal-org">at {work.data.organization}</span>
+                  )}
+                </div>
+                <div class="modal-tags">
+                  {work.data.tags.map((t: string) => (
+                    <span class="tag-chip">#{t}</span>
+                  ))}
+                </div>
+                <hr class="modal-divider" />
+                <div class="app-prose max-w-none">
+                  <Content />
+                </div>
+                {work.data.links && work.data.links.length > 0 && (
+                  <div class="modal-actions">
+                    {work.data.links.map(
+                      (link: { url: string; label: string }) => (
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="modal-action-btn"
+                        >
+                          {link.label} &rarr;
+                        </a>
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
+            </article>
+          </div>
+        );
+      })
+    }
 
     <WorkModal />
   </main>

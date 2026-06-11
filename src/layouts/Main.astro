@@ -11,7 +11,7 @@ const { props } = Astro;
 const backUrl = SITE.showBackButton ? Astro.url.pathname : "/";
 ---
 
-<main data-backUrl={backUrl} id="main-content" class="app-layout main-content">
+<main data-backUrl={backUrl} id="main-content" class="main-content app-layout">
   {
     "titleTransition" in props ? (
       <h1 class="page-title">

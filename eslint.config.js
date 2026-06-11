@@ -14,5 +14,8 @@ export default [
     },
   },
   { rules: { "no-console": "error" } },
+  // Node CLI build scripts (sync-sources, adapters): console output is the
+  // intended progress/error UX, not stray debugging — allow it here only.
+  { files: ["scripts/**"], rules: { "no-console": "off" } },
   { ignores: ["dist/**", ".astro", "public/pagefind/**"] },
 ];

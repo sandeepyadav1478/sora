@@ -12,8 +12,6 @@ import WorkCardTimeline from "@/components/WorkCardTimeline.astro";
 import WorkCardFeatured from "@/components/WorkCardFeatured.astro";
 import WorkModal from "@/components/WorkModal.astro";
 import AboutSection from "@/components/AboutSection.astro";
-import StartHere from "@/components/StartHere.astro";
-import StatsBar from "@/components/StatsBar.astro";
 import ExperienceTimeline from "@/components/ExperienceTimeline.astro";
 import SkillsSection from "@/components/SkillsSection.astro";
 import Publications from "@/components/Publications.astro";
@@ -23,13 +21,12 @@ import FeaturedModels from "@/components/FeaturedModels.astro";
 import ResourcesSection from "@/components/ResourcesSection.astro";
 import CuratedLists from "@/components/CuratedLists.astro";
 import FAQSection from "@/components/FAQSection.astro";
-import ClientsSection from "@/components/ClientsSection.astro";
 import EducationSection from "@/components/EducationSection.astro";
-import AwardsSection from "@/components/AwardsSection.astro";
 import Testimonials from "@/components/Testimonials.astro";
 import HighlightCards from "@/components/HighlightCards.astro";
 import Newsletter from "@/components/Newsletter.astro";
 import ContactSection from "@/components/ContactSection.astro";
+import ActivityFeed from "@/components/ActivityFeed.astro";
 import getSortedWorks from "@/utils/getSortedWorks";
 import { SECTIONS, BOARD } from "@/config";
 
@@ -42,21 +39,6 @@ if (BOARD.layout === "two-tier") {
     if (w.data.featured || i < BOARD.recentCount) firstTier.add(w.id);
   });
 }
-
-const typeLabelMap: Record<string, string> = {
-  oss: "OSS Contribution",
-  project: "Project",
-  writing: "Writing",
-  talk: "Talk",
-  certification: "Certification",
-  experience: "Role",
-  conference: "Conference",
-  hackathon: "Hackathon",
-  meetup: "Meetup",
-  building: "Building",
-  learning: "Learning",
-  reading: "Reading",
-};
 
 const typeEyebrowMap: Record<string, string> = {
   oss: "Open Source",
@@ -74,10 +56,10 @@ const typeEyebrowMap: Record<string, string> = {
 };
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
-  "active": { label: "Active", cls: "status-active" },
-  "maintained": { label: "Maintained", cls: "status-maintained" },
+  active: { label: "Active", cls: "status-active" },
+  maintained: { label: "Maintained", cls: "status-maintained" },
   "in-production": { label: "In Production", cls: "status-active" },
-  "archived": { label: "Archived", cls: "status-archived" },
+  archived: { label: "Archived", cls: "status-archived" },
 };
 ---
 
@@ -91,85 +73,136 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
     <HighlightCards />
 
     {/* === THE BOARD === */}
-    <section id="works" class:list={["works-section", BOARD.badgeStyle === "uniform" && "badges-uniform"]}>
+    <section
+      id="works"
+      class:list={[
+        "works-section",
+        BOARD.badgeStyle === "uniform" && "badges-uniform",
+      ]}
+    >
       <FilterTabs />
 
-      {BOARD.layout === "two-tier" && (() => {
-        const featuredWorks = sortedWorks.filter(w => w.data.featured);
-        const recentWorks = sortedWorks.filter(w => !w.data.featured).slice(0, BOARD.recentCount);
-        const showcaseWorks = sortedWorks.filter(w => !w.data.featured).slice(BOARD.recentCount, BOARD.recentCount + 4);
-        const restWorks = sortedWorks.filter(w => !w.data.featured).slice(BOARD.recentCount + 4);
+      {
+        BOARD.layout === "two-tier" &&
+          (() => {
+            const featuredWorks = sortedWorks.filter(w => w.data.featured);
+            const recentWorks = sortedWorks
+              .filter(w => !w.data.featured)
+              .slice(0, BOARD.recentCount);
+            const showcaseWorks = sortedWorks
+              .filter(w => !w.data.featured)
+              .slice(BOARD.recentCount, BOARD.recentCount + 4);
+            const restWorks = sortedWorks
+              .filter(w => !w.data.featured)
+              .slice(BOARD.recentCount + 4);
 
-        return (
-          <>
-            {/* Featured + recent in a 3-column grid */}
-            <ul class="grid-board grid-board--3col">
-              {featuredWorks.map(work => <WorkCardFeatured {...work} />)}
-              {recentWorks.map(work => <WorkCardGrid {...work} />)}
-            </ul>
+            return (
+              <>
+                {/* Featured + recent in a 3-column grid */}
+                <ul class="grid-board grid-board--3col">
+                  {featuredWorks.map(work => (
+                    <WorkCardFeatured {...work} />
+                  ))}
+                  {recentWorks.map(work => (
+                    <WorkCardGrid {...work} />
+                  ))}
+                </ul>
 
-            {/* 2×2 showcase row */}
-            {showcaseWorks.length > 0 && (
-              <ul class="grid-board grid-board--2x2">
-                {showcaseWorks.map(work => <WorkCardGrid {...work} />)}
-              </ul>
-            )}
+                {/* 2×2 showcase row */}
+                {showcaseWorks.length > 0 && (
+                  <ul class="grid-board grid-board--2x2">
+                    {showcaseWorks.map(work => (
+                      <WorkCardGrid {...work} />
+                    ))}
+                  </ul>
+                )}
 
-            {/* Rest as compact rows */}
-            {restWorks.length > 0 && (
-              <ul class="compact-list">
-                {restWorks.map(work => <WorkCardCompact {...work} />)}
-              </ul>
-            )}
-          </>
-        );
-      })()}
+                {/* Rest as compact rows */}
+                {restWorks.length > 0 && (
+                  <ul class="compact-list">
+                    {restWorks.map(work => (
+                      <WorkCardCompact {...work} />
+                    ))}
+                  </ul>
+                )}
+              </>
+            );
+          })()
+      }
 
-      {BOARD.layout === "flat" && (
-        <ul>
-          {sortedWorks.map(work => <WorkCard {...work} />)}
-        </ul>
-      )}
+      {
+        BOARD.layout === "flat" && (
+          <ul>
+            {sortedWorks.map(work => (
+              <WorkCard {...work} />
+            ))}
+          </ul>
+        )
+      }
 
-      {BOARD.layout === "grid" && (
-        <ul class="grid-board">
-          {sortedWorks.map(work => <WorkCardGrid {...work} />)}
-        </ul>
-      )}
+      {
+        BOARD.layout === "grid" && (
+          <ul class="grid-board">
+            {sortedWorks.map(work => (
+              <WorkCardGrid {...work} />
+            ))}
+          </ul>
+        )
+      }
 
-      {BOARD.layout === "timeline" && (
-        <ul class="timeline-board">
-          {sortedWorks.map(work => <WorkCardTimeline {...work} />)}
-        </ul>
-      )}
+      {
+        BOARD.layout === "timeline" && (
+          <ul class="timeline-board">
+            {sortedWorks.map(work => (
+              <WorkCardTimeline {...work} />
+            ))}
+          </ul>
+        )
+      }
     </section>
 
     {/* === WORK GROUP: Open Source + Models === */}
-    {SECTIONS.showOpenSource && (
-      <div class="section-tinted">
-        <OpenSourceSection />
-      </div>
-    )}
-    {SECTIONS.showFeaturedModels && (
-      <div class="section-tinted">
-        <FeaturedModels />
-      </div>
-    )}
+    {
+      SECTIONS.showOpenSource && (
+        <div class="section-tinted">
+          <OpenSourceSection />
+        </div>
+      )
+    }
+    {
+      SECTIONS.showFeaturedModels && (
+        <div class="section-tinted">
+          <FeaturedModels />
+        </div>
+      )
+    }
 
     {/* === CAREER GROUP: Experience + Skills + Education + Awards === */}
-    {SECTIONS.showExperience && (
-      <div class="section-tinted">
-        <ExperienceTimeline />
-      </div>
-    )}
-    {SECTIONS.showSkills && <div class="skills-wrapper"><SkillsSection /></div>}
-    {(SECTIONS.showEducation || SECTIONS.showAwards) && (
-      <div class="section-tinted">
-        <EducationSection />
-      </div>
-    )}
+    {
+      SECTIONS.showExperience && (
+        <div class="section-tinted">
+          <ExperienceTimeline />
+        </div>
+      )
+    }
+    {
+      SECTIONS.showSkills && (
+        <div class="skills-wrapper">
+          <SkillsSection />
+        </div>
+      )
+    }
+    {
+      (SECTIONS.showEducation || SECTIONS.showAwards) && (
+        <div class="section-tinted">
+          <EducationSection />
+        </div>
+      )
+    }
 
-    {/* === RESEARCH GROUP: Publications + Speaking + Resources + Curated === */}
+    {
+      /* === RESEARCH GROUP: Publications + Speaking + Resources + Curated === */
+    }
     {SECTIONS.showPublications && <Publications />}
     {SECTIONS.showSpeaking && <SpeakingSection />}
     {SECTIONS.showResources && <ResourcesSection />}
@@ -177,174 +210,247 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
 
     {/* === CONNECT + EXTRAS === */}
     <Testimonials />
+    {
+      SECTIONS.showActivity && (
+        <div class="section-tinted">
+          <ActivityFeed />
+        </div>
+      )
+    }
     {SECTIONS.showFAQ && <FAQSection />}
     <Newsletter />
-    {SECTIONS.showContact && (
-      <div class="section-tinted">
-        <ContactSection />
-      </div>
-    )}
+    {
+      SECTIONS.showContact && (
+        <div class="section-tinted">
+          <ContactSection />
+        </div>
+      )
+    }
 
     {/* Pre-rendered work content (hidden, cloned into modal by JS) */}
-    {sortedWorks.map(async work => {
-      const { Content } = await render(work);
-      const img = work.data.image;
-      const imgSrc = typeof img === "object" && img?.src ? img.src : typeof img === "string" ? img : null;
-      const displayDate = new Date(work.data.modDatetime ?? work.data.pubDatetime)
-        .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-      const eyebrow = typeEyebrowMap[work.data.type] || work.data.type;
-      const statusInfo = work.data.status ? statusLabelMap[work.data.status] : null;
-      const highlights = work.data.highlights ?? [];
-      const tech = work.data.tech ?? [];
-      const gallery = work.data.gallery ?? [];
-      const timeline = work.data.timeline ?? [];
-      return (
-        <div data-work-template={work.id} class="hidden">
-          <article class="modal-article">
-            {imgSrc && (
-              <div class="modal-cover">
-                <img src={imgSrc} alt={work.data.title} />
-                <div class="modal-cover-overlay"></div>
-              </div>
-            )}
+    {
+      sortedWorks.map(async work => {
+        const { Content } = await render(work);
+        const img = work.data.image;
+        const imgSrc =
+          typeof img === "object" && img?.src
+            ? img.src
+            : typeof img === "string"
+              ? img
+              : null;
+        const displayDate = new Date(
+          work.data.modDatetime ?? work.data.pubDatetime
+        ).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+        const eyebrow = typeEyebrowMap[work.data.type] || work.data.type;
+        const statusInfo = work.data.status
+          ? statusLabelMap[work.data.status]
+          : null;
+        const highlights = work.data.highlights ?? [];
+        const tech = work.data.tech ?? [];
+        const gallery = work.data.gallery ?? [];
+        const timeline = work.data.timeline ?? [];
+        return (
+          <div data-work-template={work.id} class="hidden">
+            <article class="modal-article">
+              {imgSrc && (
+                <div class="modal-cover">
+                  <img src={imgSrc} alt={work.data.title} />
+                  <div class="modal-cover-overlay" />
+                </div>
+              )}
 
-            <div class="modal-body">
-              <p class="modal-eyebrow">{eyebrow}</p>
-              <h1 class="modal-title">{work.data.title}</h1>
-              <p class="modal-subtitle">{work.data.description}</p>
+              <div class="modal-body">
+                <p class="modal-eyebrow">{eyebrow}</p>
+                <h1 class="modal-title">{work.data.title}</h1>
+                <p class="modal-subtitle">{work.data.description}</p>
 
-              <div class="modal-meta-row">
-                {work.data.organization && (
+                <div class="modal-meta-row">
+                  {work.data.organization && (
+                    <span class="modal-meta-item">
+                      <span class="modal-meta-label">Org</span>
+                      {work.data.organizationUrl && (
+                        <img
+                          src={`https://www.google.com/s2/favicons?domain=${new URL(work.data.organizationUrl).hostname}&sz=32`}
+                          alt=""
+                          class="org-favicon"
+                          width="14"
+                          height="14"
+                          loading="lazy"
+                        />
+                      )}
+                      {work.data.organization}
+                    </span>
+                  )}
+                  {work.data.role && (
+                    <span class="modal-meta-item">
+                      <span class="modal-meta-label">Role</span>
+                      {work.data.role}
+                    </span>
+                  )}
                   <span class="modal-meta-item">
-                    <span class="modal-meta-label">Org</span>
-                    {work.data.organizationUrl && (
-                      <img
-                        src={`https://www.google.com/s2/favicons?domain=${new URL(work.data.organizationUrl).hostname}&sz=32`}
-                        alt=""
-                        class="org-favicon"
-                        width="14"
-                        height="14"
-                        loading="lazy"
-                      />
-                    )}
-                    {work.data.organization}
+                    <span class="modal-meta-label">Date</span>
+                    {displayDate}
                   </span>
-                )}
-                {work.data.role && (
-                  <span class="modal-meta-item">
-                    <span class="modal-meta-label">Role</span>
-                    {work.data.role}
-                  </span>
-                )}
-                <span class="modal-meta-item">
-                  <span class="modal-meta-label">Date</span>
-                  {displayDate}
-                </span>
-                {statusInfo && (
-                  <span class:list={["status-badge", statusInfo.cls]}>
-                    {statusInfo.label}
-                  </span>
-                )}
-              </div>
+                  {statusInfo && (
+                    <span class:list={["status-badge", statusInfo.cls]}>
+                      {statusInfo.label}
+                    </span>
+                  )}
+                </div>
 
-              <div class="modal-tags">
-                {work.data.tags.map(tag => (
-                  <a href={`/tags?t=${encodeURIComponent(tag)}`} class="tag-chip tag-link">#{tag}</a>
-                ))}
-              </div>
-
-              {work.data.links && work.data.links.length > 0 && (
-                <div class="modal-link-bar">
-                  {work.data.links.map(link => (
+                <div class="modal-tags">
+                  {work.data.tags.map(tag => (
                     <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="modal-action-btn"
+                      href={`/tags?t=${encodeURIComponent(tag)}`}
+                      class="tag-chip tag-link"
                     >
-                      {link.label} &rarr;
+                      #{tag}
                     </a>
                   ))}
                 </div>
-              )}
 
-              <hr class="modal-divider" />
-
-              {highlights.length > 0 && (
-                <div class="modal-highlights">
-                  {highlights.map(h => (
-                    <div class="modal-highlight-card">
-                      <span class="modal-highlight-value">{h.value}</span>
-                      <span class="modal-highlight-label">{h.label}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {gallery.length > 0 && (
-                <div class="modal-gallery">
-                  {gallery.map(item => (
-                    <figure class="modal-gallery-item" data-gallery-type={item.type}>
-                      {item.type === "video" ? (
-                        <div class="modal-gallery-video">
-                          <iframe src={item.src} title={item.caption || ""}></iframe>
-                          <div class="video-theater-overlay">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                              <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
-                              <polyline points="17 2 12 7 7 2"></polyline>
-                            </svg>
-                          </div>
-                        </div>
-                      ) : (
-                        <img src={item.src} alt={item.caption || ""} loading="lazy" />
-                      )}
-                      {item.caption && <figcaption>{item.caption}</figcaption>}
-                    </figure>
-                  ))}
-                </div>
-              )}
-
-              {timeline.length > 0 && (
-                <div class="modal-timeline">
-                  <h3 class="modal-timeline-heading">Timeline</h3>
-                  <ol class="modal-timeline-list">
-                    {timeline.map((entry, i) => (
-                      <li class:list={["modal-timeline-entry", i === timeline.length - 1 && "modal-timeline-entry-last"]}>
-                        <div class="modal-timeline-dot"></div>
-                        <div class="modal-timeline-content">
-                          <span class="modal-timeline-date">{entry.date}</span>
-                          <strong class="modal-timeline-title">{entry.title}</strong>
-                          {entry.description && <p class="modal-timeline-desc">{entry.description}</p>}
-                        </div>
-                      </li>
+                {work.data.links && work.data.links.length > 0 && (
+                  <div class="modal-link-bar">
+                    {work.data.links.map(link => (
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="modal-action-btn"
+                      >
+                        {link.label} &rarr;
+                      </a>
                     ))}
-                  </ol>
-                </div>
-              )}
+                  </div>
+                )}
 
-              <div class="app-prose max-w-none modal-prose">
-                <Content />
+                <hr class="modal-divider" />
+
+                {highlights.length > 0 && (
+                  <div class="modal-highlights">
+                    {highlights.map(h => (
+                      <div class="modal-highlight-card">
+                        <span class="modal-highlight-value">{h.value}</span>
+                        <span class="modal-highlight-label">{h.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {gallery.length > 0 && (
+                  <div class="modal-gallery">
+                    {gallery.map(item => (
+                      <figure
+                        class="modal-gallery-item"
+                        data-gallery-type={item.type}
+                      >
+                        {item.type === "video" ? (
+                          <div class="modal-gallery-video">
+                            <iframe src={item.src} title={item.caption || ""} />
+                            <div class="video-theater-overlay">
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              >
+                                <rect
+                                  x="2"
+                                  y="7"
+                                  width="20"
+                                  height="15"
+                                  rx="2"
+                                  ry="2"
+                                />
+                                <polyline points="17 2 12 7 7 2" />
+                              </svg>
+                            </div>
+                          </div>
+                        ) : (
+                          <img
+                            src={item.src}
+                            alt={item.caption || ""}
+                            loading="lazy"
+                          />
+                        )}
+                        {item.caption && (
+                          <figcaption>{item.caption}</figcaption>
+                        )}
+                      </figure>
+                    ))}
+                  </div>
+                )}
+
+                {timeline.length > 0 && (
+                  <div class="modal-timeline">
+                    <h3 class="modal-timeline-heading">Timeline</h3>
+                    <ol class="modal-timeline-list">
+                      {timeline.map((entry, i) => (
+                        <li
+                          class:list={[
+                            "modal-timeline-entry",
+                            i === timeline.length - 1 &&
+                              "modal-timeline-entry-last",
+                          ]}
+                        >
+                          <div class="modal-timeline-dot" />
+                          <div class="modal-timeline-content">
+                            <span class="modal-timeline-date">
+                              {entry.date}
+                            </span>
+                            <strong class="modal-timeline-title">
+                              {entry.title}
+                            </strong>
+                            {entry.description && (
+                              <p class="modal-timeline-desc">
+                                {entry.description}
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                <div class="app-prose modal-prose max-w-none">
+                  <Content />
+                </div>
+
+                {tech.length > 0 && (
+                  <div class="modal-tech">
+                    <h3 class="modal-tech-heading">Tech Stack</h3>
+                    {BOARD.techStyle === "comma-list" ? (
+                      <p class="tech-comma-list">{tech.join(", ")}</p>
+                    ) : BOARD.techStyle === "dot-separated" ? (
+                      <p class="tech-dot-list">{tech.join(" · ")}</p>
+                    ) : (
+                      <div class="modal-tech-list">
+                        {tech.map(t => (
+                          <span
+                            class={`tech-chip tech-chip--${BOARD.techStyle}`}
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-
-              {tech.length > 0 && (
-                <div class="modal-tech">
-                  <h3 class="modal-tech-heading">Tech Stack</h3>
-                  {BOARD.techStyle === "comma-list" ? (
-                    <p class="tech-comma-list">{tech.join(", ")}</p>
-                  ) : BOARD.techStyle === "dot-separated" ? (
-                    <p class="tech-dot-list">{tech.join(" · ")}</p>
-                  ) : (
-                    <div class="modal-tech-list">
-                      {tech.map(t => <span class={`tech-chip tech-chip--${BOARD.techStyle}`}>{t}</span>)}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </article>
-        </div>
-      );
-    })}
+            </article>
+          </div>
+        );
+      })
+    }
 
     <WorkModal />
     <div id="compact-preview-float" class="compact-preview"></div>
@@ -367,7 +473,9 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
     let raf = 0;
 
     function show(card: HTMLElement, e: MouseEvent) {
-      const tpl = card.closest(".work-item")?.querySelector<HTMLTemplateElement>(".compact-preview-tpl");
+      const tpl = card
+        .closest(".work-item")
+        ?.querySelector<HTMLTemplateElement>(".compact-preview-tpl");
       if (!tpl) return;
       float.innerHTML = "";
       float.appendChild(tpl.content.cloneNode(true));
@@ -405,7 +513,9 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
     }
 
     document.addEventListener("mouseover", e => {
-      const card = (e.target as HTMLElement).closest<HTMLElement>(".compact-card, .grid-board--2x3 .grid-card");
+      const card = (e.target as HTMLElement).closest<HTMLElement>(
+        ".compact-card, .grid-board--2x3 .grid-card"
+      );
       if (card && card !== activeCard) show(card, e as MouseEvent);
       else if (!card && activeCard) hide();
     });

@@ -8,7 +8,7 @@ function initTagFilter() {
 
   if (tagLinks.length === 0) return;
 
-  let activeTags = new Set<string>();
+  const activeTags = new Set<string>();
 
   function applyFilters() {
     const typeLinks = document.querySelectorAll<HTMLElement>(".filter-link");
@@ -20,19 +20,27 @@ function initTagFilter() {
     });
 
     items.forEach(item => {
-      const typeMatch = currentType === "all" || item.dataset.type === currentType;
+      const typeMatch =
+        currentType === "all" || item.dataset.type === currentType;
       const itemTags = (item.dataset.tags || "").split(",").filter(Boolean);
-      const tagMatch = activeTags.size === 0 || [...activeTags].every(t => itemTags.includes(t));
+      const tagMatch =
+        activeTags.size === 0 ||
+        [...activeTags].every(t => itemTags.includes(t));
       item.style.display = typeMatch && tagMatch ? "" : "none";
     });
   }
 
   function renderPills() {
-    const html = [...activeTags].map(tag =>
-      `<span class="tag-pill" data-remove-tag="${tag}" role="button" tabindex="0">#${tag} ×</span>`
-    ).join("");
+    const html = [...activeTags]
+      .map(
+        tag =>
+          `<span class="tag-pill" data-remove-tag="${tag}" role="button" tabindex="0">#${tag} ×</span>`
+      )
+      .join("");
 
-    containers.forEach(c => { c.innerHTML = html; });
+    containers.forEach(c => {
+      c.innerHTML = html;
+    });
 
     document.querySelectorAll<HTMLElement>(".tag-pill").forEach(pill => {
       pill.addEventListener("click", e => {
@@ -53,22 +61,26 @@ function initTagFilter() {
   }
 
   tagLinks.forEach(link => {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      const tag = link.dataset.tag;
-      if (!tag) return;
-      if (activeTags.has(tag)) {
-        activeTags.delete(tag);
-      } else {
-        activeTags.add(tag);
-      }
-      renderPills();
-      syncHighlights();
-      applyFilters();
-      return false;
-    }, true);
+    link.addEventListener(
+      "click",
+      e => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        const tag = link.dataset.tag;
+        if (!tag) return;
+        if (activeTags.has(tag)) {
+          activeTags.delete(tag);
+        } else {
+          activeTags.add(tag);
+        }
+        renderPills();
+        syncHighlights();
+        applyFilters();
+        return false;
+      },
+      true
+    );
   });
 }
 

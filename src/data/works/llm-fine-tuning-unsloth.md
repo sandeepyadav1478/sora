@@ -5,7 +5,19 @@ pubDatetime: 2025-11-20T00:00:00Z
 description: "Fine-tuned Llama 3 and Mistral models for domain-specific tasks using Unsloth + QLoRA, achieving 40% faster training with 60% less VRAM."
 featured: true
 tags: [fine-tuning, llm, parameter-efficient, model-training, optimization]
-tech: [PyTorch, Unsloth, PEFT, QLoRA, Hugging Face, Weights & Biases, GGUF, vLLM, Llama, Mistral]
+tech:
+  [
+    PyTorch,
+    Unsloth,
+    PEFT,
+    QLoRA,
+    Hugging Face,
+    Weights & Biases,
+    GGUF,
+    vLLM,
+    Llama,
+    Mistral,
+  ]
 role: "AI Engineer"
 status: maintained
 highlights:
@@ -41,11 +53,11 @@ Unsloth's fused kernels and memory optimizations let us fine-tune 8B models on a
 
 ## Results
 
-| Model | Task | Accuracy | vs Base |
-|---|---|---|---|
-| Llama 3 8B | Legal Summarization | 91.3% | +18.7% |
-| Mistral 7B | Code Review | 87.5% | +22.1% |
-| Phi-3 Mini | Support Triage | 94.0% | +15.3% |
+| Model      | Task                | Accuracy | vs Base |
+| ---------- | ------------------- | -------- | ------- |
+| Llama 3 8B | Legal Summarization | 91.3%    | +18.7%  |
+| Mistral 7B | Code Review         | 87.5%    | +22.1%  |
+| Phi-3 Mini | Support Triage      | 94.0%    | +15.3%  |
 
 ## Deployment
 

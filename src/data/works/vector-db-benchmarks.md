@@ -22,11 +22,11 @@ Ran a production-realistic benchmark of the three most popular vector databases 
 
 ## Results Summary
 
-| Database | Recall@10 | p95 Latency | Cost/Month (2M vectors) |
-|---|---|---|---|
-| Qdrant (self-hosted) | 98.2% | 12ms | $150 |
-| Pinecone (managed) | 97.8% | 18ms | $420 |
-| Weaviate (self-hosted) | 97.5% | 22ms | $180 |
+| Database               | Recall@10 | p95 Latency | Cost/Month (2M vectors) |
+| ---------------------- | --------- | ----------- | ----------------------- |
+| Qdrant (self-hosted)   | 98.2%     | 12ms        | $150                    |
+| Pinecone (managed)     | 97.8%     | 18ms        | $420                    |
+| Weaviate (self-hosted) | 97.5%     | 22ms        | $180                    |
 
 ## Recommendation
 

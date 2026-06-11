@@ -25,10 +25,7 @@ const tabs = [
           data-filter={tab.filter}
           role="button"
           tabindex="0"
-          class:list={[
-            "filter-link",
-            { active: tab.filter === "all" },
-          ]}
+          class:list={["filter-link", { active: tab.filter === "all" }]}
         >
           {tab.label}
         </span>
@@ -47,10 +44,7 @@ const tabs = [
           data-filter={tab.filter}
           role="button"
           tabindex="0"
-          class:list={[
-            "filter-link",
-            { active: tab.filter === "all" },
-          ]}
+          class:list={["filter-link", { active: tab.filter === "all" }]}
         >
           {tab.label}
         </span>
@@ -64,14 +58,18 @@ const tabs = [
   function initFilterTabs() {
     const links = document.querySelectorAll<HTMLElement>(".filter-link");
     const items = document.querySelectorAll<HTMLElement>(".work-item");
-    const desktopSidebar = document.querySelector<HTMLElement>(".filter-desktop");
+    const desktopSidebar =
+      document.querySelector<HTMLElement>(".filter-desktop");
     const worksSection = document.getElementById("works");
 
     links.forEach(link => {
       link.addEventListener("click", () => {
         const filter = link.dataset.filter!;
         links.forEach(l => l.classList.remove("active"));
-        document.querySelectorAll<HTMLElement>(`.filter-link[data-filter="${filter}"]`)
+        document
+          .querySelectorAll<HTMLElement>(
+            `.filter-link[data-filter="${filter}"]`
+          )
           .forEach(l => l.classList.add("active"));
 
         items.forEach(item => {
@@ -84,7 +82,10 @@ const tabs = [
     if (desktopSidebar && worksSection) {
       const observer = new IntersectionObserver(
         ([entry]) => {
-          desktopSidebar.classList.toggle("filter-visible", entry.isIntersecting);
+          desktopSidebar.classList.toggle(
+            "filter-visible",
+            entry.isIntersecting
+          );
         },
         { rootMargin: "-5% 0px -5% 0px", threshold: 0 }
       );

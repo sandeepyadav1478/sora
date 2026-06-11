@@ -27,12 +27,12 @@ Our Llama 3 8B model was serving at 800ms p95 with HuggingFace's default inferen
 
 ## Results
 
-| Metric | Before | After |
-|---|---|---|
-| p95 Latency | 800ms | 250ms |
-| Throughput | 15 req/s | 48 req/s |
-| GPU Utilization | 40% | 92% |
-| Cost/1K requests | $0.12 | $0.04 |
+| Metric           | Before   | After    |
+| ---------------- | -------- | -------- |
+| p95 Latency      | 800ms    | 250ms    |
+| Throughput       | 15 req/s | 48 req/s |
+| GPU Utilization  | 40%      | 92%      |
+| Cost/1K requests | $0.12    | $0.04    |
 
 ## Takeaway
 

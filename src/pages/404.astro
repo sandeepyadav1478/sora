@@ -9,14 +9,12 @@ import { SITE } from "@/config";
 <Layout title={`404 Not Found | ${SITE.title}`}>
   <NavSidebar />
 
-  <main id="main-content" class="app-layout error-page">
+  <main id="main-content" class="error-page app-layout">
     <div class="error-content">
       <h1 class="error-code">404</h1>
       <span aria-hidden="true">¯\_(ツ)_/¯</span>
       <p class="error-message">Page Not Found</p>
-      <LinkButton href="/" class="error-home-link">
-        Go back home
-      </LinkButton>
+      <LinkButton href="/" class="error-home-link"> Go back home </LinkButton>
     </div>
   </main>
 

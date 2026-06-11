@@ -6,12 +6,8 @@ import { SITE } from "@/config";
 
 {
   SITE.showBackButton && (
-    <div class="app-layout back-button-wrap">
-      <LinkButton
-        id="back-button"
-        href="/"
-        class="back-button-link"
-      >
+    <div class="back-button-wrap app-layout">
+      <LinkButton id="back-button" href="/" class="back-button-link">
         <IconChevronLeft class="back-button-icon" />
         <span>Go back</span>
       </LinkButton>
