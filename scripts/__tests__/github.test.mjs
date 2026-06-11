@@ -48,3 +48,21 @@ test("normalizeEvents returns [] for empty/garbage input (never throws)", () => 
   assert.deepEqual(normalizeEvents([], { handle: "x", maxCommits: 25 }), []);
   assert.deepEqual(normalizeEvents(null, { handle: "x", maxCommits: 25 }), []);
 });
+
+test("normalizeEvents represents a minimal PushEvent (no commits[]) by its head SHA", () => {
+  const minimal = [
+    {
+      type: "PushEvent",
+      repo: { name: "octocat/hello" },
+      payload: { ref: "refs/heads/feat/x", head: "deadbeef123", before: "c0ffee456" },
+      created_at: "2026-06-11T06:05:10Z",
+    },
+  ];
+  const out = normalizeEvents(minimal, { handle: "octocat", maxCommits: 25 });
+  const commits = out.filter((e) => e.kind === "commit");
+  assert.equal(commits.length, 1);
+  assert.equal(commits[0].payload.sha, "deadbeef123");
+  assert.equal(commits[0].payload.branch, "feat/x");
+  assert.equal(commits[0].id, "github:commit:deadbeef123");
+  assert.equal(commits[0].url, "https://github.com/octocat/hello/commit/deadbeef123");
+});

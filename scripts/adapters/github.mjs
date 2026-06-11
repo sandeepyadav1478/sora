@@ -11,26 +11,48 @@ export function EVENTS_URL(handle) {
   return `${API}/users/${encodeURIComponent(handle)}/events/public`;
 }
 
-/** Pure transform: GitHub events array -> Envelope[]. No network. */
+/** Pure transform: GitHub events array -> Envelope[]. No network.
+ * NOTE: Minimal PushEvent payloads (no commits[]) are represented by their head SHA;
+ *       full commit messages would require an extra API call (out of scope). */
 export function normalizeEvents(events, cfg) {
   if (!Array.isArray(events)) return [];
   const out = [];
   for (const ev of events) {
     if (!ev || !ev.repo || !ev.created_at) continue;
     const repo = ev.repo.name;
-    if (ev.type === "PushEvent" && ev.payload && Array.isArray(ev.payload.commits)) {
+    if (ev.type === "PushEvent" && ev.payload) {
       const branch = String(ev.payload.ref || "").replace("refs/heads/", "") || undefined;
-      for (const c of ev.payload.commits) {
-        if (!c || !c.sha) continue;
+      const repoShort = repo.includes("/") ? repo.split("/")[1] : repo;
+      const commits = Array.isArray(ev.payload.commits)
+        ? ev.payload.commits.filter((c) => c && c.sha)
+        : [];
+      if (commits.length > 0) {
+        // Full payload: one envelope per commit, with messages.
+        for (const c of commits) {
+          out.push(
+            makeEnvelope({
+              id: stableId("github", "commit", c.sha),
+              source: "github",
+              kind: "commit",
+              title: (c.message || "").split("\n")[0] || `Pushed to ${repoShort}`,
+              url: `https://github.com/${repo}/commit/${c.sha}`,
+              date: ev.created_at,
+              payload: { repo, sha: c.sha, branch, message: c.message || "" },
+            })
+          );
+        }
+      } else if (ev.payload.head) {
+        // Minimal payload (no commits array): represent the push by its head SHA.
+        const sha = ev.payload.head;
         out.push(
           makeEnvelope({
-            id: stableId("github", "commit", c.sha),
+            id: stableId("github", "commit", sha),
             source: "github",
             kind: "commit",
-            title: (c.message || "").split("\n")[0] || "commit",
-            url: `https://github.com/${repo}/commit/${c.sha}`,
+            title: `Pushed to ${repoShort}`,
+            url: `https://github.com/${repo}/commit/${sha}`,
             date: ev.created_at,
-            payload: { repo, sha: c.sha, branch, message: c.message || "" },
+            payload: { repo, sha, branch, message: "" },
           })
         );
       }
