@@ -9,34 +9,47 @@ if (!READING.enabled) return Astro.redirect("/");
 
 <Layout title={`Reading | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" class="app-layout main-content">
+  <main id="main-content" class="main-content app-layout">
     <section class="reading-page">
       <h1 class="page-title">Reading</h1>
-      <p class="reading-intro">Books, papers, and resources that shaped my thinking.</p>
+      <p class="reading-intro">
+        Books, papers, and resources that shaped my thinking.
+      </p>
 
       <div class="reading-categories">
-        {READING.categories.map(category => (
-          <div class="reading-category">
-            <h2 class="reading-category-title">{category.name}</h2>
-            <ul class="reading-list">
-              {category.items.map(item => (
-                <li class="reading-item">
-                  {item.url ? (
-                    <a href={item.url} target="_blank" rel="noopener" class="reading-item-link">
-                      <span class="reading-item-title">{item.title}</span>
-                      {item.author && <span class="reading-item-author">{item.author}</span>}
-                    </a>
-                  ) : (
-                    <div class="reading-item-link">
-                      <span class="reading-item-title">{item.title}</span>
-                      {item.author && <span class="reading-item-author">{item.author}</span>}
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {
+          READING.categories.map(category => (
+            <div class="reading-category">
+              <h2 class="reading-category-title">{category.name}</h2>
+              <ul class="reading-list">
+                {category.items.map(item => (
+                  <li class="reading-item">
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener"
+                        class="reading-item-link"
+                      >
+                        <span class="reading-item-title">{item.title}</span>
+                        {item.author && (
+                          <span class="reading-item-author">{item.author}</span>
+                        )}
+                      </a>
+                    ) : (
+                      <div class="reading-item-link">
+                        <span class="reading-item-title">{item.title}</span>
+                        {item.author && (
+                          <span class="reading-item-author">{item.author}</span>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </div>
     </section>
   </main>

@@ -1,6 +1,8 @@
 ---
 import type { ActivityItem } from "@/lib/sources";
-interface Props { item: ActivityItem }
+interface Props {
+  item: ActivityItem;
+}
 const { item } = Astro.props;
 
 // Per-kind label + glyph; falls back gracefully for kinds added later.
@@ -14,11 +16,23 @@ const KIND_LABEL: Record<string, string> = {
   badge: "Badge",
 };
 const label = KIND_LABEL[item.kind] ?? item.kind;
-const when = new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-const branch = item.kind === "commit" ? (item.payload as { branch?: string }).branch : undefined;
+const when = new Date(item.date).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+const branch =
+  item.kind === "commit"
+    ? (item.payload as { branch?: string }).branch
+    : undefined;
 ---
 
-<a href={item.url} target="_blank" rel="noopener noreferrer" class="activity-card">
+<a
+  href={item.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="activity-card"
+>
   <span class="activity-chip">{item.source}</span>
   <span class="activity-kind">{label}</span>
   <span class="activity-title">{item.title}</span>
@@ -32,27 +46,48 @@ const branch = item.kind === "commit" ? (item.payload as { branch?: string }).br
     align-items: center;
     gap: 0.6rem;
     padding: 0.6rem 0.8rem;
-    border: 1px solid var(--border, rgba(127,127,127,0.2));
+    border: 1px solid var(--border, rgba(127, 127, 127, 0.2));
     border-radius: 0.5rem;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.15s ease, transform 0.15s ease;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
   }
-  .activity-card:hover { border-color: var(--accent, #888); transform: translateY(-1px); }
+  .activity-card:hover {
+    border-color: var(--accent, #888);
+    transform: translateY(-1px);
+  }
   .activity-chip {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     padding: 0.1rem 0.4rem;
     border-radius: 0.3rem;
-    background: var(--accent-muted, rgba(127,127,127,0.15));
+    background: var(--accent-muted, rgba(127, 127, 127, 0.15));
     flex-shrink: 0;
   }
-  .activity-kind { font-size: 0.75rem; opacity: 0.7; flex-shrink: 0; }
-  .activity-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .activity-branch {
-    font-size: 0.7rem; font-family: var(--font-mono, monospace);
-    opacity: 0.6; flex-shrink: 0;
+  .activity-kind {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    flex-shrink: 0;
   }
-  .activity-date { font-size: 0.75rem; opacity: 0.6; flex-shrink: 0; }
+  .activity-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .activity-branch {
+    font-size: 0.7rem;
+    font-family: var(--font-mono, monospace);
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+  .activity-date {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
 </style>

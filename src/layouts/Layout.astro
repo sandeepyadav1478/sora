@@ -89,7 +89,10 @@ const structuredData = isHomepage
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
-    <meta name="keywords" content={[PROFILE.role, ...PROFILE.keywords, "Portfolio"].join(", ")} />
+    <meta
+      name="keywords"
+      content={[PROFILE.role, ...PROFILE.keywords, "Portfolio"].join(", ")}
+    />
     <meta name="robots" content="index, follow" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -157,7 +160,10 @@ const structuredData = isHomepage
     <ClientRouter />
 
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
-    <script is:inline define:vars={{ initialColorScheme: SITE.initialColorScheme }}>
+    <script
+      is:inline
+      define:vars={{ initialColorScheme: SITE.initialColorScheme }}
+    >
       (function () {
         const currentTheme = localStorage.getItem("theme");
 

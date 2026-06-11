@@ -61,6 +61,7 @@ pnpm run dev
 ```
 
 The docs page shows:
+
 - All 4 board layouts with visual previews
 - All 13 card styles rendered live
 - All 7 tech stack display styles
@@ -92,11 +93,11 @@ The docs page shows:
 
 ## What You Edit
 
-| File | Purpose |
-|---|---|
-| `src/config.ts` | All personal data & settings |
-| `src/data/works/*.md` | Your work items (markdown) |
-| `public/` | Profile photo, favicon, images |
+| File                    | Purpose                         |
+| ----------------------- | ------------------------------- |
+| `src/config.ts`         | All personal data & settings    |
+| `src/data/works/*.md`   | Your work items (markdown)      |
+| `public/`               | Profile photo, favicon, images  |
 | `src/styles/global.css` | Visual customization (optional) |
 
 <br/>

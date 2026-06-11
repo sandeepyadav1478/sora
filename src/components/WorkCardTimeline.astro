@@ -11,7 +11,17 @@ dayjs.extend(timezone);
 type Props = CollectionEntry<"works">;
 
 const { id, data } = Astro.props;
-const { title, type, description, pubDatetime, tags, organization, featured, status, badgeColor } = data;
+const {
+  title,
+  type,
+  description,
+  pubDatetime,
+  tags,
+  organization,
+  featured,
+  status,
+  badgeColor,
+} = data;
 
 const typeLabelMap: Record<string, string> = {
   oss: "OSS",
@@ -29,10 +39,10 @@ const typeLabelMap: Record<string, string> = {
 };
 
 const statusLabelMap: Record<string, { label: string; cls: string }> = {
-  "active": { label: "Active", cls: "status-active" },
-  "maintained": { label: "Maintained", cls: "status-maintained" },
+  active: { label: "Active", cls: "status-active" },
+  maintained: { label: "Maintained", cls: "status-maintained" },
   "in-production": { label: "In Production", cls: "status-active" },
-  "archived": { label: "Archived", cls: "status-archived" },
+  archived: { label: "Archived", cls: "status-archived" },
 };
 
 const tz = SITE.timezone;
@@ -41,7 +51,8 @@ const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
 
 <li class="work-item timeline-item" data-type={type} data-tags={tags.join(",")}>
   <div class="timeline-dot-wrap">
-    <div class:list={["timeline-dot", featured && "timeline-dot-featured"]}></div>
+    <div class:list={["timeline-dot", featured && "timeline-dot-featured"]}>
+    </div>
   </div>
   <div
     class:list={[
@@ -54,21 +65,26 @@ const dateStr = dayjs(pubDatetime).tz(tz).format("MMM YYYY");
   >
     <div class="timeline-date">{dateStr}</div>
     <div class="timeline-badges">
-      <span class:list={["compact-type-badge", `type-badge--${type}`]} style={badgeColor ? `--badge-color:${badgeColor};background:color-mix(in srgb,var(--badge-color) 12%,transparent);color:var(--badge-color)` : undefined}>{typeLabelMap[type]}</span>
+      <span
+        class:list={["compact-type-badge", `type-badge--${type}`]}
+        style={badgeColor
+          ? `--badge-color:${badgeColor};background:color-mix(in srgb,var(--badge-color) 12%,transparent);color:var(--badge-color)`
+          : undefined}>{typeLabelMap[type]}</span
+      >
       {featured && <span class="featured-badge">Featured</span>}
-      {status && statusLabelMap[status] && (
-        <span class:list={["status-badge", statusLabelMap[status].cls]}>
-          {statusLabelMap[status].label}
-        </span>
-      )}
+      {
+        status && statusLabelMap[status] && (
+          <span class:list={["status-badge", statusLabelMap[status].cls]}>
+            {statusLabelMap[status].label}
+          </span>
+        )
+      }
     </div>
     <h3 class="timeline-title">{title}</h3>
     {organization && <span class="timeline-org">at {organization}</span>}
     <p class="timeline-desc">{description}</p>
     <div class="timeline-tags">
-      {tags.slice(0, 4).map(tag => (
-        <span class="tag-chip">#{tag}</span>
-      ))}
+      {tags.slice(0, 4).map(tag => <span class="tag-chip">#{tag}</span>)}
     </div>
   </div>
 </li>

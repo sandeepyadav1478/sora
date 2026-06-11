@@ -4,7 +4,17 @@ type: project
 pubDatetime: 2024-07-22T00:00:00Z
 description: "Self-hosted analytics dashboard with real-time event streaming, custom SQL queries, and team collaboration. React + FastAPI + PostgreSQL."
 tags: [full-stack, analytics, real-time, self-hosted, dashboard]
-tech: [React, TypeScript, FastAPI, PostgreSQL, TimescaleDB, WebSockets, Celery, Docker]
+tech:
+  [
+    React,
+    TypeScript,
+    FastAPI,
+    PostgreSQL,
+    TimescaleDB,
+    WebSockets,
+    Celery,
+    Docker,
+  ]
 role: "Creator & Lead Developer"
 status: in-production
 highlights:

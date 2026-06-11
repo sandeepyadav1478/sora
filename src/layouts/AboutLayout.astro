@@ -12,7 +12,7 @@ const { frontmatter } = Astro.props;
 
 <Layout title={`${frontmatter.title} | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" class="app-layout main-content">
+  <main id="main-content" class="main-content app-layout">
     <section id="about" class="about-page-content app-prose">
       <h1 class="about-page-title">{frontmatter.title}</h1>
       <slot />

@@ -3,7 +3,14 @@ import cache from "@/data/sources-cache.json";
 export interface ActivityItem {
   id: string;
   source: string;
-  kind: "commit" | "release" | "post" | "video" | "package" | "rating" | "badge";
+  kind:
+    | "commit"
+    | "release"
+    | "post"
+    | "video"
+    | "package"
+    | "rating"
+    | "badge";
   title: string;
   url: string;
   date: string;

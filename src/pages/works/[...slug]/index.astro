@@ -21,7 +21,18 @@ export async function getStaticPaths() {
 type Props = { work: CollectionEntry<"works"> };
 
 const { work } = Astro.props;
-const { title, description, pubDatetime, modDatetime, timezone, tags, links, organization, type, ogImage: initOgImage } = work.data;
+const {
+  title,
+  description,
+  pubDatetime,
+  modDatetime,
+  timezone,
+  tags,
+  links,
+  organization,
+  type,
+  ogImage: initOgImage,
+} = work.data;
 
 const { Content } = await render(work);
 
@@ -64,20 +75,27 @@ const ogImage = ogImageUrl
   scrollSmooth
 >
   <NavSidebar />
-  <main id="main-content" class="app-layout main-content post-main" data-pagefind-body>
+  <main
+    id="main-content"
+    class="main-content post-main app-layout"
+    data-pagefind-body
+  >
     <div class="work-back-link-wrap">
-      <a href="/" class="work-back-link" id="work-back-link">
-        &larr; Back
-      </a>
+      <a href="/" class="work-back-link" id="work-back-link"> &larr; Back </a>
       <script>
-        document.getElementById("work-back-link")?.addEventListener("click", (e) => {
-          e.preventDefault();
-          if (document.referrer && new URL(document.referrer).origin === location.origin) {
-            history.back();
-          } else {
-            window.location.href = "/";
-          }
-        });
+        document
+          .getElementById("work-back-link")
+          ?.addEventListener("click", e => {
+            e.preventDefault();
+            if (
+              document.referrer &&
+              new URL(document.referrer).origin === location.origin
+            ) {
+              history.back();
+            } else {
+              window.location.href = "/";
+            }
+          });
       </script>
     </div>
     <h1 class="post-title">
@@ -93,20 +111,22 @@ const ogImage = ogImageUrl
       <Content />
     </article>
 
-    {links && links.length > 0 && (
-      <div class="work-links-row">
-        {links.map(link => (
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="modal-link"
-          >
-            {link.label} &rarr;
-          </a>
-        ))}
-      </div>
-    )}
+    {
+      links && links.length > 0 && (
+        <div class="work-links-row">
+          {links.map(link => (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="modal-link"
+            >
+              {link.label} &rarr;
+            </a>
+          ))}
+        </div>
+      )
+    }
 
     <ul class="post-tags">
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}

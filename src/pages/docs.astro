@@ -11,14 +11,13 @@ if (!SITE.isTemplate) {
 
 <Layout title={`Documentation | ${SITE.title}`}>
   <NavSidebar />
-  <main id="main-content" class="app-layout main-content">
+  <main id="main-content" class="main-content app-layout">
     <article class="docs-page">
-
       <header class="docs-hero">
         <div class="docs-hero-badge">Documentation</div>
         <h1 class="docs-hero-title">Sora Template</h1>
         <p class="docs-hero-subtitle">
-          A portfolio template for developers, researchers, and creators.<br/>
+          A portfolio template for developers, researchers, and creators.<br />
           Configure one file. Add your works. Deploy.
         </p>
       </header>
@@ -31,7 +30,8 @@ if (!SITE.isTemplate) {
             <span class="docs-step-num">1</span>
             <div class="docs-step-body">
               <h3>Clone the template</h3>
-              <pre class="docs-code"><code>git clone https://github.com/sandeepyadav1478/sora.git my-portfolio
+              <pre
+                class="docs-code"><code>git clone https://github.com/sandeepyadav1478/sora.git my-portfolio
 cd my-portfolio && pnpm install</code></pre>
             </div>
           </div>
@@ -39,21 +39,28 @@ cd my-portfolio && pnpm install</code></pre>
             <span class="docs-step-num">2</span>
             <div class="docs-step-body">
               <h3>Edit <code>src/config.ts</code></h3>
-              <p>All your personal data lives in one file — name, role, socials, skills, experience.</p>
+              <p>
+                All your personal data lives in one file — name, role, socials,
+                skills, experience.
+              </p>
             </div>
           </div>
           <div class="docs-step">
             <span class="docs-step-num">3</span>
             <div class="docs-step-body">
               <h3>Add works to <code>src/data/works/</code></h3>
-              <p>Each work is a markdown file. Delete the sample files and add yours.</p>
+              <p>
+                Each work is a markdown file. Delete the sample files and add
+                yours.
+              </p>
             </div>
           </div>
           <div class="docs-step">
             <span class="docs-step-num">4</span>
             <div class="docs-step-body">
               <h3>Deploy</h3>
-              <pre class="docs-code"><code>git push  # GitHub Actions auto-deploys to Pages</code></pre>
+              <pre
+                class="docs-code"><code>git push  # GitHub Actions auto-deploys to Pages</code></pre>
             </div>
           </div>
         </div>
@@ -62,7 +69,9 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Board Layouts -->
       <section class="docs-section">
         <h2 class="docs-heading" id="layouts">Board Layouts</h2>
-        <p class="docs-text">Set <code>BOARD.layout</code> in config. Four options available:</p>
+        <p class="docs-text">
+          Set <code>BOARD.layout</code> in config. Four options available:
+        </p>
 
         <div class="docs-layout-grid">
           <div class="docs-layout-card">
@@ -124,7 +133,9 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Card Styles -->
       <section class="docs-section">
         <h2 class="docs-heading" id="card-styles">Card Styles</h2>
-        <p class="docs-text">Set <code>cardStyle</code> in work frontmatter for per-card visual treatment:</p>
+        <p class="docs-text">
+          Set <code>cardStyle</code> in work frontmatter for per-card visual treatment:
+        </p>
 
         <div class="docs-card-style-grid">
           <div class="docs-demo-card-wrap">
@@ -231,7 +242,9 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Tech Styles -->
       <section class="docs-section">
         <h2 class="docs-heading" id="tech-styles">Tech Stack Styles</h2>
-        <p class="docs-text">Set <code>BOARD.techStyle</code> in config. Shown in work modals:</p>
+        <p class="docs-text">
+          Set <code>BOARD.techStyle</code> in config. Shown in work modals:
+        </p>
 
         <div class="docs-tech-demos">
           <div class="docs-tech-demo">
@@ -292,7 +305,9 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Work Types -->
       <section class="docs-section">
         <h2 class="docs-heading" id="work-types">Work Types</h2>
-        <p class="docs-text">Set <code>type</code> in frontmatter. Each type gets a colored badge:</p>
+        <p class="docs-text">
+          Set <code>type</code> in frontmatter. Each type gets a colored badge:
+        </p>
 
         <div class="docs-types-grid">
           <div class="docs-type-item">
@@ -301,7 +316,8 @@ cd my-portfolio && pnpm install</code></pre>
           </div>
           <div class="docs-type-item">
             <span class="type-badge type-badge--project">Project</span>
-            <span class="docs-type-desc">Personal or professional projects</span>
+            <span class="docs-type-desc">Personal or professional projects</span
+            >
           </div>
           <div class="docs-type-item">
             <span class="type-badge type-badge--writing">Writing</span>
@@ -349,7 +365,10 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Modal Features -->
       <section class="docs-section">
         <h2 class="docs-heading" id="modal">Modal Features</h2>
-        <p class="docs-text">Click any work card to open a rich detail modal. Add these to frontmatter:</p>
+        <p class="docs-text">
+          Click any work card to open a rich detail modal. Add these to
+          frontmatter:
+        </p>
 
         <div class="docs-features-grid">
           <div class="docs-feature-card">
@@ -406,7 +425,9 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Frontmatter -->
       <section class="docs-section">
         <h2 class="docs-heading" id="frontmatter">Frontmatter Reference</h2>
-        <p class="docs-text">Full list of available fields for each work markdown file:</p>
+        <p class="docs-text">
+          Full list of available fields for each work markdown file:
+        </p>
 
         <div class="docs-table-wrap">
           <table class="docs-table">
@@ -419,30 +440,114 @@ cd my-portfolio && pnpm install</code></pre>
               </tr>
             </thead>
             <tbody>
-              <tr><td><code>title</code></td><td>string</td><td>Yes</td><td>Work title</td></tr>
-              <tr><td><code>type</code></td><td>enum</td><td>Yes</td><td>oss, project, writing, talk, certification, experience, conference, hackathon, meetup, building, learning, reading</td></tr>
-              <tr><td><code>pubDatetime</code></td><td>date</td><td>Yes</td><td>Publish date (ISO format)</td></tr>
-              <tr><td><code>description</code></td><td>string</td><td>Yes</td><td>One-line summary (shown on cards)</td></tr>
-              <tr><td><code>tags</code></td><td>string[]</td><td>Yes</td><td>Tags for filtering</td></tr>
+              <tr
+                ><td><code>title</code></td><td>string</td><td>Yes</td><td
+                  >Work title</td
+                ></tr
+              >
+              <tr
+                ><td><code>type</code></td><td>enum</td><td>Yes</td><td
+                  >oss, project, writing, talk, certification, experience,
+                  conference, hackathon, meetup, building, learning, reading</td
+                ></tr
+              >
+              <tr
+                ><td><code>pubDatetime</code></td><td>date</td><td>Yes</td><td
+                  >Publish date (ISO format)</td
+                ></tr
+              >
+              <tr
+                ><td><code>description</code></td><td>string</td><td>Yes</td><td
+                  >One-line summary (shown on cards)</td
+                ></tr
+              >
+              <tr
+                ><td><code>tags</code></td><td>string[]</td><td>Yes</td><td
+                  >Tags for filtering</td
+                ></tr
+              >
               <tr class="docs-table-divider"><td colspan="4"></td></tr>
-              <tr><td><code>featured</code></td><td>boolean</td><td></td><td>Pin to top / first tier</td></tr>
-              <tr><td><code>draft</code></td><td>boolean</td><td></td><td>Hide from production build</td></tr>
-              <tr><td><code>tech</code></td><td>string[]</td><td></td><td>Tech stack tags for modal</td></tr>
-              <tr><td><code>status</code></td><td>enum</td><td></td><td>active, maintained, archived, in-production</td></tr>
-              <tr><td><code>image</code></td><td>string</td><td></td><td>Cover image URL</td></tr>
-              <tr><td><code>organization</code></td><td>string</td><td></td><td>Company or project name</td></tr>
-              <tr><td><code>organizationUrl</code></td><td>string</td><td></td><td>Link for organization</td></tr>
-              <tr><td><code>role</code></td><td>string</td><td></td><td>Your role in this work</td></tr>
-              <tr><td><code>links</code></td><td>array</td><td></td><td>Action buttons: [&#123;label, url&#125;]</td></tr>
+              <tr
+                ><td><code>featured</code></td><td>boolean</td><td></td><td
+                  >Pin to top / first tier</td
+                ></tr
+              >
+              <tr
+                ><td><code>draft</code></td><td>boolean</td><td></td><td
+                  >Hide from production build</td
+                ></tr
+              >
+              <tr
+                ><td><code>tech</code></td><td>string[]</td><td></td><td
+                  >Tech stack tags for modal</td
+                ></tr
+              >
+              <tr
+                ><td><code>status</code></td><td>enum</td><td></td><td
+                  >active, maintained, archived, in-production</td
+                ></tr
+              >
+              <tr
+                ><td><code>image</code></td><td>string</td><td></td><td
+                  >Cover image URL</td
+                ></tr
+              >
+              <tr
+                ><td><code>organization</code></td><td>string</td><td></td><td
+                  >Company or project name</td
+                ></tr
+              >
+              <tr
+                ><td><code>organizationUrl</code></td><td>string</td><td
+                ></td><td>Link for organization</td></tr
+              >
+              <tr
+                ><td><code>role</code></td><td>string</td><td></td><td
+                  >Your role in this work</td
+                ></tr
+              >
+              <tr
+                ><td><code>links</code></td><td>array</td><td></td><td
+                  >Action buttons: [&#123;label, url&#125;]</td
+                ></tr
+              >
               <tr class="docs-table-divider"><td colspan="4"></td></tr>
-              <tr><td><code>highlights</code></td><td>array</td><td></td><td>Metric cards: [&#123;label, value, icon?&#125;]</td></tr>
-              <tr><td><code>gallery</code></td><td>array</td><td></td><td>Media: [&#123;src, caption, type&#125;]</td></tr>
-              <tr><td><code>timeline</code></td><td>array</td><td></td><td>Milestones: [&#123;date, title, description&#125;]</td></tr>
-              <tr><td><code>cardStyle</code></td><td>enum</td><td></td><td>Visual card style (see Card Styles)</td></tr>
+              <tr
+                ><td><code>highlights</code></td><td>array</td><td></td><td
+                  >Metric cards: [&#123;label, value, icon?&#125;]</td
+                ></tr
+              >
+              <tr
+                ><td><code>gallery</code></td><td>array</td><td></td><td
+                  >Media: [&#123;src, caption, type&#125;]</td
+                ></tr
+              >
+              <tr
+                ><td><code>timeline</code></td><td>array</td><td></td><td
+                  >Milestones: [&#123;date, title, description&#125;]</td
+                ></tr
+              >
+              <tr
+                ><td><code>cardStyle</code></td><td>enum</td><td></td><td
+                  >Visual card style (see Card Styles)</td
+                ></tr
+              >
               <tr class="docs-table-divider"><td colspan="4"></td></tr>
-              <tr><td><code>modDatetime</code></td><td>date</td><td></td><td>Last modified date</td></tr>
-              <tr><td><code>ogImage</code></td><td>string</td><td></td><td>Custom OG image</td></tr>
-              <tr><td><code>canonicalURL</code></td><td>string</td><td></td><td>Canonical URL (if cross-posted)</td></tr>
+              <tr
+                ><td><code>modDatetime</code></td><td>date</td><td></td><td
+                  >Last modified date</td
+                ></tr
+              >
+              <tr
+                ><td><code>ogImage</code></td><td>string</td><td></td><td
+                  >Custom OG image</td
+                ></tr
+              >
+              <tr
+                ><td><code>canonicalURL</code></td><td>string</td><td></td><td
+                  >Canonical URL (if cross-posted)</td
+                ></tr
+              >
             </tbody>
           </table>
         </div>
@@ -451,16 +556,24 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Configuration File -->
       <section class="docs-section">
         <h2 class="docs-heading" id="config">Configuration</h2>
-        <p class="docs-text">Everything you need to configure lives in <code>src/config.ts</code>:</p>
+        <p class="docs-text">
+          Everything you need to configure lives in <code>src/config.ts</code>:
+        </p>
 
         <div class="docs-config-grid">
           <div class="docs-config-card">
             <h3>SITE</h3>
-            <p>URL, title, author, description, theme settings, OG image, language</p>
+            <p>
+              URL, title, author, description, theme settings, OG image,
+              language
+            </p>
           </div>
           <div class="docs-config-card">
             <h3>PROFILE</h3>
-            <p>Name, tagline, photo, role, organization, location, typed phrases, trending keywords</p>
+            <p>
+              Name, tagline, photo, role, organization, location, typed phrases,
+              trending keywords
+            </p>
           </div>
           <div class="docs-config-card">
             <h3>SOCIALS_CONFIG</h3>
@@ -488,7 +601,10 @@ cd my-portfolio && pnpm install</code></pre>
           </div>
           <div class="docs-config-card">
             <h3>ABOUT</h3>
-            <p>Rich bio with markdown decorators: **bold**, ~muted~, _italic_, ## headings</p>
+            <p>
+              Rich bio with markdown decorators: **bold**, ~muted~, _italic_, ##
+              headings
+            </p>
           </div>
           <div class="docs-config-card">
             <h3>TESTIMONIALS</h3>
@@ -564,78 +680,219 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Hero Backgrounds & Animations -->
       <section class="docs-section">
         <h2 class="docs-heading" id="hero">Hero Backgrounds & Animations</h2>
-        <p class="docs-text">Set <code>SITE.heroBackground</code> and <code>SITE.heroAnimation</code> in config. Use the shuffle button in the sidebar to preview random combinations.</p>
+        <p class="docs-text">
+          Set <code>SITE.heroBackground</code> and <code
+            >SITE.heroAnimation</code
+          > in config. Use the shuffle button in the sidebar to preview random combinations.
+        </p>
 
         <h3 class="docs-subheading">Backgrounds</h3>
         <div class="docs-bg-grid">
-          <div class="docs-bg-card hero-bg--dot-grid"><div class="docs-bg-label"><code>dot-grid</code><span>Subtle repeating dot matrix</span></div></div>
-          <div class="docs-bg-card hero-bg--dual-glow"><div class="docs-bg-label"><code>dual-glow</code><span>Soft accent blobs left/right</span></div></div>
-          <div class="docs-bg-card hero-bg--mesh"><div class="docs-bg-label"><code>mesh</code><span>Multiple color blobs (SaaS style)</span></div></div>
-          <div class="docs-bg-card hero-bg--aurora"><div class="docs-bg-label"><code>aurora</code><span>Northern-lights color bands</span></div></div>
-          <div class="docs-bg-card hero-bg--spotlight"><div class="docs-bg-label"><code>spotlight</code><span>Center glow fading to edges</span></div></div>
-          <div class="docs-bg-card hero-bg--sunset"><div class="docs-bg-label"><code>sunset</code><span>Warm-to-cool diagonal sweep</span></div></div>
-          <div class="docs-bg-card hero-bg--frosted"><div class="docs-bg-label"><code>frosted</code><span>Subtle single-tint frosted glass</span></div></div>
-          <div class="docs-bg-card hero-bg--cyber"><div class="docs-bg-label"><code>cyber</code><span>Neon grid with scan lines</span></div></div>
-          <div class="docs-bg-card hero-bg--gradient-mesh"><div class="docs-bg-label"><code>gradient-mesh</code><span>Conic color wheel gradient</span></div></div>
-          <div class="docs-bg-card"><div class="docs-bg-label"><code>none</code><span>No background effect</span></div></div>
+          <div class="docs-bg-card hero-bg--dot-grid">
+            <div class="docs-bg-label">
+              <code>dot-grid</code><span>Subtle repeating dot matrix</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--dual-glow">
+            <div class="docs-bg-label">
+              <code>dual-glow</code><span>Soft accent blobs left/right</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--mesh">
+            <div class="docs-bg-label">
+              <code>mesh</code><span>Multiple color blobs (SaaS style)</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--aurora">
+            <div class="docs-bg-label">
+              <code>aurora</code><span>Northern-lights color bands</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--spotlight">
+            <div class="docs-bg-label">
+              <code>spotlight</code><span>Center glow fading to edges</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--sunset">
+            <div class="docs-bg-label">
+              <code>sunset</code><span>Warm-to-cool diagonal sweep</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--frosted">
+            <div class="docs-bg-label">
+              <code>frosted</code><span>Subtle single-tint frosted glass</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--cyber">
+            <div class="docs-bg-label">
+              <code>cyber</code><span>Neon grid with scan lines</span>
+            </div>
+          </div>
+          <div class="docs-bg-card hero-bg--gradient-mesh">
+            <div class="docs-bg-label">
+              <code>gradient-mesh</code><span>Conic color wheel gradient</span>
+            </div>
+          </div>
+          <div class="docs-bg-card">
+            <div class="docs-bg-label">
+              <code>none</code><span>No background effect</span>
+            </div>
+          </div>
         </div>
 
         <h3 class="docs-subheading">Canvas Animations</h3>
         <div class="docs-anim-grid" id="docs-anim-grid">
-          <div class="docs-anim-card"><canvas data-docs-anim="snake"></canvas><div class="docs-anim-label"><code>snake</code><span>Glowing lines on dot grid</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="aurora"></canvas><div class="docs-anim-label"><code>aurora</code><span>Drifting translucent blobs</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="constellation"></canvas><div class="docs-anim-label"><code>constellation</code><span>Particles with connection lines</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="wave-field"></canvas><div class="docs-anim-label"><code>wave-field</code><span>Dots rippling in sine waves</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="mesh-gradient"></canvas><div class="docs-anim-label"><code>mesh-gradient</code><span>Animated color fills</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="noise-flow"></canvas><div class="docs-anim-label"><code>noise-flow</code><span>Particles along noise currents</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="warp-starfield"></canvas><div class="docs-anim-label"><code>warp-starfield</code><span>Depth-projected star trails</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="neural-pulse"></canvas><div class="docs-anim-label"><code>neural-pulse</code><span>Dot grid with cascading beams</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="morph-blobs"></canvas><div class="docs-anim-label"><code>morph-blobs</code><span>Organic shape-shifting blobs</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="silk-waves"></canvas><div class="docs-anim-label"><code>silk-waves</code><span>Layered flowing ribbons</span></div></div>
-          <div class="docs-anim-card"><canvas data-docs-anim="floating-orbs"></canvas><div class="docs-anim-label"><code>floating-orbs</code><span>Glowing orbs with depth</span></div></div>
-          <div class="docs-anim-card"><div class="docs-anim-label"><code>none</code><span>No animation</span></div></div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="snake"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>snake</code><span>Glowing lines on dot grid</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="aurora"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>aurora</code><span>Drifting translucent blobs</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="constellation"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>constellation</code><span
+                >Particles with connection lines</span
+              >
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="wave-field"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>wave-field</code><span>Dots rippling in sine waves</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="mesh-gradient"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>mesh-gradient</code><span>Animated color fills</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="noise-flow"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>noise-flow</code><span>Particles along noise currents</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="warp-starfield"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>warp-starfield</code><span>Depth-projected star trails</span
+              >
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="neural-pulse"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>neural-pulse</code><span>Dot grid with cascading beams</span
+              >
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="morph-blobs"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>morph-blobs</code><span>Organic shape-shifting blobs</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="silk-waves"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>silk-waves</code><span>Layered flowing ribbons</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <canvas data-docs-anim="floating-orbs"></canvas><div
+              class="docs-anim-label"
+            >
+              <code>floating-orbs</code><span>Glowing orbs with depth</span>
+            </div>
+          </div>
+          <div class="docs-anim-card">
+            <div class="docs-anim-label">
+              <code>none</code><span>No animation</span>
+            </div>
+          </div>
         </div>
 
         <div class="docs-callout">
-          <strong>Shuffle button:</strong> When <code>isTemplate: true</code>, a shuffle icon appears in the sidebar and hero area. Click it to preview random background + animation combinations.
+          <strong>Shuffle button:</strong> When <code>isTemplate: true</code>, a
+          shuffle icon appears in the sidebar and hero area. Click it to preview
+          random background + animation combinations.
         </div>
       </section>
 
       <!-- Theming -->
       <section class="docs-section">
         <h2 class="docs-heading" id="theming">Theming</h2>
-        <p class="docs-text">All colors are CSS custom properties in <code>src/styles/global.css</code>:</p>
+        <p class="docs-text">
+          All colors are CSS custom properties in <code
+            >src/styles/global.css</code
+          >:
+        </p>
 
         <div class="docs-theme-demo">
           <div class="docs-color-row">
-            <div class="docs-color-swatch" style="background: var(--background); border: 1px solid var(--border);"></div>
+            <div
+              class="docs-color-swatch"
+              style="background: var(--background); border: 1px solid var(--border);"
+            >
+            </div>
             <code>--background</code>
             <span class="docs-color-desc">Page background</span>
           </div>
           <div class="docs-color-row">
-            <div class="docs-color-swatch" style="background: var(--foreground);"></div>
+            <div
+              class="docs-color-swatch"
+              style="background: var(--foreground);"
+            >
+            </div>
             <code>--foreground</code>
             <span class="docs-color-desc">Text color</span>
           </div>
           <div class="docs-color-row">
-            <div class="docs-color-swatch" style="background: var(--accent);"></div>
+            <div class="docs-color-swatch" style="background: var(--accent);">
+            </div>
             <code>--accent</code>
-            <span class="docs-color-desc">Brand color (links, badges, highlights)</span>
+            <span class="docs-color-desc"
+              >Brand color (links, badges, highlights)</span
+            >
           </div>
           <div class="docs-color-row">
-            <div class="docs-color-swatch" style="background: var(--muted);"></div>
+            <div class="docs-color-swatch" style="background: var(--muted);">
+            </div>
             <code>--muted</code>
             <span class="docs-color-desc">Backgrounds for cards, chips</span>
           </div>
           <div class="docs-color-row">
-            <div class="docs-color-swatch" style="background: var(--border);"></div>
+            <div class="docs-color-swatch" style="background: var(--border);">
+            </div>
             <code>--border</code>
             <span class="docs-color-desc">Borders and dividers</span>
           </div>
         </div>
 
         <div class="docs-callout">
-          <strong>To change your brand color:</strong> update <code>--accent</code> in both the <code>:root</code> (light) and <code>[data-theme="dark"]</code> blocks.
+          <strong>To change your brand color:</strong> update <code
+            >--accent</code
+          > in both the <code>:root</code> (light) and <code
+            >[data-theme="dark"]</code
+          > blocks.
         </div>
       </section>
 
@@ -675,7 +932,11 @@ cd my-portfolio && pnpm install</code></pre>
       <!-- Deploy -->
       <section class="docs-section">
         <h2 class="docs-heading" id="deploy">Deployment</h2>
-        <p class="docs-text">The included GitHub Actions workflow auto-deploys on every push to <code>main</code>.</p>
+        <p class="docs-text">
+          The included GitHub Actions workflow auto-deploys on every push to <code
+            >main</code
+          >.
+        </p>
 
         <div class="docs-steps">
           <div class="docs-step">
@@ -702,8 +963,10 @@ cd my-portfolio && pnpm install</code></pre>
         </div>
 
         <div class="docs-callout">
-          <strong>Other platforms:</strong> Sora builds to a static <code>dist/</code> folder.
-          Deploy on Vercel, Netlify, or Cloudflare Pages with build command <code>pnpm run build</code>.
+          <strong>Other platforms:</strong> Sora builds to a static <code
+            >dist/</code
+          > folder. Deploy on Vercel, Netlify, or Cloudflare Pages with build command
+          <code>pnpm run build</code>.
         </div>
       </section>
 
@@ -711,11 +974,12 @@ cd my-portfolio && pnpm install</code></pre>
       <section class="docs-section docs-section-last">
         <h2 class="docs-heading" id="disable">Removing This Page</h2>
         <p class="docs-text">
-          Once you've configured your site, hide the documentation page, the Docs nav link, and the hero shuffle button by setting:
+          Once you've configured your site, hide the documentation page, the
+          Docs nav link, and the hero shuffle button by setting:
         </p>
-        <pre class="docs-code"><code set:html={`// src/config.ts\nexport const SITE = {\n  ...\n  isTemplate: false,  // ← hides /docs page, Docs link, and shuffle button\n};`}></code></pre>
+        <pre
+          class="docs-code"><code set:html={`// src/config.ts\nexport const SITE = {\n  ...\n  isTemplate: false,  // ← hides /docs page, Docs link, and shuffle button\n};`} /></pre>
       </section>
-
     </article>
   </main>
   <Footer />
@@ -941,9 +1205,15 @@ cd my-portfolio && pnpm install</code></pre>
     position: absolute;
     left: calc(0.6rem - 3px);
   }
-  .docs-mock-dot:nth-of-type(2) { top: 0.5rem; }
-  .docs-mock-dot:nth-of-type(4) { top: 2.8rem; }
-  .docs-mock-dot:nth-of-type(6) { top: 5.1rem; }
+  .docs-mock-dot:nth-of-type(2) {
+    top: 0.5rem;
+  }
+  .docs-mock-dot:nth-of-type(4) {
+    top: 2.8rem;
+  }
+  .docs-mock-dot:nth-of-type(6) {
+    top: 5.1rem;
+  }
   .docs-mock-tl {
     width: 80%;
     margin-left: 0;
@@ -1226,22 +1496,44 @@ cd my-portfolio && pnpm install</code></pre>
 
   /* Responsive */
   @media (max-width: 640px) {
-    .docs-hero-title { font-size: 1.75rem; }
-    .docs-heading { font-size: 1.25rem; }
-    .docs-layout-grid { grid-template-columns: repeat(2, 1fr); }
-    .docs-card-style-grid { grid-template-columns: repeat(2, 1fr); }
-    .docs-features-grid { grid-template-columns: 1fr; }
-    .docs-config-grid { grid-template-columns: 1fr; }
-    .docs-types-grid { grid-template-columns: 1fr; }
+    .docs-hero-title {
+      font-size: 1.75rem;
+    }
+    .docs-heading {
+      font-size: 1.25rem;
+    }
+    .docs-layout-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .docs-card-style-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .docs-features-grid {
+      grid-template-columns: 1fr;
+    }
+    .docs-config-grid {
+      grid-template-columns: 1fr;
+    }
+    .docs-types-grid {
+      grid-template-columns: 1fr;
+    }
     .docs-tech-demo {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.5rem;
     }
-    .docs-tech-demo-label { min-width: auto; }
-    .docs-file-entry { flex-wrap: wrap; }
-    .docs-bg-grid { grid-template-columns: repeat(2, 1fr); }
-    .docs-anim-grid { grid-template-columns: repeat(2, 1fr); }
+    .docs-tech-demo-label {
+      min-width: auto;
+    }
+    .docs-file-entry {
+      flex-wrap: wrap;
+    }
+    .docs-bg-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .docs-anim-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   /* Background Preview Cards */
@@ -1336,27 +1628,31 @@ cd my-portfolio && pnpm install</code></pre>
 
 <script>
   async function initDocsAnimations() {
-    const canvases = document.querySelectorAll<HTMLCanvasElement>("[data-docs-anim]");
+    const canvases =
+      document.querySelectorAll<HTMLCanvasElement>("[data-docs-anim]");
     if (!canvases.length) return;
 
     const { animations } = await import("@/utils/heroAnimations");
     const cleanups: (() => void)[] = [];
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const canvas = entry.target as HTMLCanvasElement;
-        const type = canvas.dataset.docsAnim;
-        if (!type || !entry.isIntersecting) return;
-        if (canvas.dataset.running) return;
-        canvas.dataset.running = "1";
-        const fn = animations[type];
-        if (fn) {
-          const cleanup = fn(canvas);
-          if (cleanup) cleanups.push(cleanup);
-        }
-        observer.unobserve(canvas);
-      });
-    }, { rootMargin: "100px" });
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          const canvas = entry.target as HTMLCanvasElement;
+          const type = canvas.dataset.docsAnim;
+          if (!type || !entry.isIntersecting) return;
+          if (canvas.dataset.running) return;
+          canvas.dataset.running = "1";
+          const fn = animations[type];
+          if (fn) {
+            const cleanup = fn(canvas);
+            if (cleanup) cleanups.push(cleanup);
+          }
+          observer.unobserve(canvas);
+        });
+      },
+      { rootMargin: "100px" }
+    );
 
     canvases.forEach(c => observer.observe(c));
 
@@ -1367,9 +1663,13 @@ cd my-portfolio && pnpm install</code></pre>
   }
 
   let docsCleanup: (() => void) | undefined;
-  initDocsAnimations().then(c => { docsCleanup = c; });
+  initDocsAnimations().then(c => {
+    docsCleanup = c;
+  });
   document.addEventListener("astro:page-load", () => {
     if (docsCleanup) docsCleanup();
-    initDocsAnimations().then(c => { docsCleanup = c; });
+    initDocsAnimations().then(c => {
+      docsCleanup = c;
+    });
   });
 </script>

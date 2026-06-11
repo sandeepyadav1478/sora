@@ -4,9 +4,9 @@
 // SECURITY: this repo is public. Never put secrets here — only public handles.
 export const SOURCES = {
   github: {
-    enabled: false,        // forker: set true + fill handle
-    handle: "",            // GitHub username, e.g. "octocat"
-    maxCommits: 25,         // latest activity items kept in the feed
+    enabled: false, // forker: set true + fill handle
+    handle: "", // GitHub username, e.g. "octocat"
+    maxCommits: 25, // latest activity items kept in the feed
   },
   // Plan 2 adds: pypi, npm, rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
   // Plan 3 adds: manual, issueOnFailure

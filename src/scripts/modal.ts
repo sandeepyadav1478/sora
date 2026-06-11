@@ -2,7 +2,9 @@ function initModal() {
   const dialog = document.getElementById("work-modal") as HTMLDialogElement;
   const modalContent = document.getElementById("modal-content");
   const closeBtn = document.getElementById("modal-close");
-  const lightbox = document.getElementById("media-lightbox") as HTMLDialogElement;
+  const lightbox = document.getElementById(
+    "media-lightbox"
+  ) as HTMLDialogElement;
 
   if (!dialog || !modalContent || !closeBtn) return;
 
@@ -89,84 +91,92 @@ function initModal() {
     const lbClose = lightbox.querySelector(".lightbox-close");
     if (!lbClose) return;
 
-    modalContent?.querySelectorAll<HTMLImageElement>(".app-prose img").forEach(img => {
-      img.addEventListener("click", () => {
-        openLightbox(`<img src="${img.src}" alt="${img.alt || ""}" />`);
-      });
-    });
-
-    modalContent?.querySelectorAll<HTMLIFrameElement>(".app-prose iframe").forEach(iframe => {
-      iframe.removeAttribute("allowfullscreen");
-      const wrapper = document.createElement("div");
-      wrapper.className = "video-theater-wrap";
-
-      const overlay = document.createElement("div");
-      overlay.className = "video-theater-overlay";
-      overlay.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
-          <polyline points="17 2 12 7 7 2"></polyline>
-        </svg>
-        <span>Theater mode</span>
-      `;
-
-      overlay.addEventListener("click", e => {
-        e.stopPropagation();
-        const src = iframe.src.includes("?")
-          ? iframe.src + "&autoplay=1"
-          : iframe.src + "?autoplay=1";
-        openLightbox(`<iframe src="${src}"></iframe>`);
-      });
-
-      iframe.parentNode?.insertBefore(wrapper, iframe);
-      wrapper.appendChild(iframe);
-      wrapper.appendChild(overlay);
-    });
-
-    modalContent?.querySelectorAll<HTMLVideoElement>(".app-prose video").forEach(video => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "video-theater-wrap";
-
-      const overlay = document.createElement("div");
-      overlay.className = "video-theater-overlay";
-      overlay.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
-          <polyline points="17 2 12 7 7 2"></polyline>
-        </svg>
-        <span>Theater mode</span>
-      `;
-
-      overlay.addEventListener("click", e => {
-        e.stopPropagation();
-        openLightbox(`<video src="${video.src}" controls autoplay></video>`);
-      });
-
-      video.parentNode?.insertBefore(wrapper, video);
-      wrapper.appendChild(video);
-      wrapper.appendChild(overlay);
-    });
-
-    modalContent?.querySelectorAll<HTMLElement>(".modal-gallery-item").forEach(item => {
-      const img = item.querySelector("img");
-      if (img) {
+    modalContent
+      ?.querySelectorAll<HTMLImageElement>(".app-prose img")
+      .forEach(img => {
         img.addEventListener("click", () => {
           openLightbox(`<img src="${img.src}" alt="${img.alt || ""}" />`);
         });
-      }
-      const videoOverlay = item.querySelector(".video-theater-overlay");
-      const iframe = item.querySelector("iframe");
-      if (videoOverlay && iframe) {
+      });
+
+    modalContent
+      ?.querySelectorAll<HTMLIFrameElement>(".app-prose iframe")
+      .forEach(iframe => {
         iframe.removeAttribute("allowfullscreen");
-        videoOverlay.addEventListener("click", e => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "video-theater-wrap";
+
+        const overlay = document.createElement("div");
+        overlay.className = "video-theater-overlay";
+        overlay.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+          <polyline points="17 2 12 7 7 2"></polyline>
+        </svg>
+        <span>Theater mode</span>
+      `;
+
+        overlay.addEventListener("click", e => {
           e.stopPropagation();
           const src = iframe.src.includes("?")
             ? iframe.src + "&autoplay=1"
             : iframe.src + "?autoplay=1";
           openLightbox(`<iframe src="${src}"></iframe>`);
         });
-      }
-    });
+
+        iframe.parentNode?.insertBefore(wrapper, iframe);
+        wrapper.appendChild(iframe);
+        wrapper.appendChild(overlay);
+      });
+
+    modalContent
+      ?.querySelectorAll<HTMLVideoElement>(".app-prose video")
+      .forEach(video => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "video-theater-wrap";
+
+        const overlay = document.createElement("div");
+        overlay.className = "video-theater-overlay";
+        overlay.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+          <polyline points="17 2 12 7 7 2"></polyline>
+        </svg>
+        <span>Theater mode</span>
+      `;
+
+        overlay.addEventListener("click", e => {
+          e.stopPropagation();
+          openLightbox(`<video src="${video.src}" controls autoplay></video>`);
+        });
+
+        video.parentNode?.insertBefore(wrapper, video);
+        wrapper.appendChild(video);
+        wrapper.appendChild(overlay);
+      });
+
+    modalContent
+      ?.querySelectorAll<HTMLElement>(".modal-gallery-item")
+      .forEach(item => {
+        const img = item.querySelector("img");
+        if (img) {
+          img.addEventListener("click", () => {
+            openLightbox(`<img src="${img.src}" alt="${img.alt || ""}" />`);
+          });
+        }
+        const videoOverlay = item.querySelector(".video-theater-overlay");
+        const iframe = item.querySelector("iframe");
+        if (videoOverlay && iframe) {
+          iframe.removeAttribute("allowfullscreen");
+          videoOverlay.addEventListener("click", e => {
+            e.stopPropagation();
+            const src = iframe.src.includes("?")
+              ? iframe.src + "&autoplay=1"
+              : iframe.src + "?autoplay=1";
+            openLightbox(`<iframe src="${src}"></iframe>`);
+          });
+        }
+      });
 
     lbClose.addEventListener("click", closeLightbox);
     lightbox.addEventListener("click", e => {
@@ -189,30 +199,34 @@ function initModal() {
     });
   }
 
-  document.querySelectorAll<HTMLElement>(".work-card-trigger").forEach(trigger => {
-    trigger.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).closest(".tag-link")) return;
-      const workId = trigger.dataset.workId;
-      if (workId) openModal(workId);
-    });
-
-    trigger.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+  document
+    .querySelectorAll<HTMLElement>(".work-card-trigger")
+    .forEach(trigger => {
+      trigger.addEventListener("click", e => {
         if ((e.target as HTMLElement).closest(".tag-link")) return;
-        e.preventDefault();
         const workId = trigger.dataset.workId;
         if (workId) openModal(workId);
-      }
-    });
-  });
+      });
 
-  document.querySelectorAll<HTMLElement>("[data-work-trigger]").forEach(trigger => {
-    trigger.addEventListener("click", (e) => {
-      e.preventDefault();
-      const workId = trigger.dataset.workTrigger;
-      if (workId) openModal(workId);
+      trigger.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          if ((e.target as HTMLElement).closest(".tag-link")) return;
+          e.preventDefault();
+          const workId = trigger.dataset.workId;
+          if (workId) openModal(workId);
+        }
+      });
     });
-  });
+
+  document
+    .querySelectorAll<HTMLElement>("[data-work-trigger]")
+    .forEach(trigger => {
+      trigger.addEventListener("click", e => {
+        e.preventDefault();
+        const workId = trigger.dataset.workTrigger;
+        if (workId) openModal(workId);
+      });
+    });
 
   closeBtn.addEventListener("click", closeModal);
 
