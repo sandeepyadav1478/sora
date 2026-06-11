@@ -12,13 +12,14 @@ import * as youtube from "./adapters/youtube.mjs";
 import * as stackoverflow from "./adapters/stackoverflow.mjs";
 import * as bluesky from "./adapters/bluesky.mjs";
 import * as mastodon from "./adapters/mastodon.mjs";
+import * as huggingface from "./adapters/huggingface.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_PATH = resolve(__dirname, "../src/data/sources-cache.json");
 const DRY_RUN = process.argv.includes("--dry-run");
 
 // Adapter registry. Plan 2 appends more entries here.
-const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, bluesky, mastodon };
+const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, bluesky, mastodon, huggingface };
 
 /** A source runs when it is enabled. Each adapter validates its own required
  *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */

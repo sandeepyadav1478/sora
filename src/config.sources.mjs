@@ -49,6 +49,11 @@ export const SOURCES = {
     user: "", // local username (acct), e.g. "Gargron"
     maxPosts: 25, // latest original posts kept (boosts & replies dropped)
   },
-  // Plan 2 adds: wakatime, huggingface
+  huggingface: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // HF org/user, e.g. "google" — author= on both endpoints
+    maxBadges: 50, // model+dataset badges kept (per-endpoint API limit too)
+  },
+  // Plan 2 adds: wakatime
   // Plan 3 adds: manual, issueOnFailure
 };
