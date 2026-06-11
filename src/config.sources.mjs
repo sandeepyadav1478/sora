@@ -13,6 +13,11 @@ export const SOURCES = {
     handle: "", // PyPI project name, e.g. "requests"
     maxPackages: 25, // releases kept (this adapter emits the latest release)
   },
-  // Plan 2 adds: npm, rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
+  npm: {
+    enabled: false, // forker: set true + add package names
+    packages: [], // e.g. ["your-package"] — npm package names you publish
+    maxPackages: 25, // latest releases kept
+  },
+  // Plan 2 adds: rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
   // Plan 3 adds: manual, issueOnFailure
 };
