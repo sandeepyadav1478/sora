@@ -7,10 +7,12 @@
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
     "preview": "astro preview",
     "sync": "astro sync",
+    "sync:sources": "node scripts/sync-sources.mjs",
     "astro": "astro",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:sync": "node --test 'scripts/__tests__/*.test.mjs'"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.14",
