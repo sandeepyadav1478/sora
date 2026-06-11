@@ -1,56 +1,92 @@
 ---
 import Socials from "./Socials.astro";
 import { PROFILE, SITE } from "@/config";
-const phrases = "typedPhrases" in PROFILE ? (PROFILE.typedPhrases as readonly string[]) : [];
-const trending = "trendingKeywords" in PROFILE ? (PROFILE.trendingKeywords as readonly string[]) : [];
-const heroBg = "heroBackground" in SITE ? (SITE.heroBackground as string) : "dual-glow";
-const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "snake";
+const phrases =
+  "typedPhrases" in PROFILE ? (PROFILE.typedPhrases as readonly string[]) : [];
+const trending =
+  "trendingKeywords" in PROFILE
+    ? (PROFILE.trendingKeywords as readonly string[])
+    : [];
+const heroBg =
+  "heroBackground" in SITE ? (SITE.heroBackground as string) : "dual-glow";
+const heroAnim =
+  "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "snake";
 ---
 
 <section id="hero" class={`hero-section hero-bg--${heroBg}`}>
-  {heroAnim !== "none" && <canvas id="hero-anim" class="hero-snake-canvas" data-animation={heroAnim} aria-hidden="true"></canvas>}
+  {
+    heroAnim !== "none" && (
+      <canvas
+        id="hero-anim"
+        class="hero-snake-canvas"
+        data-animation={heroAnim}
+        aria-hidden="true"
+      />
+    )
+  }
   <div class="hero-row">
     <div class="hero-photo-wrap">
-      <img
-        src={PROFILE.photo}
-        alt={PROFILE.name}
-        class="hero-photo"
-      />
+      <img src={PROFILE.photo} alt={PROFILE.name} class="hero-photo" />
     </div>
 
     <div class="hero-content">
-      <p class="hero-greeting">Hi, I'm <a href="/about" class="hero-at-link">@{PROFILE.name.split(" ")[0].toLowerCase()}</a>,</p>
+      <p class="hero-greeting">
+        Hi, I'm <a href="/about" class="hero-at-link"
+          >@{PROFILE.name.split(" ")[0].toLowerCase()}</a
+        >,
+      </p>
 
       <h1 class="hero-headline">
-        <span class="hero-typed-wrap"><span id="hero-typed" data-phrases={JSON.stringify(phrases)}></span><span class="hero-cursor">|</span></span>
+        <span class="hero-typed-wrap"
+          ><span id="hero-typed" data-phrases={JSON.stringify(phrases)}
+          ></span><span class="hero-cursor">|</span></span
+        >
       </h1>
 
       <p class="hero-pitch">
         building <strong>production-grade AI systems</strong>
       </p>
       <p class="hero-keywords">
-        with <span class="hero-kw">{trending[0]}</span> + <span class="hero-kw">{trending[1]}</span> + <span class="hero-kw">{trending[2]}</span>
+        with <span class="hero-kw">{trending[0]}</span> + <span class="hero-kw"
+          >{trending[1]}</span
+        > + <span class="hero-kw">{trending[2]}</span>
       </p>
 
       <div class="hero-pills">
         <span class="hero-pill">{PROFILE.role}</span>
-        {PROFILE.organization && (
-          <span class="hero-pill">
-            {PROFILE.organizationUrl ? (
-              <a href={PROFILE.organizationUrl} target="_blank" rel="noopener noreferrer">{PROFILE.organization}</a>
-            ) : PROFILE.organization}
-          </span>
-        )}
-        {PROFILE.location && <span class="hero-pill hero-pill--muted">{PROFILE.location}</span>}
+        {
+          PROFILE.organization && (
+            <span class="hero-pill">
+              {PROFILE.organizationUrl ? (
+                <a
+                  href={PROFILE.organizationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {PROFILE.organization}
+                </a>
+              ) : (
+                PROFILE.organization
+              )}
+            </span>
+          )
+        }
+        {
+          PROFILE.location && (
+            <span class="hero-pill hero-pill--muted">{PROFILE.location}</span>
+          )
+        }
       </div>
 
-      {trending.length > 3 && (
-        <div class="hero-trending">
-          {trending.slice(3).map(kw => (
-            <span class="hero-trending-pill">{kw}</span>
-          ))}
-        </div>
-      )}
+      {
+        trending.length > 3 && (
+          <div class="hero-trending">
+            {trending.slice(3).map(kw => (
+              <span class="hero-trending-pill">{kw}</span>
+            ))}
+          </div>
+        )
+      }
 
       <div class="hero-socials">
         <Socials />
@@ -65,7 +101,9 @@ const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "sna
     if (!el) return;
 
     const target = el as HTMLElement;
-    const cursor = target.parentElement?.querySelector(".hero-cursor") as HTMLElement | null;
+    const cursor = target.parentElement?.querySelector(
+      ".hero-cursor"
+    ) as HTMLElement | null;
     const phrases: string[] = JSON.parse(target.dataset.phrases || "[]");
     if (!phrases.length) return;
 
@@ -126,7 +164,9 @@ const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "sna
   document.addEventListener("astro:page-load", initTypingEffect);
 
   async function initAnimation() {
-    const canvas = document.getElementById("hero-anim") as HTMLCanvasElement | null;
+    const canvas = document.getElementById(
+      "hero-anim"
+    ) as HTMLCanvasElement | null;
     if (!canvas) return;
     const type = canvas.dataset.animation;
     if (!type) return;
@@ -137,14 +177,42 @@ const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "sna
   }
 
   let animCleanup: (() => void) | undefined;
-  initAnimation().then(c => { animCleanup = c; });
+  initAnimation().then(c => {
+    animCleanup = c;
+  });
   document.addEventListener("astro:page-load", () => {
     if (animCleanup) animCleanup();
-    initAnimation().then(c => { animCleanup = c; });
+    initAnimation().then(c => {
+      animCleanup = c;
+    });
   });
 
-  const BG_OPTIONS = ["dot-grid","dual-glow","mesh","aurora","spotlight","sunset","frosted","cyber","gradient-mesh","none"];
-  const ANIM_OPTIONS = ["snake","aurora","constellation","wave-field","mesh-gradient","noise-flow","warp-starfield","neural-pulse","morph-blobs","silk-waves","floating-orbs","none"];
+  const BG_OPTIONS = [
+    "dot-grid",
+    "dual-glow",
+    "mesh",
+    "aurora",
+    "spotlight",
+    "sunset",
+    "frosted",
+    "cyber",
+    "gradient-mesh",
+    "none",
+  ];
+  const ANIM_OPTIONS = [
+    "snake",
+    "aurora",
+    "constellation",
+    "wave-field",
+    "mesh-gradient",
+    "noise-flow",
+    "warp-starfield",
+    "neural-pulse",
+    "morph-blobs",
+    "silk-waves",
+    "floating-orbs",
+    "none",
+  ];
 
   function pickRandom(arr: string[], exclude?: string) {
     const filtered = exclude ? arr.filter(x => x !== exclude) : arr;
@@ -155,13 +223,17 @@ const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "sna
     const hero = document.getElementById("hero");
     if (!hero) return;
 
-    const currentBg = BG_OPTIONS.find(bg => hero.classList.contains(`hero-bg--${bg}`));
+    const currentBg = BG_OPTIONS.find(bg =>
+      hero.classList.contains(`hero-bg--${bg}`)
+    );
     const newBg = pickRandom(BG_OPTIONS, currentBg);
     if (currentBg) hero.classList.remove(`hero-bg--${currentBg}`);
     hero.classList.add(`hero-bg--${newBg}`);
 
     if (animCleanup) animCleanup();
-    let canvas = document.getElementById("hero-anim") as HTMLCanvasElement | null;
+    let canvas = document.getElementById(
+      "hero-anim"
+    ) as HTMLCanvasElement | null;
     const currentAnim = canvas?.dataset.animation;
     const newAnim = pickRandom(ANIM_OPTIONS, currentAnim);
 
@@ -184,7 +256,6 @@ const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "sna
     }
 
     const label = `${newBg} + ${newAnim}`;
-    console.log(`🎲 Hero: ${label}`);
     const toast = document.createElement("div");
     toast.className = "shuffle-toast";
     toast.textContent = label;
@@ -197,8 +268,12 @@ const heroAnim = "heroAnimation" in SITE ? (SITE.heroAnimation as string) : "sna
   }
 
   function initShuffle() {
-    document.getElementById("shuffle-btn")?.addEventListener("click", shuffleHero);
-    document.getElementById("shuffle-btn-hero")?.addEventListener("click", shuffleHero);
+    document
+      .getElementById("shuffle-btn")
+      ?.addEventListener("click", shuffleHero);
+    document
+      .getElementById("shuffle-btn-hero")
+      ?.addEventListener("click", shuffleHero);
   }
   initShuffle();
   document.addEventListener("astro:page-load", initShuffle);

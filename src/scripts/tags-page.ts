@@ -3,7 +3,7 @@ function initTagsPage() {
   const items = document.querySelectorAll<HTMLElement>(".work-item");
   if (toggles.length === 0 || items.length === 0) return;
 
-  let activeTags = new Set<string>();
+  const activeTags = new Set<string>();
 
   const params = new URLSearchParams(window.location.search);
   const preselected = params.get("t");
@@ -12,7 +12,9 @@ function initTagsPage() {
   function applyFilters() {
     items.forEach(item => {
       const itemTags = (item.dataset.tags || "").split(",").filter(Boolean);
-      const match = activeTags.size === 0 || [...activeTags].every(t => itemTags.includes(t));
+      const match =
+        activeTags.size === 0 ||
+        [...activeTags].every(t => itemTags.includes(t));
       item.style.display = match ? "" : "none";
     });
   }
