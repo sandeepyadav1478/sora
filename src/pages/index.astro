@@ -30,6 +30,7 @@ import Testimonials from "@/components/Testimonials.astro";
 import HighlightCards from "@/components/HighlightCards.astro";
 import Newsletter from "@/components/Newsletter.astro";
 import ContactSection from "@/components/ContactSection.astro";
+import ActivityFeed from "@/components/ActivityFeed.astro";
 import getSortedWorks from "@/utils/getSortedWorks";
 import { SECTIONS, BOARD } from "@/config";
 
@@ -177,6 +178,11 @@ const statusLabelMap: Record<string, { label: string; cls: string }> = {
 
     {/* === CONNECT + EXTRAS === */}
     <Testimonials />
+    {SECTIONS.showActivity && (
+      <div class="section-tinted">
+        <ActivityFeed />
+      </div>
+    )}
     {SECTIONS.showFAQ && <FAQSection />}
     <Newsletter />
     {SECTIONS.showContact && (
