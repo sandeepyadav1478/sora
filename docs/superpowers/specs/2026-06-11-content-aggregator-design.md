@@ -34,6 +34,31 @@ The template ships every source **OFF by default** with example handles. A forke
 
 ---
 
+## 2.5 Secrets & privacy model (load-bearing — the repo is public)
+
+**Root constraint (verified against GitHub docs):** zero-spend forces a **public** repo. GitHub Pages on the Free tier only publishes from a public repository, and a `<username>.github.io` user site can *never* be access-controlled — it is world-readable permanently, even on a paid plan. Therefore **there is no private corner of this repo.** Everything committed — `sources-cache.json`, `manual/*.json`, config, git history — is public forever. The design's job is to ensure nothing private ever *enters* the repo or the built site.
+
+**Three tiers — one rule: private data never enters the repo.**
+
+| Tier | Examples | Where it lives | Committed / shipped? |
+|---|---|---|---|
+| Public data | stars, public commits, published posts, public badges | `sources-cache.json`, `manual/*.json` | ✅ yes — already public |
+| Owner secret | `WAKATIME_API_KEY`, any private API key | **Actions encrypted secret** → injected as a step-level env var → used to fetch → discarded | ❌ never written anywhere |
+| Private info | private-repo activity, private email, anything non-public | **never fetched** — only public endpoints are ever called | ❌ never enters the pipeline |
+
+**Hard rules baked into the build (each maps to a verified finding):**
+
+1. **Only public endpoints, ever.** The GitHub adapter calls **exactly `GET /users/{handle}/events/public`** — the `/public` suffix is hardcoded and asserted. ⚠️ The sibling `GET /users/{handle}/events` (no suffix), if called while authenticated *as the owner*, returns **private-repo activity** that would then be published — a real leak vector and an easy octokit/`gh` default mistake. We never call the unsuffixed endpoint.
+2. **Prefer no token for public fetches.** Unauthenticated `/events/public` works at 60 req/hr — ample for a 6-hourly sync. If a token is used only to raise rate limits, it must be a **fine-grained PAT with zero permissions** (none are needed for this endpoint), so a misrouted call can't read private data anyway.
+3. **`GITHUB_TOKEN` is pinned read-only and never echoed.** It is scoped to its own repo only (cannot reach other private repos), but is not inherently "public-only," so the workflow sets explicit `permissions` and grants nothing beyond what's needed.
+4. **Secrets never cross the build→client boundary.** Actions log-masking does **nothing** for committed files or shipped HTML/JS. Astro inlines any **`PUBLIC_`-prefixed** env var into client JS — so a secret must **never** use a `PUBLIC_` prefix. Secrets are read server-side in the Action, used to fetch, and only the *resulting data* is written.
+5. **Leak guard before write (defense-in-depth).** Before writing `sources-cache.json`, the orchestrator scans the serialized output for any known secret value (the env vars it was given) and **refuses to write** if any appears. A buggy adapter therefore cannot commit a key. Adapter error messages are sanitized before logging.
+6. **No `pull_request_target`.** Fork PRs use `pull_request` (no secrets passed, read-only token) — never `pull_request_target` with untrusted code.
+
+**Forker doc:** the world-facing docs state plainly — "this repo is public; never put anything private in config, manual JSON, or commits; the only secret is an optional WakaTime key set as an Actions secret."
+
+---
+
 ## 3. Architecture
 
 ```
@@ -259,14 +284,16 @@ jobs:
 - Bot-gated sources (YouTube, some Hashnode) retried once with a real `User-Agent` header.
 - Total adapter failure → retain last cache entries, flip status to `stale`/`error`, continue. Build stays green.
 
-**Secrets**
-- Zero-secret for all adapters except WakaTime (optional `WAKATIME_API_KEY`).
-- GitHub adapter uses the workflow's `GITHUB_TOKEN` (1000 req/hr) and falls back to unauthenticated (60/hr) for local runs.
-- No secret is ever read at render time or shipped to the browser — all fetching is build-time only.
+**Secrets** (full model in §2.5)
+- Zero-secret for all adapters except WakaTime (optional `WAKATIME_API_KEY`, Actions secret, owner-only).
+- GitHub adapter calls only `GET /users/{handle}/events/public` — `/public` suffix hardcoded and asserted; the unsuffixed `/events` endpoint is never called. Prefers unauthenticated (60/hr, ample for 6-hourly sync); a token, if used, is for rate-limit only and never required.
+- Secrets are injected as step-level env vars, used server-side to fetch, never written to files and never given a `PUBLIC_` prefix (Astro inlines those into client JS). No secret is read at render time or shipped to the browser.
+- **Leak guard:** before writing the cache, the orchestrator scans serialized output for any known secret value and aborts the write if found. Adapter error strings are sanitized before logging.
 
 **Testing**
 - Each adapter has a unit test against a **recorded fixture** (committed JSON response) — no live network in CI tests. Asserts: maps fixture → correct `Envelope[]`, and returns `[]` (not throw) on a malformed/empty response.
 - Orchestrator tests: merge/dedup/sort correctness; fallback-to-cache on adapter failure; staleness threshold math for the issue loop.
+- **Security tests:** GitHub adapter rejects/asserts the `/public` suffix; the leak guard refuses to write a cache containing a seeded secret value; no `PUBLIC_`-prefixed env var is referenced anywhere in `src/`.
 - A lint/type pass (`astro check`) keeps the existing CI green.
 
 ---
@@ -277,9 +304,10 @@ jobs:
 scripts/
   sync-sources.mjs              # orchestrator
   lib/
-    cache.mjs                   # read/write/merge sources-cache.json
+    cache.mjs                   # read/write/merge sources-cache.json (+ leak-guard before write, §2.5)
     dedup.mjs                   # stable-id dedup + date sort
     issues.mjs                  # GitHub-issue failure loop (§7)
+    redact.mjs                  # leak guard: scan output for known secret values; sanitize error strings
   adapters/
     github.mjs  pypi.mjs  npm.mjs  rss.mjs  bluesky.mjs  mastodon.mjs
     youtube.mjs  codeforces.mjs  wakatime.mjs  huggingface.mjs  stackoverflow.mjs
@@ -319,4 +347,5 @@ docs/                            # world-facing: how to enable each source, hand
 7. `astro check && astro build` passes; `pagefind` indexes the new pages.
 8. The template builds with all sources off (empty feed section simply doesn't render).
 9. No secret other than optional `WAKATIME_API_KEY`; nothing fetched at render time.
+10. **Security (§2.5):** the GitHub adapter only ever requests a URL ending in `/events/public` (asserted in test); the leak guard refuses to write a cache file containing a seeded secret value; no `PUBLIC_`-prefixed env var appears in `src/`; the sync workflow uses `pull_request` (never `pull_request_target`) and pins explicit `permissions`.
 ```
