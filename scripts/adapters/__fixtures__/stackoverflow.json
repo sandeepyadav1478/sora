@@ -1,0 +1,252 @@
+{
+  "answers": {
+    "items": [
+      {
+        "owner": {
+          "account_id": 11683,
+          "reputation": 1527930,
+          "user_id": 22656,
+          "user_type": "registered",
+          "accept_rate": 86,
+          "profile_image": "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
+          "display_name": "Jon Skeet",
+          "link": "https://stackoverflow.com/users/22656/jon-skeet"
+        },
+        "is_accepted": true,
+        "score": 3,
+        "last_activity_date": 1780589628,
+        "creation_date": 1780589628,
+        "answer_id": 79951496,
+        "question_id": 79951495,
+        "content_license": "CC BY-SA 4.0"
+      },
+      {
+        "owner": {
+          "account_id": 11683,
+          "reputation": 1527930,
+          "user_id": 22656,
+          "user_type": "registered",
+          "accept_rate": 86,
+          "profile_image": "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
+          "display_name": "Jon Skeet",
+          "link": "https://stackoverflow.com/users/22656/jon-skeet"
+        },
+        "is_accepted": true,
+        "score": 4,
+        "last_activity_date": 1780494159,
+        "creation_date": 1780494159,
+        "answer_id": 79950875,
+        "question_id": 79950869,
+        "content_license": "CC BY-SA 4.0"
+      },
+      {
+        "owner": {
+          "account_id": 11683,
+          "reputation": 1527930,
+          "user_id": 22656,
+          "user_type": "registered",
+          "accept_rate": 86,
+          "profile_image": "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
+          "display_name": "Jon Skeet",
+          "link": "https://stackoverflow.com/users/22656/jon-skeet"
+        },
+        "is_accepted": false,
+        "score": 5,
+        "last_activity_date": 1780239728,
+        "creation_date": 1780239728,
+        "answer_id": 79949304,
+        "question_id": 79949299,
+        "content_license": "CC BY-SA 4.0"
+      },
+      {
+        "owner": {
+          "account_id": 11683,
+          "reputation": 1527930,
+          "user_id": 22656,
+          "user_type": "registered",
+          "accept_rate": 86,
+          "profile_image": "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
+          "display_name": "Jon Skeet",
+          "link": "https://stackoverflow.com/users/22656/jon-skeet"
+        },
+        "is_accepted": false,
+        "score": 20,
+        "last_activity_date": 1778157514,
+        "last_edit_date": 1778157514,
+        "creation_date": 1778156873,
+        "answer_id": 79937566,
+        "question_id": 79937561,
+        "content_license": "CC BY-SA 4.0"
+      },
+      {
+        "owner": {
+          "account_id": 11683,
+          "reputation": 1527930,
+          "user_id": 22656,
+          "user_type": "registered",
+          "accept_rate": 86,
+          "profile_image": "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
+          "display_name": "Jon Skeet",
+          "link": "https://stackoverflow.com/users/22656/jon-skeet"
+        },
+        "is_accepted": false,
+        "score": 7,
+        "last_activity_date": 1777452273,
+        "last_edit_date": 1777452273,
+        "creation_date": 1775737414,
+        "answer_id": 79922817,
+        "question_id": 79922808,
+        "content_license": "CC BY-SA 4.0"
+      }
+    ],
+    "has_more": true,
+    "quota_max": 300,
+    "quota_remaining": 297
+  },
+  "questions": {
+    "items": [
+      {
+        "tags": [
+          "c#"
+        ],
+        "owner": {
+          "account_id": 46448510,
+          "reputation": 25,
+          "user_id": 32786871,
+          "user_type": "registered",
+          "profile_image": "https://www.gravatar.com/avatar/99e3600818bb00cc9075cb009f2b53b1?s=256&d=identicon&r=PG&f=y&so-version=2",
+          "display_name": "Mehrzad",
+          "link": "https://stackoverflow.com/users/32786871/mehrzad"
+        },
+        "is_answered": true,
+        "view_count": 196,
+        "closed_date": 1780514519,
+        "answer_count": 1,
+        "score": -2,
+        "last_activity_date": 1780686022,
+        "creation_date": 1780239188,
+        "last_edit_date": 1780686022,
+        "question_id": 79949299,
+        "link": "https://stackoverflow.com/questions/79949299/c-subscription-pattern",
+        "closed_reason": "Needs more focus",
+        "title": "C# subscription pattern"
+      },
+      {
+        "tags": [
+          "c#",
+          "dependency-injection",
+          "syntax",
+          "dryioc"
+        ],
+        "owner": {
+          "account_id": 34627,
+          "reputation": 6193,
+          "user_id": 97925,
+          "user_type": "registered",
+          "accept_rate": 65,
+          "profile_image": "https://www.gravatar.com/avatar/dc74889c12646eb356d19bbc7c572762?s=256&d=identicon&r=PG",
+          "display_name": "Martin Robins",
+          "link": "https://stackoverflow.com/users/97925/martin-robins"
+        },
+        "is_answered": true,
+        "view_count": 180,
+        "accepted_answer_id": 79951496,
+        "answer_count": 1,
+        "score": 0,
+        "last_activity_date": 1780597062,
+        "creation_date": 1780589505,
+        "last_edit_date": 1780597062,
+        "question_id": 79951495,
+        "content_license": "CC BY-SA 4.0",
+        "link": "https://stackoverflow.com/questions/79951495/what-is-the-correct-syntax-to-call-this-method",
+        "title": "What is the correct syntax to call this method?"
+      },
+      {
+        "tags": [
+          "c#",
+          "xml",
+          ".net-8.0",
+          "xmlserializer"
+        ],
+        "owner": {
+          "account_id": 3553938,
+          "reputation": 767,
+          "user_id": 2968106,
+          "user_type": "registered",
+          "accept_rate": 62,
+          "profile_image": "https://www.gravatar.com/avatar/4f13b8a15ae37fff4576841a55dcdd38?s=256&d=identicon&r=PG&f=y&so-version=2",
+          "display_name": "MilConDoin",
+          "link": "https://stackoverflow.com/users/2968106/milcondoin"
+        },
+        "is_answered": true,
+        "view_count": 136,
+        "accepted_answer_id": 79950875,
+        "answer_count": 1,
+        "score": 2,
+        "last_activity_date": 1780497008,
+        "creation_date": 1780493132,
+        "last_edit_date": 1780497008,
+        "question_id": 79950869,
+        "content_license": "CC BY-SA 4.0",
+        "link": "https://stackoverflow.com/questions/79950869/xmlserializer-does-not-serialize-a-derived-value",
+        "title": "XmlSerializer does not serialize a derived value"
+      },
+      {
+        "tags": [
+          "c#",
+          "enums"
+        ],
+        "owner": {
+          "account_id": 46287187,
+          "reputation": 129,
+          "user_id": 32703481,
+          "user_type": "registered",
+          "profile_image": "https://www.gravatar.com/avatar/76a9e6963a936f58e4447b5725f41326?s=256&d=identicon&r=PG&f=y&so-version=2",
+          "display_name": "user32703481",
+          "link": "https://stackoverflow.com/users/32703481/user32703481"
+        },
+        "is_answered": true,
+        "view_count": 726,
+        "answer_count": 1,
+        "score": 13,
+        "last_activity_date": 1778157514,
+        "creation_date": 1778156084,
+        "last_edit_date": 1778156314,
+        "question_id": 79937561,
+        "content_license": "CC BY-SA 4.0",
+        "link": "https://stackoverflow.com/questions/79937561/how-to-create-a-static-extension-method-for-all-enum-types",
+        "title": "How to create a static extension method for all Enum types?"
+      },
+      {
+        "tags": [
+          "c#",
+          "compiler-warnings"
+        ],
+        "owner": {
+          "account_id": 89342,
+          "reputation": 26549,
+          "user_id": 246568,
+          "user_type": "registered",
+          "accept_rate": 62,
+          "profile_image": "https://www.gravatar.com/avatar/6a62c6e7acd47259151ba488eb6a17e3?s=256&d=identicon&r=PG",
+          "display_name": "William Jockusch",
+          "link": "https://stackoverflow.com/users/246568/william-jockusch"
+        },
+        "is_answered": true,
+        "view_count": 269,
+        "answer_count": 2,
+        "score": 0,
+        "last_activity_date": 1777452273,
+        "creation_date": 1775736441,
+        "last_edit_date": 1775738606,
+        "question_id": 79922808,
+        "content_license": "CC BY-SA 4.0",
+        "link": "https://stackoverflow.com/questions/79922808/tell-c-compiler-not-to-warn-based-on-a-debug-constant-whose-value-might-change",
+        "title": "Tell C# compiler not to warn based on a debug constant whose value might change on the next run"
+      }
+    ],
+    "has_more": false,
+    "quota_max": 300,
+    "quota_remaining": 297
+  }
+}

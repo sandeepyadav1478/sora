@@ -33,6 +33,11 @@ export const SOURCES = {
     handle: "", // YouTube CHANNEL id, must start with "UC…" (NOT an @handle). Find it via the channel page source / a UC-id lookup.
     maxVideos: 15, // latest videos kept in the feed
   },
-  // Plan 2 adds: bluesky, mastodon, codeforces, wakatime, huggingface, stackoverflow
+  stackoverflow: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // Stack Overflow NUMERIC user id, e.g. "22656" (from your profile URL /users/<id>/...)
+    maxPosts: 25, // latest answers kept in the feed
+  },
+  // Plan 2 adds: bluesky, mastodon, wakatime, huggingface
   // Plan 3 adds: manual, issueOnFailure
 };

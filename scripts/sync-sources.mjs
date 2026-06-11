@@ -9,13 +9,14 @@ import * as pypi from "./adapters/pypi.mjs";
 import * as npm from "./adapters/npm.mjs";
 import * as rss from "./adapters/rss.mjs";
 import * as youtube from "./adapters/youtube.mjs";
+import * as stackoverflow from "./adapters/stackoverflow.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_PATH = resolve(__dirname, "../src/data/sources-cache.json");
 const DRY_RUN = process.argv.includes("--dry-run");
 
 // Adapter registry. Plan 2 appends more entries here.
-const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube };
+const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow };
 
 /** A source runs when it is enabled. Each adapter validates its own required
  *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */
