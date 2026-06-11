@@ -38,6 +38,11 @@ export const SOURCES = {
     handle: "", // Stack Overflow NUMERIC user id, e.g. "22656" (from your profile URL /users/<id>/...)
     maxPosts: 25, // latest answers kept in the feed
   },
-  // Plan 2 adds: bluesky, mastodon, wakatime, huggingface
+  bluesky: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // Bluesky handle or DID, e.g. "bsky.app" (no @)
+    maxPosts: 25, // latest original posts kept (reposts + replies excluded)
+  },
+  // Plan 2 adds: mastodon, wakatime, huggingface
   // Plan 3 adds: manual, issueOnFailure
 };
