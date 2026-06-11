@@ -1,0 +1,21 @@
+---
+import { getActivityItems } from "@/lib/sources";
+import ActivityCard from "@/components/ActivityCard.astro";
+
+// Show the latest slice; honest empty state -> render nothing.
+const items = getActivityItems(20);
+---
+
+{items.length > 0 && (
+  <section id="activity" class="activity-section">
+    <h2 class="section-heading">Recent Activity</h2>
+    <div class="activity-list">
+      {items.map((item) => <ActivityCard item={item} />)}
+    </div>
+  </section>
+)}
+
+<style>
+  .activity-section { margin: 2rem 0; }
+  .activity-list { display: flex; flex-direction: column; gap: 0.5rem; }
+</style>
