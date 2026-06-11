@@ -8,6 +8,11 @@ export const SOURCES = {
     handle: "", // GitHub username, e.g. "octocat"
     maxCommits: 25, // latest activity items kept in the feed
   },
+  codeforces: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // Codeforces handle, e.g. "tourist"
+    maxRatings: 50, // latest rating changes kept (active users have ~300+)
+  },
   pypi: {
     enabled: false, // forker: set true + fill handle
     handle: "", // PyPI project name, e.g. "requests"
