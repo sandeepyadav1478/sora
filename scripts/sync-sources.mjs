@@ -12,6 +12,12 @@ const DRY_RUN = process.argv.includes("--dry-run");
 // Adapter registry. Plan 2 appends more entries here.
 const ADAPTERS = { github };
 
+/** A source runs when it is enabled. Each adapter validates its own required
+ *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */
+export function shouldRun(cfg) {
+  return Boolean(cfg && cfg.enabled);
+}
+
 function nowIso() {
   // Date.now is fine in a real CLI run (this is not a resumable workflow script).
   return new Date().toISOString();
@@ -28,8 +34,8 @@ async function run() {
   const results = [];
   for (const [key, adapter] of Object.entries(ADAPTERS)) {
     const cfg = SOURCES[key];
-    if (!cfg || !cfg.enabled || !cfg.handle) {
-      console.log(`- ${key}: skipped (disabled or no handle)`);
+    if (!shouldRun(cfg)) {
+      console.log(`- ${key}: skipped (disabled)`);
       continue;
     }
     try {
@@ -57,7 +63,10 @@ async function run() {
   console.log(`\nWrote ${next.items.length} item(s) to ${CACHE_PATH}`);
 }
 
-run().catch((err) => {
-  console.error("sync-sources fatal:", err.message);
-  process.exit(1);
-});
+// Only run when invoked directly as a CLI; importing for tests must not trigger a sync.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  run().catch((err) => {
+    console.error("sync-sources fatal:", err.message);
+    process.exit(1);
+  });
+}
