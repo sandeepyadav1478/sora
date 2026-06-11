@@ -92,6 +92,17 @@ export async function fetch(cfg) {      // cfg = the source's config object from
 
 Adding a 12th source later = drop in one file + add one `SOURCES` entry. No orchestrator changes.
 
+### 4.1 GitHub adapter — commit cap (keeps the feed elegant)
+
+A repo can have hundreds of commits; dumping them all would bloat the cache and clutter the feed. The GitHub adapter therefore caps commits **at normalize time**, before they ever reach the cache:
+
+- For each tracked repo: gather commits from **all branches** (`branches: "all"`, default) or just the default branch (`branches: "default"`).
+- **Dedup by SHA** — a commit on two branches counts once.
+- **Sort newest-first**, then **keep the latest `maxCommitsPerRepo` (default 25)**.
+- Releases are separate and not subject to this cap (releases are inherently sparse).
+
+This is a hard upper bound per repo, applied in the adapter — so `sources-cache.json` stays lean at the source, not just hidden at render. Configurable via `SOURCES.github.maxCommitsPerRepo`.
+
 ---
 
 ## 5. Data shape — envelope + typed payload
@@ -154,7 +165,8 @@ Single source of truth, consistent with the existing config-driven design.
 
 ```ts
 export const SOURCES = {
-  github:       { enabled: true,  handle: "" /* gh username */, includeCommits: true, includeReleases: true },
+  github:       { enabled: true,  handle: "" /* gh username */, includeCommits: true, includeReleases: true,
+                  maxCommitsPerRepo: 25, branches: "all" /* "all" | "default" */ },
   pypi:         { enabled: false, packages: [] as string[] },
   npm:          { enabled: false, user: "" },
   rss:          { enabled: false, feeds: [] as string[] },
@@ -286,6 +298,7 @@ docs/                            # world-facing: how to enable each source, hand
 ## 12. Acceptance criteria
 
 1. `node scripts/sync-sources.mjs` with only GitHub enabled produces a valid `sources-cache.json` with real commits/releases.
+1a. A repo with >25 commits across branches yields exactly the 25 latest, deduped by SHA — never more — in the cache.
 2. Disabling a source (or blanking its handle) cleanly omits it — no crash, no error.
 3. A simulated adapter failure (bad handle) keeps last-cached entries, sets `status: "error"`, and the build still passes.
 4. After `threshold` consecutive simulated failures, exactly one issue opens; recovery closes it; no duplicates in between.
