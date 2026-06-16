@@ -1,0 +1,26 @@
+{
+  "registry": {
+    "_id": "express",
+    "name": "express",
+    "dist-tags": { "latest": "5.2.1", "latest-4": "4.22.2" },
+    "versions": {
+      "5.2.1": {
+        "name": "express",
+        "version": "5.2.1",
+        "description": "Fast, unopinionated, minimalist web framework",
+        "license": "MIT"
+      }
+    },
+    "time": {
+      "created": "2010-12-29T19:38:25.450Z",
+      "modified": "2026-05-19T12:28:53.443Z",
+      "5.2.1": "2025-12-01T20:49:43.268Z"
+    }
+  },
+  "downloads": {
+    "downloads": 449230493,
+    "start": "2026-05-04",
+    "end": "2026-06-02",
+    "package": "express"
+  }
+}

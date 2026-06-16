@@ -1,0 +1,64 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { normalizeHuggingface } from "../adapters/huggingface.mjs";
+
+const fixture = JSON.parse(
+  await readFile(new URL("../adapters/__fixtures__/huggingface.json", import.meta.url), "utf8"),
+);
+
+const cfg = { handle: "google", maxBadges: 50 };
+
+test("huggingface: merges models + datasets into badge envelopes", () => {
+  const out = normalizeHuggingface(fixture, cfg);
+  assert.ok(out.length >= 2, "should yield model + dataset badges");
+  assert.ok(out.some((e) => e.payload.kindOf === "model"), "has a model badge");
+  assert.ok(out.some((e) => e.payload.kindOf === "dataset"), "has a dataset badge");
+});
+
+test("huggingface: model envelope core fields", () => {
+  const out = normalizeHuggingface(fixture, cfg);
+  const m = out.find((e) => e.payload.kindOf === "model");
+
+  assert.equal(m.source, "huggingface");
+  assert.equal(m.kind, "badge");
+  assert.equal(m.id, `huggingface:badge:${m.title}`); // id = huggingface:badge:{id}, title = the model id
+  assert.equal(m.id.split(":")[1], "badge", "id-kind invariant: id segment[1] === envelope.kind");
+  assert.equal(m.url, `https://huggingface.co/${m.title}`);
+  assert.equal(m.payload.issuer, "huggingface");
+  assert.ok(!Number.isNaN(Date.parse(m.date)), "date is ISO-parseable");
+  assert.equal(typeof m.payload.downloads, "number");
+  assert.equal(typeof m.payload.likes, "number");
+});
+
+test("huggingface: dataset url gets /datasets/ segment + label falls back", () => {
+  const out = normalizeHuggingface(fixture, cfg);
+  const d = out.find((e) => e.payload.kindOf === "dataset");
+
+  assert.equal(d.url, `https://huggingface.co/datasets/${d.title}`);
+  assert.equal(d.id.split(":")[1], "badge");
+  // datasets have no pipeline_tag/library_name -> label must be a non-empty string, never undefined
+  assert.equal(typeof d.payload.label, "string");
+});
+
+test("huggingface: downloads of 0 render as 0, never -1", () => {
+  const out = normalizeHuggingface(fixture, cfg);
+  const zero = out.find((e) => e.payload.downloads === 0);
+  assert.ok(zero, "the diffusiongemma model with downloads:0 should survive");
+  assert.notEqual(zero.payload.downloads, -1);
+});
+
+test("huggingface: large tags[] arrays are trimmed", () => {
+  const out = normalizeHuggingface(fixture, cfg);
+  for (const e of out) {
+    assert.ok(Array.isArray(e.payload.tags));
+    assert.ok(e.payload.tags.length <= 12, "tags trimmed to <=12");
+  }
+});
+
+test("huggingface: returns [] on garbage input", () => {
+  assert.deepEqual(normalizeHuggingface(null, cfg), []);
+  assert.deepEqual(normalizeHuggingface({}, cfg), []);
+  assert.deepEqual(normalizeHuggingface({ models: "nope", datasets: 42 }, cfg), []);
+  assert.deepEqual(normalizeHuggingface({ models: [{}], datasets: [] }, cfg), []); // entry with no id is dropped
+});

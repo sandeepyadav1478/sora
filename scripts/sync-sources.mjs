@@ -4,13 +4,29 @@ import { SOURCES } from "../src/config.sources.mjs";
 import { readCache, mergeSources, writeCache } from "./lib/cache.mjs";
 import { collectSecrets, assertNoSecrets, sanitize } from "./lib/redact.mjs";
 import * as github from "./adapters/github.mjs";
+import * as codeforces from "./adapters/codeforces.mjs";
+import * as pypi from "./adapters/pypi.mjs";
+import * as npm from "./adapters/npm.mjs";
+import * as rss from "./adapters/rss.mjs";
+import * as youtube from "./adapters/youtube.mjs";
+import * as stackoverflow from "./adapters/stackoverflow.mjs";
+import * as bluesky from "./adapters/bluesky.mjs";
+import * as mastodon from "./adapters/mastodon.mjs";
+import * as huggingface from "./adapters/huggingface.mjs";
+import * as wakatime from "./adapters/wakatime.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_PATH = resolve(__dirname, "../src/data/sources-cache.json");
 const DRY_RUN = process.argv.includes("--dry-run");
 
 // Adapter registry. Plan 2 appends more entries here.
-const ADAPTERS = { github };
+const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, bluesky, mastodon, huggingface, wakatime };
+
+/** A source runs when it is enabled. Each adapter validates its own required
+ *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */
+export function shouldRun(cfg) {
+  return Boolean(cfg && cfg.enabled);
+}
 
 function nowIso() {
   // Date.now is fine in a real CLI run (this is not a resumable workflow script).
@@ -28,8 +44,8 @@ async function run() {
   const results = [];
   for (const [key, adapter] of Object.entries(ADAPTERS)) {
     const cfg = SOURCES[key];
-    if (!cfg || !cfg.enabled || !cfg.handle) {
-      console.log(`- ${key}: skipped (disabled or no handle)`);
+    if (!shouldRun(cfg)) {
+      console.log(`- ${key}: skipped (disabled)`);
       continue;
     }
     try {
@@ -57,7 +73,10 @@ async function run() {
   console.log(`\nWrote ${next.items.length} item(s) to ${CACHE_PATH}`);
 }
 
-run().catch((err) => {
-  console.error("sync-sources fatal:", err.message);
-  process.exit(1);
-});
+// Only run when invoked directly as a CLI; importing for tests must not trigger a sync.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  run().catch((err) => {
+    console.error("sync-sources fatal:", err.message);
+    process.exit(1);
+  });
+}

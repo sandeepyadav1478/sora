@@ -8,6 +8,57 @@ export const SOURCES = {
     handle: "", // GitHub username, e.g. "octocat"
     maxCommits: 25, // latest activity items kept in the feed
   },
-  // Plan 2 adds: pypi, npm, rss, bluesky, mastodon, youtube, codeforces, wakatime, huggingface, stackoverflow
+  codeforces: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // Codeforces handle, e.g. "tourist"
+    maxRatings: 50, // latest rating changes kept (active users have ~300+)
+  },
+  pypi: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // PyPI project name, e.g. "requests"
+    maxPackages: 25, // releases kept (this adapter emits the latest release)
+  },
+  npm: {
+    enabled: false, // forker: set true + add package names
+    packages: [], // e.g. ["your-package"] — npm package names you publish
+    maxPackages: 25, // latest releases kept
+  },
+  rss: {
+    enabled: false, // forker: set true + add at least one feed URL
+    feeds: [], // e.g. ["https://overreacted.io/rss.xml", "https://blog.rust-lang.org/feed.xml"]
+    maxPosts: 50, // newest posts kept across ALL feeds combined
+  },
+  youtube: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // YouTube CHANNEL id, must start with "UC…" (NOT an @handle). Find it via the channel page source / a UC-id lookup.
+    maxVideos: 15, // latest videos kept in the feed
+  },
+  stackoverflow: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // Stack Overflow NUMERIC user id, e.g. "22656" (from your profile URL /users/<id>/...)
+    maxPosts: 25, // latest answers kept in the feed
+  },
+  bluesky: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // Bluesky handle or DID, e.g. "bsky.app" (no @)
+    maxPosts: 25, // latest original posts kept (reposts + replies excluded)
+  },
+  mastodon: {
+    enabled: false, // forker: set true + fill instance & user
+    instance: "", // Mastodon instance host, e.g. "mastodon.social"
+    user: "", // local username (acct), e.g. "Gargron"
+    maxPosts: 25, // latest original posts kept (boosts & replies dropped)
+  },
+  huggingface: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // HF org/user, e.g. "google" — author= on both endpoints
+    maxBadges: 50, // model+dataset badges kept (per-endpoint API limit too)
+  },
+  wakatime: {
+    enabled: false, // forker: set true; key comes from the WAKATIME_API_KEY env/secret, NOT here
+    handle: "", // WakaTime username (display only)
+    profileUrl: "", // public profile, e.g. "https://wakatime.com/@yourname" — used as the item url
+    range: "last_7_days", // WakaTime stats range; part of the dedup id (wakatime:rating:<range>)
+  },
   // Plan 3 adds: manual, issueOnFailure
 };
