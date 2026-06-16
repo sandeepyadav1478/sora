@@ -1,0 +1,94 @@
+name: Sync content sources
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Daily at 2am UTC
+  workflow_dispatch: # Manual trigger from the Actions UI
+
+permissions:
+  contents: write # push updated cache to main
+  issues: write # open / update / close the failure issue
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run sync
+        run: node scripts/sync-sources.mjs --report
+        env:
+          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+
+      - name: Commit updated cache
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet src/data/sources-cache.json; then
+            echo "Cache unchanged — skipping commit"
+          else
+            git add src/data/sources-cache.json
+            git commit -m "chore(sync): update sources cache"
+            git push
+          fi
+
+      - name: Process sync report
+        id: report
+        run: node scripts/process-report.mjs
+
+      - name: Ensure sync-failure label exists
+        if: steps.report.outputs.failure_count != '0'
+        run: |
+          gh label create "sync-failure" \
+            --color "d73a4a" \
+            --description "Automatic sync failure notification" \
+            --force 2>/dev/null || true
+
+      - name: Open or update failure issue
+        if: steps.report.outputs.failure_count != '0'
+        run: |
+          ISSUE_TITLE="[Sora] Sync failures"
+          EXISTING=$(gh issue list --state open \
+            --search "\"$ISSUE_TITLE\" in:title" \
+            --json number --jq '.[0].number // empty')
+          if [ -z "$EXISTING" ]; then
+            gh issue create \
+              --title "$ISSUE_TITLE" \
+              --body-file /tmp/issue_body.md \
+              --label "sync-failure"
+          else
+            gh issue edit "$EXISTING" --body-file /tmp/issue_body.md
+          fi
+
+      - name: Close failure issue on clean sync
+        if: steps.report.outputs.failure_count == '0'
+        run: |
+          ISSUE_TITLE="[Sora] Sync failures"
+          EXISTING=$(gh issue list --state open \
+            --search "\"$ISSUE_TITLE\" in:title" \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue close "$EXISTING" \
+              --comment "All sources synced successfully. Closing."
+          fi
