@@ -78,18 +78,19 @@ async function run() {
   // Leak guard (spec §2.5): never write a cache containing a secret value.
   assertNoSecrets(serialized, secrets);
 
-  if (REPORT) {
-    const report = buildReport(results, generatedAt);
-    await writeFile(REPORT_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
-    console.log(`Sync report: ${report.failures.length} failure(s), ${report.successes.length} success(es)`);
-  }
-
   if (DRY_RUN) {
     console.log(`\n[dry-run] would write ${next.items.length} item(s) to ${CACHE_PATH}`);
     return;
   }
   await writeCache(CACHE_PATH, next);
   console.log(`\nWrote ${next.items.length} item(s) to ${CACHE_PATH}`);
+
+  if (REPORT) {
+    const report = buildReport(results, generatedAt);
+    assertNoSecrets(JSON.stringify(report), secrets);
+    await writeFile(REPORT_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
+    console.log(`Sync report: ${report.failures.length} failure(s), ${report.successes.length} success(es)`);
+  }
 }
 
 // Only run when invoked directly as a CLI; importing for tests must not trigger a sync.
