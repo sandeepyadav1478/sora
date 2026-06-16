@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { writeFile } from "node:fs/promises";
 import { SOURCES } from "../src/config.sources.mjs";
 import { readCache, mergeSources, writeCache } from "./lib/cache.mjs";
 import { collectSecrets, assertNoSecrets, sanitize } from "./lib/redact.mjs";
@@ -18,6 +19,8 @@ import * as wakatime from "./adapters/wakatime.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_PATH = resolve(__dirname, "../src/data/sources-cache.json");
 const DRY_RUN = process.argv.includes("--dry-run");
+const REPORT = process.argv.includes("--report");
+const REPORT_PATH = resolve(__dirname, "../sync-report.json");
 
 // Adapter registry. Plan 2 appends more entries here.
 const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, bluesky, mastodon, huggingface, wakatime };
@@ -26,6 +29,16 @@ const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, b
  *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */
 export function shouldRun(cfg) {
   return Boolean(cfg && cfg.enabled);
+}
+
+export function buildReport(results, generatedAt) {
+  return {
+    generatedAt,
+    failures: results
+      .filter((r) => !r.ok)
+      .map(({ source, error }) => ({ source, error: error ?? "" })),
+    successes: results.filter((r) => r.ok).map((r) => r.source),
+  };
 }
 
 function nowIso() {
@@ -64,6 +77,12 @@ async function run() {
 
   // Leak guard (spec §2.5): never write a cache containing a secret value.
   assertNoSecrets(serialized, secrets);
+
+  if (REPORT) {
+    const report = buildReport(results, generatedAt);
+    await writeFile(REPORT_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
+    console.log(`Sync report: ${report.failures.length} failure(s), ${report.successes.length} success(es)`);
+  }
 
   if (DRY_RUN) {
     console.log(`\n[dry-run] would write ${next.items.length} item(s) to ${CACHE_PATH}`);
