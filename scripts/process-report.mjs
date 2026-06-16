@@ -10,7 +10,7 @@ if (outputPath) {
 
 // Emit ::warning:: annotations — visible in the Actions summary without opening the full log
 for (const f of report.failures) {
-  process.stdout.write(`::warning::Sync failed for source ${f.source}: ${f.error}\n`);
+  process.stdout.write(`::warning::Sync failed for source ${f.source}: ${f.error.replace(/\n/g, " ")}\n`);
 }
 
 // Write issue body to a temp file (workflow uses --body-file to avoid quoting issues)
