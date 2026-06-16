@@ -37,11 +37,20 @@ jobs:
         run: pnpm install
 
       - name: Run sync
+        continue-on-error: true
         run: node scripts/sync-sources.mjs --report
         env:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
 
+      - name: Write fallback report on sync crash
+        if: always()
+        run: |
+          if [ ! -f sync-report.json ]; then
+            echo '{"generatedAt":"'"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"'","failures":[{"source":"sync-script","error":"Fatal crash — see Actions log for details"}],"successes":[]}' > sync-report.json
+          fi
+
       - name: Commit updated cache
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -55,10 +64,11 @@ jobs:
 
       - name: Process sync report
         id: report
+        if: always()
         run: node scripts/process-report.mjs
 
       - name: Ensure sync-failure label exists
-        if: steps.report.outputs.failure_count != '0'
+        if: always() && steps.report.outputs.failure_count != '0'
         run: |
           gh label create "sync-failure" \
             --color "d73a4a" \
@@ -66,7 +76,7 @@ jobs:
             --force 2>/dev/null || true
 
       - name: Open or update failure issue
-        if: steps.report.outputs.failure_count != '0'
+        if: always() && steps.report.outputs.failure_count != '0'
         run: |
           ISSUE_TITLE="[Sora] Sync failures"
           EXISTING=$(gh issue list --state open \
@@ -82,7 +92,7 @@ jobs:
           fi
 
       - name: Close failure issue on clean sync
-        if: steps.report.outputs.failure_count == '0'
+        if: always() && steps.report.outputs.failure_count == '0'
         run: |
           ISSUE_TITLE="[Sora] Sync failures"
           EXISTING=$(gh issue list --state open \
