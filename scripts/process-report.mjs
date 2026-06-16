@@ -1,6 +1,12 @@
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
 
-const report = JSON.parse(readFileSync("sync-report.json", "utf8"));
+let report;
+try {
+  report = JSON.parse(readFileSync("sync-report.json", "utf8"));
+} catch (e) {
+  console.error("process-report: could not read sync-report.json:", e.message);
+  process.exit(1);
+}
 
 // Write failure_count to GitHub Actions output (read by if: conditions in workflow)
 const outputPath = process.env.GITHUB_OUTPUT;
