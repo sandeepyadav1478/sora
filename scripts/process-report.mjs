@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
+import { collectSecrets, sanitize } from "./lib/redact.mjs";
 
 let report;
 try {
@@ -8,6 +9,11 @@ try {
   process.exit(1);
 }
 
+// Independent redaction layer — upstream already sanitizes, but re-sanitize before
+// any value reaches public GHA outputs (annotations, issue body).
+const secrets = collectSecrets(["WAKATIME_API_KEY"]);
+const safeError = (err) => sanitize((err ?? "").replace(/\n/g, " "), secrets);
+
 // Write failure_count to GitHub Actions output (read by if: conditions in workflow)
 const outputPath = process.env.GITHUB_OUTPUT;
 if (outputPath) {
@@ -16,27 +22,28 @@ if (outputPath) {
 
 // Emit ::warning:: annotations — visible in the Actions summary without opening the full log
 for (const f of report.failures) {
-  process.stdout.write(`::warning::Sync failed for source ${f.source}: ${f.error.replace(/\n/g, " ")}\n`);
+  process.stdout.write(`::warning::Sync failed for source ${f.source}: ${safeError(f.error)}\n`);
 }
 
 // Write issue body to a temp file (workflow uses --body-file to avoid quoting issues)
-const runUrl = process.env.GITHUB_SERVER_URL &&
+const runUrl =
+  process.env.GITHUB_SERVER_URL &&
   process.env.GITHUB_REPOSITORY &&
   process.env.GITHUB_RUN_ID
-  ? [
-      process.env.GITHUB_SERVER_URL,
-      process.env.GITHUB_REPOSITORY,
-      "actions/runs",
-      process.env.GITHUB_RUN_ID,
-    ].join("/")
-  : "";
+    ? [
+        process.env.GITHUB_SERVER_URL,
+        process.env.GITHUB_REPOSITORY,
+        "actions/runs",
+        process.env.GITHUB_RUN_ID,
+      ].join("/")
+    : "";
 
 const bodyLines = [
   "## Sync failures",
   "",
   runUrl ? `**Run:** ${runUrl}` : "_Run URL unavailable_",
   "",
-  ...report.failures.map((f) => `- **${f.source}**: \`${f.error}\``),
+  ...report.failures.map((f) => `- **${f.source}**: \`${safeError(f.error)}\``),
   "",
   `_Last updated: ${report.generatedAt}_`,
 ];

@@ -9,6 +9,10 @@ permissions:
   contents: write # push updated cache to main
   issues: write # open / update / close the failure issue
 
+concurrency:
+  group: sync-sources
+  cancel-in-progress: true
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -65,7 +69,16 @@ jobs:
       - name: Process sync report
         id: report
         if: always()
+        continue-on-error: true
         run: node scripts/process-report.mjs
+
+      - name: Write fallback issue body if process-report crashed
+        if: always()
+        run: |
+          if [ ! -f /tmp/issue_body.md ]; then
+            printf '## Sync failures\n\n_Report processing failed — check the Actions log._\n' > /tmp/issue_body.md
+            echo "failure_count=1" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Ensure sync-failure label exists
         if: always() && steps.report.outputs.failure_count != '0'
