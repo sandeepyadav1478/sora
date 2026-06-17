@@ -15,6 +15,7 @@ import * as bluesky from "./adapters/bluesky.mjs";
 import * as mastodon from "./adapters/mastodon.mjs";
 import * as huggingface from "./adapters/huggingface.mjs";
 import * as wakatime from "./adapters/wakatime.mjs";
+import * as leetcode from "./adapters/leetcode.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_PATH = resolve(__dirname, "../src/data/sources-cache.json");
@@ -23,7 +24,7 @@ const REPORT = process.argv.includes("--report");
 const REPORT_PATH = resolve(__dirname, "../sync-report.json");
 
 // Adapter registry. Plan 2 appends more entries here.
-const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, bluesky, mastodon, huggingface, wakatime };
+const ADAPTERS = { github, codeforces, pypi, npm, rss, youtube, stackoverflow, bluesky, mastodon, huggingface, wakatime, leetcode };
 
 /** A source runs when it is enabled. Each adapter validates its own required
  *  config (handle/packages/feeds/instance) inside fetch(), returning [] if incomplete. */

@@ -60,5 +60,8 @@ export const SOURCES = {
     profileUrl: "", // public profile, e.g. "https://wakatime.com/@yourname" — used as the item url
     range: "last_7_days", // WakaTime stats range; part of the dedup id (wakatime:rating:<range>)
   },
-  // Plan 3 adds: manual, issueOnFailure
+  leetcode: {
+    enabled: false, // forker: set true + fill handle
+    handle: "", // LeetCode username, e.g. "sandeepyadav1478"
+  },
 };
