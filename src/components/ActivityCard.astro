@@ -116,7 +116,8 @@ if (kind === "rating" && platform === "leetcode") {
     tip = `Easy ${solved.easy ?? 0} · Medium ${solved.medium ?? 0} · Hard ${solved.hard ?? 0}`;
 }
 
-if (kind === "badge" && platform === "huggingface") {
+const issuer = typeof p.issuer === "string" ? p.issuer : "";
+if (kind === "badge" && issuer === "huggingface") {
   const dl = fmt(p.downloads);
   if (ACTIVITY_DISPLAY.hf_downloads && dl)
     badges.push({ icon: "download", text: dl });
