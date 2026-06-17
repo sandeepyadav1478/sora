@@ -61,6 +61,7 @@ makeEnvelope({
   url:    `https://leetcode.com/${handle}/`,
   date:   generatedAt,   // timestamp of the sync run
   payload: {
+    platform: "leetcode",             // disambiguates rating kind in the UI layer
     solved:  { all: 61, easy: 48, medium: 13, hard: 0 },
     ranking: 2215747,
   },
