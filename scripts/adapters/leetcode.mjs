@@ -6,6 +6,8 @@ export const needs = []; // no secrets — public GraphQL
 const GQL_URL = "https://leetcode.com/graphql";
 const UA = "sora-portfolio-aggregator";
 
+const fmtRank = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
 export function normalizeStats(raw, cfg, generatedAt) {
   try {
     const user = raw?.data?.matchedUser;
@@ -21,12 +23,14 @@ export function normalizeStats(raw, cfg, generatedAt) {
     const ranking = user.profile?.ranking ?? 0;
     const handle  = cfg?.handle ?? "unknown";
 
+    const rankLabel = ranking > 0 ? `rank #${fmtRank(ranking)}` : "unranked";
+
     return [
       makeEnvelope({
         id:     stableId("leetcode", "rating", handle),
         source: "leetcode",
         kind:   "rating",
-        title:  `LeetCode: ${all} solved (rank #${ranking.toLocaleString("en-US")})`,
+        title:  `LeetCode: ${all} solved (${rankLabel})`,
         url:    `https://leetcode.com/${handle}/`,
         date:   generatedAt,
         payload: {
@@ -53,7 +57,8 @@ export async function fetch_(cfg) {
       },
       signal: AbortSignal.timeout(10_000),
       body: JSON.stringify({
-        query: `{ matchedUser(username: "${cfg.handle}") { submitStats { acSubmissionNum { difficulty count } } profile { ranking } } }`,
+        query: `query UserStats($handle: String!) { matchedUser(username: $handle) { submitStats { acSubmissionNum { difficulty count } } profile { ranking } } }`,
+        variables: { handle: cfg.handle },
       }),
     });
     if (!res.ok) return [];

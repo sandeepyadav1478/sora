@@ -59,3 +59,23 @@ test("fetch_ returns [] when handle is missing (graceful, no network, no throw)"
   const out = await leetcodeFetch({ enabled: true, handle: "" });
   assert.deepEqual(out, []);
 });
+
+test("normalizeStats: ranking=0 shows 'unranked' not 'rank #0'", () => {
+  const unranked = {
+    data: {
+      matchedUser: {
+        submitStats: { acSubmissionNum: [
+          { difficulty: "All", count: 5 },
+          { difficulty: "Easy", count: 5 },
+          { difficulty: "Medium", count: 0 },
+          { difficulty: "Hard", count: 0 },
+        ]},
+        profile: { ranking: 0 },
+      },
+    },
+  };
+  const [item] = normalizeStats(unranked, cfg, GEN);
+  assert.ok(item.title.includes("unranked"), `expected 'unranked' in title, got: ${item.title}`);
+  assert.ok(!item.title.includes("#0"), `title must not contain '#0', got: ${item.title}`);
+  assert.equal(item.payload.ranking, 0, "raw ranking still stored as 0 in payload");
+});
