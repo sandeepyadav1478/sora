@@ -1,11 +1,138 @@
 ---
 import type { ActivityItem } from "@/lib/sources";
+import { ACTIVITY_DISPLAY } from "@/config";
+import IconDownload from "@/assets/icons/IconDownload.svg?raw";
+import IconHeart from "@/assets/icons/IconHeart.svg?raw";
+import IconClock from "@/assets/icons/IconClock.svg?raw";
+import IconTrophy from "@/assets/icons/IconTrophy.svg?raw";
+
 interface Props {
   item: ActivityItem;
 }
 const { item } = Astro.props;
+const p = (item.payload ?? {}) as Record<string, unknown>;
 
-// Per-kind label + glyph; falls back gracefully for kinds added later.
+// ── helpers ────────────────────────────────────────────────────────────────
+function fmt(n: unknown): string {
+  const v = Number(n);
+  if (!Number.isFinite(v) || v < 0) return "";
+  if (v >= 1_000_000)
+    return (v / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  return String(v);
+}
+function trunc(s: unknown, len = 120): string {
+  if (typeof s !== "string" || !s) return "";
+  return s.length > len ? s.slice(0, len) + "…" : s;
+}
+function fmtAvg(secs: unknown): string {
+  const s = Number(secs);
+  if (!Number.isFinite(s) || s <= 0) return "";
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return h > 0 ? `${h}h ${m}m avg/day` : `${m}m avg/day`;
+}
+
+// ── per-kind badge + tooltip computation ───────────────────────────────────
+type Badge = { icon?: string; glyph?: string; text: string };
+const badges: Badge[] = [];
+let tip = "";
+
+const kind = item.kind;
+const platform = typeof p.platform === "string" ? p.platform : "";
+
+if (kind === "commit") {
+  const branch = typeof p.branch === "string" ? p.branch : "";
+  if (ACTIVITY_DISPLAY.commit_branch && branch)
+    badges.push({ glyph: "⎇", text: branch });
+  if (ACTIVITY_DISPLAY.commit_tooltip) tip = trunc(p.message);
+}
+
+if (kind === "release") {
+  const ver = typeof p.version === "string" ? p.version : "";
+  if (ACTIVITY_DISPLAY.release_version && ver)
+    badges.push({ glyph: "🏷", text: ver });
+  if (ACTIVITY_DISPLAY.release_tooltip && typeof p.repo === "string")
+    tip = p.repo;
+}
+
+if (kind === "package") {
+  const ver = typeof p.version === "string" ? p.version : "";
+  if (ACTIVITY_DISPLAY.package_version && ver)
+    badges.push({ glyph: "📦", text: ver });
+  const dl = fmt(p.downloads);
+  if (ACTIVITY_DISPLAY.package_downloads && dl)
+    badges.push({ icon: "download", text: dl });
+  if (ACTIVITY_DISPLAY.package_tooltip && typeof p.registry === "string")
+    tip = p.registry;
+}
+
+if (kind === "post") {
+  const feed = typeof p.feed === "string" ? p.feed : "";
+  if (ACTIVITY_DISPLAY.post_feed && feed)
+    badges.push({ glyph: "📰", text: feed });
+  if (ACTIVITY_DISPLAY.post_tooltip) tip = trunc(p.excerpt);
+}
+
+if (kind === "video") {
+  const views = fmt(p.views);
+  if (ACTIVITY_DISPLAY.video_views && views && views !== "0")
+    badges.push({ glyph: "▶", text: views });
+  if (ACTIVITY_DISPLAY.video_tooltip && typeof p.channel === "string")
+    tip = p.channel;
+}
+
+if (kind === "rating" && platform === "codeforces") {
+  if (ACTIVITY_DISPLAY.cf_rating && typeof p.rating === "number")
+    badges.push({ icon: "trophy", text: String(p.rating) });
+  if (ACTIVITY_DISPLAY.cf_rank && typeof p.rank === "number")
+    badges.push({ glyph: "#", text: String(p.rank) });
+  if (ACTIVITY_DISPLAY.cf_tooltip && typeof p.contestId === "number")
+    tip = `Contest #${p.contestId}`;
+}
+
+if (kind === "rating" && platform === "wakatime") {
+  const human =
+    typeof p.humanReadableTotal === "string" ? p.humanReadableTotal : "";
+  if (ACTIVITY_DISPLAY.waka_time && human)
+    badges.push({ icon: "clock", text: human });
+  const avg = fmtAvg(p.dailyAverage);
+  if (ACTIVITY_DISPLAY.waka_avg && avg) badges.push({ glyph: "~", text: avg });
+  if (
+    ACTIVITY_DISPLAY.waka_tooltip &&
+    Array.isArray(p.languages) &&
+    p.languages.length
+  )
+    tip = (p.languages as string[]).join(" · ");
+}
+
+if (kind === "rating" && platform === "leetcode") {
+  const solved = p.solved as Record<string, number> | undefined;
+  if (ACTIVITY_DISPLAY.lc_solved && solved && typeof solved.all === "number")
+    badges.push({ glyph: "✓", text: `${solved.all} solved` });
+  const rank = fmt(p.ranking);
+  if (ACTIVITY_DISPLAY.lc_rank && rank) badges.push({ glyph: "#", text: rank });
+  if (ACTIVITY_DISPLAY.lc_tooltip && solved)
+    tip = `Easy ${solved.easy ?? 0} · Medium ${solved.medium ?? 0} · Hard ${solved.hard ?? 0}`;
+}
+
+if (kind === "badge" && platform === "huggingface") {
+  const dl = fmt(p.downloads);
+  if (ACTIVITY_DISPLAY.hf_downloads && dl)
+    badges.push({ icon: "download", text: dl });
+  const likes = Number(p.likes);
+  if (ACTIVITY_DISPLAY.hf_likes && Number.isFinite(likes) && likes > 0)
+    badges.push({ icon: "heart", text: String(likes) });
+  if (ACTIVITY_DISPLAY.hf_tooltip) {
+    const label = typeof p.label === "string" ? p.label : "";
+    const tags = Array.isArray(p.tags)
+      ? (p.tags as string[]).slice(0, 3).join(" · ")
+      : "";
+    tip = [label, tags].filter(Boolean).join(" · ");
+  }
+}
+
+// ── label + date ────────────────────────────────────────────────────────────
 const KIND_LABEL: Record<string, string> = {
   commit: "Commit",
   release: "Release",
@@ -21,10 +148,13 @@ const when = new Date(item.date).toLocaleDateString("en-US", {
   day: "numeric",
   year: "numeric",
 });
-const branch =
-  item.kind === "commit"
-    ? (item.payload as { branch?: string }).branch
-    : undefined;
+
+const ICONS: Record<string, string> = {
+  download: IconDownload,
+  heart: IconHeart,
+  clock: IconClock,
+  trophy: IconTrophy,
+};
 ---
 
 <a
@@ -32,11 +162,20 @@ const branch =
   target="_blank"
   rel="noopener noreferrer"
   class="activity-card"
+  data-tip={tip || undefined}
 >
   <span class="activity-chip">{item.source}</span>
   <span class="activity-kind">{label}</span>
   <span class="activity-title">{item.title}</span>
-  {branch && <span class="activity-branch">{branch}</span>}
+  {
+    badges.map(b => (
+      <span class="activity-stat">
+        {b.icon && <span class="stat-icon" set:html={ICONS[b.icon]} />}
+        {b.glyph && <span class="stat-glyph">{b.glyph}</span>}
+        <span>{b.text}</span>
+      </span>
+    ))
+  }
   <time class="activity-date" datetime={item.date}>{when}</time>
 </a>
 
@@ -50,6 +189,7 @@ const branch =
     border-radius: 0.5rem;
     text-decoration: none;
     color: inherit;
+    position: relative;
     transition:
       border-color 0.15s ease,
       transform 0.15s ease;
@@ -58,6 +198,30 @@ const branch =
     border-color: var(--accent, #888);
     transform: translateY(-1px);
   }
+
+  /* CSS tooltip */
+  .activity-card[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card, #fff);
+    border: 1px solid var(--border, rgba(127, 127, 127, 0.2));
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+    white-space: pre-wrap;
+    max-width: 260px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 10;
+  }
+  .activity-card:hover[data-tip]::after {
+    opacity: 1;
+  }
+
   .activity-chip {
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -79,12 +243,27 @@ const branch =
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .activity-branch {
+
+  /* stat badges */
+  .activity-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
     font-size: 0.7rem;
-    font-family: var(--font-mono, monospace);
-    opacity: 0.6;
+    opacity: 0.75;
     flex-shrink: 0;
+    white-space: nowrap;
   }
+  .stat-icon :global(svg) {
+    width: 12px;
+    height: 12px;
+    opacity: 0.7;
+    vertical-align: middle;
+  }
+  .stat-glyph {
+    font-size: 0.65rem;
+  }
+
   .activity-date {
     font-size: 0.75rem;
     opacity: 0.6;

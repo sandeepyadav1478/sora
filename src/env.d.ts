@@ -1,3 +1,8 @@
+declare module "*.svg?raw" {
+  const content: string;
+  export default content;
+}
+
 interface Window {
   theme?: {
     themeValue: string;
