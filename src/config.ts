@@ -150,6 +150,53 @@ export const SECTIONS = {
 } as const;
 
 // ============================================================================
+// ACTIVITY_DISPLAY — Controls which payload fields appear as badges/tooltips
+// on ActivityCard items. Each field is opt-in. Template ships all false.
+// ============================================================================
+export const ACTIVITY_DISPLAY = {
+  // commit
+  commit_branch: false, // ⎇ branch name badge
+  commit_tooltip: false, // hover: commit message
+
+  // release
+  release_version: false, // 🏷 version tag badge
+  release_tooltip: false, // hover: repo name
+
+  // package (npm + pypi)
+  package_version: false, // 📦 version badge
+  package_downloads: false, // ⬇ download count badge (omitted if absent)
+  package_tooltip: false, // hover: registry name (npm / pypi)
+
+  // post (rss, bluesky, mastodon, stackoverflow)
+  post_feed: false, // 📰 feed/platform name badge
+  post_tooltip: false, // hover: excerpt (first 120 chars)
+
+  // video (youtube)
+  video_views: false, // ▶ view count badge (omitted if 0)
+  video_tooltip: false, // hover: channel name
+
+  // rating — codeforces
+  cf_rating: false, // ★ rating badge
+  cf_rank: false, // # rank badge
+  cf_tooltip: false, // hover: Contest #<id>
+
+  // rating — wakatime
+  waka_time: false, // ⏱ total coding time badge
+  waka_avg: false, // avg/day badge (omitted if absent)
+  waka_tooltip: false, // hover: top languages
+
+  // rating — leetcode
+  lc_solved: false, // ✓ solved count badge
+  lc_rank: false, // # global rank badge (formatted)
+  lc_tooltip: false, // hover: Easy X · Medium Y · Hard Z
+
+  // badge — huggingface
+  hf_downloads: false, // ⬇ download count badge
+  hf_likes: false, // ♥ likes badge (omitted if 0)
+  hf_tooltip: false, // hover: label + top 3 tags
+} as const;
+
+// ============================================================================
 // BOARD — Works board layout & display options
 // ============================================================================
 export const BOARD = {
