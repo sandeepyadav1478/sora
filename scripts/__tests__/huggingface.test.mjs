@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeHuggingface } from "../adapters/huggingface.mjs";
+import { normalizeHuggingface, fetch_ as huggingfaceFetch } from "../adapters/huggingface.mjs";
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/huggingface.json", import.meta.url), "utf8"),
@@ -61,4 +61,9 @@ test("huggingface: returns [] on garbage input", () => {
   assert.deepEqual(normalizeHuggingface({}, cfg), []);
   assert.deepEqual(normalizeHuggingface({ models: "nope", datasets: 42 }, cfg), []);
   assert.deepEqual(normalizeHuggingface({ models: [{}], datasets: [] }, cfg), []); // entry with no id is dropped
+});
+
+test("fetch_ returns [] when handle is missing (graceful, no network, no throw)", async () => {
+  const out = await huggingfaceFetch({ enabled: true, handle: "" });
+  assert.deepEqual(out, []);
 });

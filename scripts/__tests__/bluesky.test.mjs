@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeFeed } from "../adapters/bluesky.mjs";
+import { normalizeFeed, fetch_ as blueskyFetch } from "../adapters/bluesky.mjs";
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/bluesky.json", import.meta.url), "utf8")
@@ -76,4 +76,9 @@ test("bluesky: returns [] on garbage input", () => {
   assert.deepEqual(normalizeFeed({}, cfg), []);
   assert.deepEqual(normalizeFeed({ feed: "nope" }, cfg), []);
   assert.deepEqual(normalizeFeed({ feed: [{}, { post: {} }] }, cfg), []);
+});
+
+test("fetch_ returns [] when handle is missing (graceful, no network, no throw)", async () => {
+  const out = await blueskyFetch({ enabled: true, handle: "" });
+  assert.deepEqual(out, []);
 });

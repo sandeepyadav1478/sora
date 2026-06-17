@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeStatuses } from "../adapters/mastodon.mjs";
+import { normalizeStatuses, fetch_ as mastodonFetch } from "../adapters/mastodon.mjs";
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/mastodon.json", import.meta.url), "utf8")
@@ -53,4 +53,13 @@ test("normalizeStatuses returns [] for empty/garbage input (never throws)", () =
   assert.deepEqual(normalizeStatuses(null, cfg), []);
   assert.deepEqual(normalizeStatuses(undefined, cfg), []);
   assert.deepEqual(normalizeStatuses([{ junk: true }, 42, null], cfg), []);
+});
+
+test("fetch_ returns [] when instance or user is missing (graceful, no network, no throw)", async () => {
+  assert.deepEqual(await mastodonFetch({ enabled: true, instance: "", user: "Gargron" }), []);
+  assert.deepEqual(await mastodonFetch({ enabled: true, instance: "mastodon.social", user: "" }), []);
+});
+
+test("normalizeStatuses returns [] when cfg is null (never throws)", () => {
+  assert.deepEqual(normalizeStatuses([], null), []);
 });

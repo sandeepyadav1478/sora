@@ -8,9 +8,14 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: true
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     # Only run in forks, not in the template repo itself
     if: github.repository != 'sandeepyadav1478/sora'
     steps:
@@ -38,6 +43,7 @@ jobs:
             git merge --abort
             git checkout -b sync/upstream-$(date +%Y%m%d)
             git merge upstream/main --no-edit --allow-unrelated-histories || true
+            git diff --check || { echo "::error::Unresolved conflicts after retry — manual fix required"; exit 1; }
             git add -A
             git commit -m "chore: sync upstream template (conflicts)" --allow-empty
             git push origin sync/upstream-$(date +%Y%m%d)

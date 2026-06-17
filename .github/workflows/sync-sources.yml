@@ -38,7 +38,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Run sync
         continue-on-error: true
@@ -73,6 +73,7 @@ jobs:
         run: node scripts/process-report.mjs
 
       - name: Write fallback issue body if process-report crashed
+        id: fallback_report
         if: always()
         run: |
           if [ ! -f /tmp/issue_body.md ]; then
@@ -81,7 +82,7 @@ jobs:
           fi
 
       - name: Ensure sync-failure label exists
-        if: always() && steps.report.outputs.failure_count != '0'
+        if: always() && (steps.report.outputs.failure_count != '0' || steps.fallback_report.outputs.failure_count != '')
         run: |
           gh label create "sync-failure" \
             --color "d73a4a" \
@@ -89,7 +90,7 @@ jobs:
             --force 2>/dev/null || true
 
       - name: Open or update failure issue
-        if: always() && steps.report.outputs.failure_count != '0'
+        if: always() && (steps.report.outputs.failure_count != '0' || steps.fallback_report.outputs.failure_count != '')
         run: |
           ISSUE_TITLE="[Sora] Sync failures"
           EXISTING=$(gh issue list --state open \
@@ -105,7 +106,7 @@ jobs:
           fi
 
       - name: Close failure issue on clean sync
-        if: always() && steps.report.outputs.failure_count == '0'
+        if: always() && steps.report.outputs.failure_count == '0' && steps.fallback_report.outputs.failure_count == ''
         run: |
           ISSUE_TITLE="[Sora] Sync failures"
           EXISTING=$(gh issue list --state open \

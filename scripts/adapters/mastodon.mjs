@@ -42,7 +42,7 @@ export function normalizeStatuses(statuses, cfg) {
   // Cap newest-first; dedupAndSort in the spine does the final global sort.
   return out
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-    .slice(0, cfg.maxPosts ?? 25);
+    .slice(0, (cfg?.maxPosts) ?? 25);
 }
 
 /** Adapter entry point: 2-call flow (lookup acct -> id, then statuses).

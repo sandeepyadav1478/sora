@@ -111,7 +111,8 @@ if (kind === "rating" && platform === "leetcode") {
   if (ACTIVITY_DISPLAY.lc_solved && solved && typeof solved.all === "number")
     badges.push({ glyph: "✓", text: `${solved.all} solved` });
   const rank = fmt(p.ranking);
-  if (ACTIVITY_DISPLAY.lc_rank && rank) badges.push({ glyph: "#", text: rank });
+  if (ACTIVITY_DISPLAY.lc_rank && rank && rank !== "0")
+    badges.push({ glyph: "#", text: rank });
   if (ACTIVITY_DISPLAY.lc_tooltip && solved)
     tip = `Easy ${solved.easy ?? 0} · Medium ${solved.medium ?? 0} · Hard ${solved.hard ?? 0}`;
 }
@@ -119,7 +120,7 @@ if (kind === "rating" && platform === "leetcode") {
 const issuer = typeof p.issuer === "string" ? p.issuer : "";
 if (kind === "badge" && issuer === "huggingface") {
   const dl = fmt(p.downloads);
-  if (ACTIVITY_DISPLAY.hf_downloads && dl)
+  if (ACTIVITY_DISPLAY.hf_downloads && dl && dl !== "0")
     badges.push({ icon: "download", text: dl });
   const likes = Number(p.likes);
   if (ACTIVITY_DISPLAY.hf_likes && Number.isFinite(likes) && likes > 0)
