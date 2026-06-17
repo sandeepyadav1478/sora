@@ -1,0 +1,17 @@
+{
+  "data": {
+    "matchedUser": {
+      "submitStats": {
+        "acSubmissionNum": [
+          { "difficulty": "All",    "count": 61 },
+          { "difficulty": "Easy",   "count": 48 },
+          { "difficulty": "Medium", "count": 13 },
+          { "difficulty": "Hard",   "count": 0  }
+        ]
+      },
+      "profile": {
+        "ranking": 2215747
+      }
+    }
+  }
+}
