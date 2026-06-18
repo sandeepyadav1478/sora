@@ -13,6 +13,9 @@ export function makeEnvelope({ id, source, kind, title, url, date, projectSlug, 
   if (!id || !source || !kind || !title || !url || !date) {
     throw new Error(`makeEnvelope: missing required field in ${JSON.stringify({ id, source, kind, title, url, date })}`);
   }
+  if (!url.startsWith("https://") && !url.startsWith("http://")) {
+    throw new Error(`makeEnvelope: unsafe url scheme "${url.slice(0, 30)}"`);
+  }
   if (!KINDS.includes(kind)) {
     throw new Error(`makeEnvelope: unknown kind "${kind}"`);
   }

@@ -46,8 +46,8 @@ jobs:
             git diff --check || { echo "::error::Unresolved conflicts after retry — manual fix required"; exit 1; }
             git add -A
             git commit -m "chore: sync upstream template (conflicts)" --allow-empty
-            git push origin sync/upstream-$(date +%Y%m%d)
             echo "CONFLICT=true" >> $GITHUB_ENV
+            git push origin sync/upstream-$(date +%Y%m%d)-$GITHUB_RUN_ID
           }
 
       - name: Push merged changes

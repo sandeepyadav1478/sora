@@ -88,3 +88,16 @@ test("writeCache then readCache round-trips items", async () => {
     await rm(path, { force: true });
   }
 });
+
+// envelope URL scheme guard (added with makeEnvelope XSS fix)
+import { makeEnvelope as mkEnv } from "../lib/envelope.mjs";
+test("makeEnvelope rejects javascript: URL scheme", () => {
+  assert.throws(
+    () => mkEnv({ id: "x:commit:1", source: "x", kind: "commit", title: "t", url: "javascript:alert(1)", date: "2026-06-17T00:00:00Z", payload: {} }),
+    /unsafe url scheme/
+  );
+});
+test("makeEnvelope accepts https:// and http:// URLs", () => {
+  assert.doesNotThrow(() => mkEnv({ id: "x:commit:1", source: "x", kind: "commit", title: "t", url: "https://example.com", date: "2026-06-17T00:00:00Z", payload: {} }));
+  assert.doesNotThrow(() => mkEnv({ id: "x:commit:2", source: "x", kind: "commit", title: "t", url: "http://example.com", date: "2026-06-17T00:00:00Z", payload: {} }));
+});

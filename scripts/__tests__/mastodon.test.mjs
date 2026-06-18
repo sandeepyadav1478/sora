@@ -63,3 +63,17 @@ test("fetch_ returns [] when instance or user is missing (graceful, no network, 
 test("normalizeStatuses returns [] when cfg is null (never throws)", () => {
   assert.deepEqual(normalizeStatuses([], null), []);
 });
+
+test("normalizeStatuses caps at cfg.maxPosts (slice is exercised)", () => {
+  const base = {
+    id: "1",
+    created_at: "2026-06-17T10:00:00.000Z",
+    url: "https://mastodon.social/@Gargron/1",
+    content: "<p>Hello</p>",
+    reblog: null,
+    in_reply_to_id: null,
+  };
+  const many = Array.from({ length: 10 }, (_, i) => ({ ...base, id: String(i + 1) }));
+  const out = normalizeStatuses(many, { maxPosts: 3 });
+  assert.equal(out.length, 3, "must be capped at maxPosts=3");
+});

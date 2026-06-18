@@ -61,7 +61,7 @@ if (kind === "package") {
   if (ACTIVITY_DISPLAY.package_version && ver)
     badges.push({ glyph: "📦", text: ver });
   const dl = fmt(p.downloads);
-  if (ACTIVITY_DISPLAY.package_downloads && dl)
+  if (ACTIVITY_DISPLAY.package_downloads && dl && dl !== "0")
     badges.push({ icon: "download", text: dl });
   if (ACTIVITY_DISPLAY.package_tooltip && typeof p.registry === "string")
     tip = p.registry;
