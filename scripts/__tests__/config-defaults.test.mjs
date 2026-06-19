@@ -8,6 +8,11 @@ const ROOT = resolve(fileURLToPath(import.meta.url), "../../../");
 const configSrc = readFileSync(resolve(ROOT, "src/config.ts"), "utf8");
 const contentConfigSrc = readFileSync(resolve(ROOT, "src/content.config.ts"), "utf8");
 
+// These tests only apply to the template repo (isTemplate: true).
+// Personal forks legitimately enable sections and features with real content.
+const IS_TEMPLATE = /isTemplate:\s*true/.test(configSrc);
+if (!IS_TEMPLATE) process.exit(0); // skip gracefully in forks
+
 // ── content.config.ts ──────────────────────────────────────────────────────
 test("content.config.ts: draft defaults to true (safe template default)", () => {
   assert.ok(
