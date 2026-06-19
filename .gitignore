@@ -19,6 +19,7 @@ pnpm-debug.log*
 
 # sync artifacts
 sync-report.json
+archive-alerts.json
 
 # macOS-specific files
 .DS_Store
