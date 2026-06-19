@@ -5,6 +5,9 @@
 !/src
 !/public
 !/.github
+# Exclude workflow files that contain shell heredocs — prettier's YAML parser
+# cannot handle <<'PYEOF' blocks inside run: | scalars
+.github/workflows/
 !tsconfig.json
 !astro.config.ts
 !.prettierrc.mjs
