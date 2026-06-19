@@ -7,6 +7,7 @@ export const SOURCES = {
     enabled: false, // forker: set true + fill handle
     handle: "", // GitHub username, e.g. "octocat"
     maxCommits: 25, // latest activity items kept in the feed
+    maxPages: 1, // 1=default (unauthenticated, ~30 events). Set 3 + GITHUB_READ_TOKEN for full history.
   },
   codeforces: {
     enabled: false, // forker: set true + fill handle

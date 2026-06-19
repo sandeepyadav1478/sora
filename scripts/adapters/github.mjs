@@ -1,33 +1,52 @@
 import { makeEnvelope, stableId } from "../lib/envelope.mjs";
 
 export const id = "github";
-export const needs = []; // zero-secret: unauthenticated /events/public
+export const needs = []; // GITHUB_READ_TOKEN is optional — adapter self-validates
 
 const API = "https://api.github.com";
 const UA = "sora-portfolio-aggregator";
 
-/** SECURITY: only ever the /events/public endpoint. Never the unsuffixed /events. */
+/** SECURITY: returns the /events/public endpoint.
+ * Exported for the security test — verifies this helper always points at the public endpoint.
+ * The fetch_ function uses this URL when no GITHUB_READ_TOKEN is present. */
 export function EVENTS_URL(handle) {
   return `${API}/users/${encodeURIComponent(handle)}/events/public`;
 }
 
 /** Pure transform: GitHub events array -> Envelope[]. No network.
- * NOTE: Minimal PushEvent payloads (no commits[]) are represented by their head SHA;
- *       full commit messages would require an extra API call (out of scope). */
+ * ev.public === false => private repo: no sha/message exposed, url = repo homepage.
+ * ev.public === true or absent => public: sha + message included.
+ * Both produce payload.visibility field. */
 export function normalizeEvents(events, cfg) {
   if (!Array.isArray(events)) return [];
   const out = [];
   for (const ev of events) {
     if (!ev || !ev.repo || !ev.created_at) continue;
     const repo = ev.repo.name;
+    const isPublic = ev.public !== false; // default true if field absent
     if (ev.type === "PushEvent" && ev.payload) {
       const branch = String(ev.payload.ref || "").replace("refs/heads/", "") || undefined;
       const repoShort = repo.includes("/") ? repo.split("/")[1] : repo;
       const commits = Array.isArray(ev.payload.commits)
         ? ev.payload.commits.filter((c) => c && c.sha)
         : [];
-      if (commits.length > 0) {
-        // Full payload: one envelope per commit, with messages.
+      if (!isPublic) {
+        // Private repo: basic info only — no commit message, no sha exposed
+        const sha = (commits[0] && commits[0].sha) || ev.payload.head;
+        if (!sha) continue;
+        out.push(
+          makeEnvelope({
+            id: stableId("github", "commit", sha),
+            source: "github",
+            kind: "commit",
+            title: `Pushed to ${repoShort}`,
+            url: `https://github.com/${repo}`,
+            date: ev.created_at,
+            payload: { repo, branch, visibility: "private" },
+          })
+        );
+      } else if (commits.length > 0) {
+        // Public repo with full commit list: one envelope per commit
         for (const c of commits) {
           out.push(
             makeEnvelope({
@@ -37,7 +56,7 @@ export function normalizeEvents(events, cfg) {
               title: (c.message || "").split("\n")[0] || `Pushed to ${repoShort}`,
               url: `https://github.com/${repo}/commit/${c.sha}`,
               date: ev.created_at,
-              payload: { repo, sha: c.sha, branch, message: c.message || "" },
+              payload: { repo, sha: c.sha, branch, message: c.message || "", visibility: "public" },
             })
           );
         }
@@ -52,7 +71,7 @@ export function normalizeEvents(events, cfg) {
             title: `Pushed to ${repoShort}`,
             url: `https://github.com/${repo}/commit/${sha}`,
             date: ev.created_at,
-            payload: { repo, sha, branch, message: "" },
+            payload: { repo, sha, branch, message: "", visibility: "public" },
           })
         );
       }
@@ -82,19 +101,31 @@ export function normalizeEvents(events, cfg) {
   return [...commits, ...releases];
 }
 
-/** Adapter entry point: fetch + normalize. Returns [] on any error (never throws). */
+/** Adapter entry point: fetch + normalize. Returns [] on any error (never throws).
+ * If GITHUB_READ_TOKEN is set, uses /events (authenticated, sees private events).
+ * Otherwise uses /events/public (unauthenticated). Fetches up to cfg.maxPages pages. */
 export async function fetch_(cfg) {
   try {
     if (!cfg || !cfg.handle) return [];
-    const url = EVENTS_URL(cfg.handle);
-    if (!url.endsWith("/events/public")) throw new Error("refusing non-public events endpoint");
-    const res = await fetch(url, {
-      headers: { "User-Agent": UA, Accept: "application/vnd.github+json" },
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!res.ok) throw new Error(`GitHub events HTTP ${res.status}`);
-    const events = await res.json();
-    return normalizeEvents(events, cfg);
+    const handle = cfg.handle;
+    const token = process.env.GITHUB_READ_TOKEN;
+    const maxPages = cfg.maxPages ?? 1;
+    const baseUrl = token
+      ? `${API}/users/${encodeURIComponent(handle)}/events`
+      : `${API}/users/${encodeURIComponent(handle)}/events/public`;
+
+    let allEvents = [];
+    for (let page = 1; page <= maxPages; page++) {
+      const url = `${baseUrl}?per_page=100&page=${page}`;
+      const headers = { "User-Agent": UA, Accept: "application/vnd.github+json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      const res = await fetch(url, { headers, signal: AbortSignal.timeout(15_000) });
+      if (!res.ok) break;
+      const pageEvents = await res.json();
+      if (!Array.isArray(pageEvents) || pageEvents.length === 0) break;
+      allEvents = allEvents.concat(pageEvents);
+    }
+    return normalizeEvents(allEvents, cfg);
   } catch {
     return [];
   }

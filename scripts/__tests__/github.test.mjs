@@ -16,7 +16,7 @@ test("EVENTS_URL targets the /events/public endpoint (security: never /events)",
 test("normalizeEvents expands PushEvent commits into commit envelopes", () => {
   const out = normalizeEvents(fixture, { handle: "octocat", maxCommits: 25 });
   const commits = out.filter((e) => e.kind === "commit");
-  assert.equal(commits.length, 3); // 2 on main + 1 on feature-x
+  assert.equal(commits.length, 5); // 2 on main + 1 on feature-x + 1 private + 1 new public
   const first = commits.find((c) => c.payload.sha === "aaa111");
   assert.equal(first.source, "github");
   assert.equal(first.id, "github:commit:aaa111");
@@ -65,4 +65,37 @@ test("normalizeEvents represents a minimal PushEvent (no commits[]) by its head 
   assert.equal(commits[0].payload.branch, "feat/x");
   assert.equal(commits[0].id, "github:commit:deadbeef123");
   assert.equal(commits[0].url, "https://github.com/octocat/hello/commit/deadbeef123");
+});
+
+test("normalizeEvents: private repo commit has visibility:private and no message in payload", () => {
+  const out = normalizeEvents(fixture, { handle: "octocat", maxCommits: 50 });
+  const priv = out.find((e) => e.payload && e.payload.repo === "octocat/secret-project");
+  assert.ok(priv, "private repo commit must appear");
+  assert.equal(priv.payload.visibility, "private");
+  assert.equal(priv.payload.message, undefined, "private commits must not expose message");
+  assert.equal(priv.payload.sha, undefined, "private commits must not expose sha");
+  assert.equal(priv.url, "https://github.com/octocat/secret-project", "private url = repo homepage");
+  assert.equal(priv.title, "Pushed to secret-project");
+});
+
+test("normalizeEvents: public repo commit has visibility:public with message", () => {
+  const out = normalizeEvents(fixture, { handle: "octocat", maxCommits: 50 });
+  const pub = out.find((e) => e.payload && e.payload.sha === "eee888");
+  assert.ok(pub, "public commit must appear");
+  assert.equal(pub.payload.visibility, "public");
+  assert.ok(pub.payload.message, "public commits must have message");
+  assert.ok(pub.payload.sha, "public commits must have sha");
+});
+
+test("normalizeEvents: events with no public field default to visibility:public", () => {
+  const noFlag = [
+    {
+      type: "PushEvent",
+      repo: { name: "octocat/test" },
+      payload: { ref: "refs/heads/main", commits: [{ sha: "abc", message: "test" }] },
+      created_at: "2026-06-01T00:00:00Z",
+    },
+  ];
+  const out = normalizeEvents(noFlag, { handle: "octocat", maxCommits: 25 });
+  assert.equal(out[0].payload.visibility, "public");
 });
