@@ -26,7 +26,7 @@ const works = defineCollection({
       modDatetime: z.date().optional().nullable(),
       description: z.string(),
       featured: z.boolean().optional().default(false),
-      draft: z.boolean().optional().default(false),
+      draft: z.boolean().optional().default(true),
       tags: z.array(z.string()).default(["others"]),
       tech: z.array(z.string()).optional().default([]),
       links: z

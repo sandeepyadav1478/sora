@@ -43,7 +43,7 @@ export function normalizeRatings(raw, cfg) {
   // Cap newest-first; dedupAndSort in the spine does the final global sort.
   return out
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-    .slice(0, cfg.maxRatings ?? 50);
+    .slice(0, cfg?.maxRatings ?? 50);
 }
 
 /** Adapter entry point: fetch + normalize. Returns [] on any error (never throws). */

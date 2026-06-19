@@ -38,11 +38,15 @@ export function mergeSources(prev, results, generatedAt) {
   for (const r of results) {
     const prevMeta = sources[r.source] || { consecutiveFailures: 0, lastSuccess: null };
     if (r.ok) {
-      bySource.set(r.source, r.items);
+      // Guard: treat ok=true with 0 items as suspicious — preserve previous cache rather than
+      // silently erasing history on a transient API edge case (e.g. rate-limit returning empty).
+      const prevItems = bySource.get(r.source) || [];
+      const newItems = r.items.length > 0 ? r.items : prevItems;
+      bySource.set(r.source, newItems);
       sources[r.source] = {
         status: "ok",
         lastSuccess: generatedAt,
-        count: r.items.length,
+        count: newItems.length,
         consecutiveFailures: 0,
       };
     } else {

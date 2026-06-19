@@ -130,21 +130,21 @@ export const SOCIALS_CONFIG = [
 // SECTIONS — Toggle optional homepage sections (set to true to show)
 // ============================================================================
 export const SECTIONS = {
-  showAbout: true,
-  showStartHere: true,
-  showExperience: true,
-  showSkills: true,
-  showPublications: true,
-  showStats: true,
-  showOpenSource: true,
-  showSpeaking: true,
-  showFeaturedModels: true,
-  showResources: true,
-  showCuratedLists: true,
-  showClients: true,
-  showEducation: true,
-  showAwards: true,
-  showFAQ: true,
+  showAbout: true, // safe to leave on — about bio is a starting-state placeholder
+  showStartHere: false, // forker: set true once you've filled in your own content
+  showExperience: false,
+  showSkills: false,
+  showPublications: false,
+  showStats: false,
+  showOpenSource: false,
+  showSpeaking: false,
+  showFeaturedModels: false,
+  showResources: false,
+  showCuratedLists: false,
+  showClients: false,
+  showEducation: false,
+  showAwards: false,
+  showFAQ: false,
   showContact: false,
   showActivity: false, // GitHub/social activity feed (content aggregator)
 } as const;
@@ -238,7 +238,7 @@ export const BOARD = {
 // USES — Tools, hardware, and setup (/uses page)
 // ============================================================================
 export const USES = {
-  enabled: true,
+  enabled: false, // forker: set true once you've added your own setup
   categories: [
     {
       name: "AI / ML Stack",
@@ -296,7 +296,7 @@ export const USES = {
 // TESTIMONIALS — Social proof quotes (shown on homepage)
 // ============================================================================
 export const TESTIMONIALS = {
-  enabled: true,
+  enabled: false, // forker: set true once you have real testimonials
   items: [
     {
       quote:
@@ -325,7 +325,7 @@ export const TESTIMONIALS = {
 // NEWSLETTER — Email signup (shown on homepage)
 // ============================================================================
 export const NEWSLETTER = {
-  enabled: true,
+  enabled: false, // forker: set true once you have a real newsletter/booking link
   heading: "Stay in the loop",
   subheading:
     "Occasional thoughts on AI engineering, model deployment, and building intelligent systems.",
@@ -339,7 +339,7 @@ export const NEWSLETTER = {
 // READING — Curated reading list (/reading page)
 // ============================================================================
 export const READING = {
-  enabled: true,
+  enabled: false, // forker: set true once you've filled in your reading list
   categories: [
     {
       name: "Books",
@@ -429,7 +429,7 @@ export const COLOPHON = {
 // CONNECT — Calendly / booking embed (shown on /connect page)
 // ============================================================================
 export const CONNECT = {
-  enabled: true,
+  enabled: false, // forker: set true + update calendlyUrl before enabling
   heading: "Book a 1:1",
   subheading:
     "Pick a time that works for you — happy to chat about roles, collaborations, or anything else.",
@@ -724,10 +724,8 @@ export interface StatItem {
 }
 
 export const STATS: StatItem[] = [
-  { value: "2K+", label: "GitHub Stars" },
-  { value: "50+", label: "OSS Contributions" },
-  { value: "15+", label: "Projects Shipped" },
-  { value: "10K+", label: "Blog Readers" },
+  // forker: replace with your real stats, or leave empty to hide the stats bar
+  // { value: "2K+", label: "GitHub Stars" },
 ];
 
 // ============================================================================

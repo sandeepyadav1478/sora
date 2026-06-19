@@ -20,8 +20,9 @@ test("normalizeRss maps an RSS 2.0 item to a post envelope", () => {
   const e = out[0];
   assert.equal(e.source, "rss");
   assert.equal(e.kind, "post");
-  // id = rss:post:{guid||link}; RSS guid is the HN comments URL (≠ link)
-  assert.equal(e.id, `rss:post:${parsedRss.items[0].guid || parsedRss.items[0].link}`);
+  // id = rss:post:{feedBase}:{guid||link}; namespaced to avoid cross-feed guid collisions
+  const feedBase0 = parsedRss.feedUrl || parsedRss.feedTitle || "";
+  assert.equal(e.id, `rss:post:${feedBase0}:${parsedRss.items[0].guid || parsedRss.items[0].link}`);
   assert.ok(e.title && e.title.length > 0, "title must be non-empty");
   // url = link (the article URL), NOT the guid
   assert.equal(e.url, parsedRss.items[0].link);
@@ -36,7 +37,8 @@ test("normalizeRss maps an Atom entry (rel=alternate link, <id> guid, <published
   assert.equal(e.source, "rss");
   assert.equal(e.kind, "post");
   assert.equal(e.url, parsedAtom.items[0].link); // the rel=alternate href
-  assert.equal(e.id, `rss:post:${parsedAtom.items[0].guid || parsedAtom.items[0].link}`);
+  const feedBase1 = parsedAtom.feedUrl || parsedAtom.feedTitle || "";
+  assert.equal(e.id, `rss:post:${feedBase1}:${parsedAtom.items[0].guid || parsedAtom.items[0].link}`);
   assert.equal(Number.isNaN(Date.parse(e.date)), false);
 });
 

@@ -29,8 +29,10 @@ export function normalizeRss(parsedFeeds, cfg) {
       const date = safeIso(item.date);
       if (!date) continue;
 
-      // id key = guid || link (RSS guid often ≠ link, e.g. HN comments URL).
-      const key = item.guid || item.link;
+      // id key namespaced by feed URL to avoid guid collisions across feeds
+      // (e.g. two WordPress blogs both using sequential numeric guids "1","2","3").
+      const feedBase = feed.feedUrl || feedTitle;
+      const key = `${feedBase}:${item.guid || item.link}`;
 
       const excerpt = item.excerpt ? truncate(stripHtml(item.excerpt), 280) : "";
 
@@ -71,7 +73,7 @@ export async function fetch_(cfg) {
       if (!feedUrl) continue;
       try {
         const xml = await fetchText(feedUrl); // UA + timeout + non-200 throw handled in http.mjs
-        parsed.push(parseFeed(xml));
+        parsed.push({ ...parseFeed(xml), feedUrl });
       } catch {
         // One bad/slow feed must not sink the rest.
         continue;

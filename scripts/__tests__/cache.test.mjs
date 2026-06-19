@@ -101,3 +101,34 @@ test("makeEnvelope accepts https:// and http:// URLs", () => {
   assert.doesNotThrow(() => mkEnv({ id: "x:commit:1", source: "x", kind: "commit", title: "t", url: "https://example.com", date: "2026-06-17T00:00:00Z", payload: {} }));
   assert.doesNotThrow(() => mkEnv({ id: "x:commit:2", source: "x", kind: "commit", title: "t", url: "http://example.com", date: "2026-06-17T00:00:00Z", payload: {} }));
 });
+test("makeEnvelope rejects empty string URL", () => {
+  assert.throws(
+    () => mkEnv({ id: "x:commit:1", source: "x", kind: "commit", title: "t", url: "", date: "2026-06-17T00:00:00Z", payload: {} }),
+    /missing required field|unsafe url scheme/
+  );
+});
+test("makeEnvelope rejects data: URI", () => {
+  assert.throws(
+    () => mkEnv({ id: "x:commit:1", source: "x", kind: "commit", title: "t", url: "data:text/html,<script>alert(1)</script>", date: "2026-06-17T00:00:00Z", payload: {} }),
+    /unsafe url scheme/
+  );
+});
+test("makeEnvelope rejects ftp:// URL", () => {
+  assert.throws(
+    () => mkEnv({ id: "x:commit:1", source: "x", kind: "commit", title: "t", url: "ftp://example.com/file.zip", date: "2026-06-17T00:00:00Z", payload: {} }),
+    /unsafe url scheme/
+  );
+});
+
+// mergeSources: ok=true with empty items preserves previous cache (I-8)
+test("mergeSources: ok=true with [] preserves prior cached items for that source", () => {
+  const prev = emptyCache("2026-06-01T00:00:00Z");
+  // Seed with a prior github item
+  const priorItem = env("g-prior", "2026-06-01T00:00:00Z");
+  prev.items = [priorItem];
+  prev.sources = { github: { status: "ok", count: 1, lastSuccess: "2026-06-01T00:00:00Z", consecutiveFailures: 0 } };
+  // Simulate adapter returning ok=true but empty (transient API edge case)
+  const result = mergeSources(prev, [{ source: "github", ok: true, items: [] }], "2026-06-02T00:00:00Z");
+  assert.ok(result.items.some((i) => i.id === "g-prior"), "prior items must be preserved when adapter returns ok=true with []");
+  assert.equal(result.sources.github.status, "ok");
+});

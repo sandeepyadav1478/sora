@@ -68,7 +68,7 @@ export function normalizeAnswers(answersRaw, questionsRaw, cfg) {
 
   return out
     .sort((x, y) => Date.parse(y.date) - Date.parse(x.date))
-    .slice(0, cfg.maxPosts ?? 25);
+    .slice(0, cfg?.maxPosts ?? 25);
 }
 
 /** Adapter entry point: fetch answers + batch-fetch their questions + normalize. Never throws. */

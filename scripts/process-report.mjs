@@ -1,9 +1,14 @@
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { collectSecrets, sanitize } from "./lib/redact.mjs";
+
+// Use __dirname-anchored path so this script works regardless of CWD.
+const REPORT_PATH = resolve(fileURLToPath(import.meta.url), "../../sync-report.json");
 
 let report;
 try {
-  report = JSON.parse(readFileSync("sync-report.json", "utf8"));
+  report = JSON.parse(readFileSync(REPORT_PATH, "utf8"));
 } catch (e) {
   console.error("process-report: could not read sync-report.json:", e.message);
   process.exit(1);

@@ -1,7 +1,7 @@
 import { makeEnvelope, stableId } from "../lib/envelope.mjs";
 
 export const id = "github";
-export const needs = []; // GITHUB_READ_TOKEN is optional — adapter self-validates
+export const needs = ["GITHUB_READ_TOKEN"]; // optional — adapter self-validates (returns [] when absent); listed so assertNoSecrets guards it
 
 const API = "https://api.github.com";
 const UA = "sora-portfolio-aggregator";
@@ -34,14 +34,19 @@ export function normalizeEvents(events, cfg) {
         // Private repo: basic info only — no sha, no message, no branch, no full repo name exposed.
         // Use the public GitHub event ID (ev.id) as the dedup key — it is already public
         // and does not expose private commit SHAs in sources-cache.json.
+        // url must NOT include the real repo path — point to the user's profile instead.
         if (!ev.id) continue;
+        const handle = cfg && cfg.handle ? cfg.handle : "";
+        const safeUrl = handle
+          ? `https://github.com/${encodeURIComponent(handle)}`
+          : "https://github.com";
         out.push(
           makeEnvelope({
             id: stableId("github", "commit", `private-${ev.id}`),
             source: "github",
             kind: "commit",
-            title: `Pushed to ${repoShort}`,
-            url: `https://github.com/${repo}`,
+            title: "Pushed to a private repo",
+            url: safeUrl,
             date: ev.created_at,
             payload: { repo: "private", visibility: "private" },
           })
@@ -125,6 +130,8 @@ export async function fetch_(cfg) {
       const pageEvents = await res.json();
       if (!Array.isArray(pageEvents) || pageEvents.length === 0) break;
       allEvents = allEvents.concat(pageEvents);
+      // Stop when page is partial — no further pages exist.
+      if (pageEvents.length < 100) break;
     }
     return normalizeEvents(allEvents, cfg);
   } catch {

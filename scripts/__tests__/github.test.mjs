@@ -80,7 +80,44 @@ test("normalizeEvents: private repo commit has visibility:private and no sensiti
   // id must use event id, not the commit SHA (SHA would leak in sources-cache.json)
   assert.ok(!priv.id.includes("fff999"), "private commit id must not contain the SHA");
   assert.ok(priv.id.startsWith("github:commit:private-"), "private id uses event id prefix");
-  assert.equal(priv.title, "Pushed to secret-project");
+  // title must NOT contain the repo name — regression guard for C-2
+  assert.equal(priv.title, "Pushed to a private repo", "private title must not expose short repo name");
+  assert.ok(!priv.title.includes("secret-project"), "private title must not contain short repo name");
+  // url must NOT contain the real private repo path (security: private repo name leak)
+  assert.ok(!priv.url.includes("secret-project"), `private url must not expose repo name, got: ${priv.url}`);
+  assert.ok(priv.url.startsWith("https://github.com"), "private url must still be a valid github URL");
+});
+
+test("normalizeEvents: private repo url must not embed the real repo path", () => {
+  // Regression test for: url: `https://github.com/${repo}` leaking full private repo name.
+  // The fix redirects private events to the user's profile page instead.
+  const events = [
+    {
+      id: "privtest01",
+      type: "PushEvent",
+      public: false,
+      repo: { name: "myorg/super-secret-repo" },
+      payload: { ref: "refs/heads/main", commits: [{ sha: "deadbeef", message: "secret work" }] },
+      created_at: "2026-06-15T12:00:00Z",
+    },
+  ];
+  const out = normalizeEvents(events, { handle: "myuser", maxCommits: 25 });
+  assert.equal(out.length, 1);
+  const item = out[0];
+  // Core invariant: the full private repo path must never appear in the url
+  assert.ok(
+    !item.url.includes("super-secret-repo"),
+    `url must not contain private repo name, got: ${item.url}`
+  );
+  assert.ok(
+    !item.url.includes("myorg"),
+    `url must not contain org name, got: ${item.url}`
+  );
+  // url should point to the user's GitHub profile, not the repo
+  assert.equal(item.url, "https://github.com/myuser", `expected profile url, got: ${item.url}`);
+  // payload fields remain correctly redacted
+  assert.equal(item.payload.repo, "private");
+  assert.equal(item.payload.sha, undefined);
 });
 
 test("normalizeEvents: public repo commit has visibility:public with message", () => {
