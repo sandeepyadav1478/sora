@@ -43,9 +43,11 @@ const platform = typeof p.platform === "string" ? p.platform : "";
 
 if (kind === "commit") {
   const branch = typeof p.branch === "string" ? p.branch : "";
-  if (ACTIVITY_DISPLAY.commit_branch && branch)
+  const isPrivate = p.visibility === "private";
+  if (isPrivate) badges.push({ glyph: "🔒", text: "private" });
+  if (ACTIVITY_DISPLAY.commit_branch && branch && !isPrivate)
     badges.push({ glyph: "⎇", text: branch });
-  if (ACTIVITY_DISPLAY.commit_tooltip) tip = trunc(p.message);
+  if (ACTIVITY_DISPLAY.commit_tooltip && !isPrivate) tip = trunc(p.message);
 }
 
 if (kind === "release") {
