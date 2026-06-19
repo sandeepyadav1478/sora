@@ -27,7 +27,7 @@ export function getArchivedRepos(worksDir = DEFAULT_WORKS_DIR) {
         const content = readFileSync(join(worksDir, f), "utf8");
         const fm = parseFrontmatter(content);
         if (!fm) continue;
-        if (fm.status === "archived" && fm.githubRepo && fm.title) {
+        if (fm.status === "archived" && fm.githubRepo && fm.title && fm.draft !== "true") {
           out.push({ title: fm.title, githubRepo: fm.githubRepo });
         }
       } catch {

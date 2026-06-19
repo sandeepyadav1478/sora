@@ -31,18 +31,19 @@ export function normalizeEvents(events, cfg) {
         ? ev.payload.commits.filter((c) => c && c.sha)
         : [];
       if (!isPublic) {
-        // Private repo: basic info only — no commit message, no sha exposed
-        const sha = (commits[0] && commits[0].sha) || ev.payload.head;
-        if (!sha) continue;
+        // Private repo: basic info only — no sha, no message, no branch, no full repo name exposed.
+        // Use the public GitHub event ID (ev.id) as the dedup key — it is already public
+        // and does not expose private commit SHAs in sources-cache.json.
+        if (!ev.id) continue;
         out.push(
           makeEnvelope({
-            id: stableId("github", "commit", sha),
+            id: stableId("github", "commit", `private-${ev.id}`),
             source: "github",
             kind: "commit",
             title: `Pushed to ${repoShort}`,
             url: `https://github.com/${repo}`,
             date: ev.created_at,
-            payload: { repo, branch, visibility: "private" },
+            payload: { repo: "private", visibility: "private" },
           })
         );
       } else if (commits.length > 0) {
@@ -96,7 +97,7 @@ export function normalizeEvents(events, cfg) {
   const commits = out
     .filter((e) => e.kind === "commit")
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-    .slice(0, cfg.maxCommits ?? 25);
+    .slice(0, cfg?.maxCommits ?? 25);
   const releases = out.filter((e) => e.kind === "release");
   return [...commits, ...releases];
 }

@@ -89,17 +89,16 @@ jobs:
           GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          ALERTS=$(cat archive-alerts.json 2>/dev/null || echo "[]")
-          COUNT=$(echo "$ALERTS" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))")
+          COUNT=$(python3 -c "import json; print(len(json.load(open('archive-alerts.json'))))" 2>/dev/null || echo "0")
           if [ "$COUNT" -eq 0 ]; then
             echo "No unarchive candidates."
             exit 0
           fi
-          echo "$ALERTS" | python3 - <<'PYEOF'
-import sys, json, os
+          python3 <<'PYEOF'
+import json, os
 import urllib.request, urllib.parse
 
-alerts = json.load(sys.stdin)
+alerts = json.load(open("archive-alerts.json"))
 token = os.environ["GH_API_TOKEN"]
 repo  = os.environ["GH_REPO"]
 api   = f"https://api.github.com/repos/{repo}"
@@ -140,6 +139,7 @@ for alert in alerts:
             continue
     except Exception as e:
         print(f"Search error: {e}")
+        continue  # skip issue creation if dedup check failed
 
     body = f"""## Unarchive candidate
 

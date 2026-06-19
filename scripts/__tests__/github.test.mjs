@@ -47,6 +47,7 @@ test("normalizeEvents caps commits at maxCommits", () => {
 test("normalizeEvents returns [] for empty/garbage input (never throws)", () => {
   assert.deepEqual(normalizeEvents([], { handle: "x", maxCommits: 25 }), []);
   assert.deepEqual(normalizeEvents(null, { handle: "x", maxCommits: 25 }), []);
+  assert.deepEqual(normalizeEvents([], undefined), [], "undefined cfg must not throw");
 });
 
 test("normalizeEvents represents a minimal PushEvent (no commits[]) by its head SHA", () => {
@@ -67,14 +68,18 @@ test("normalizeEvents represents a minimal PushEvent (no commits[]) by its head 
   assert.equal(commits[0].url, "https://github.com/octocat/hello/commit/deadbeef123");
 });
 
-test("normalizeEvents: private repo commit has visibility:private and no message in payload", () => {
+test("normalizeEvents: private repo commit has visibility:private and no sensitive data exposed", () => {
   const out = normalizeEvents(fixture, { handle: "octocat", maxCommits: 50 });
-  const priv = out.find((e) => e.payload && e.payload.repo === "octocat/secret-project");
+  const priv = out.find((e) => e.payload && e.payload.visibility === "private");
   assert.ok(priv, "private repo commit must appear");
   assert.equal(priv.payload.visibility, "private");
   assert.equal(priv.payload.message, undefined, "private commits must not expose message");
   assert.equal(priv.payload.sha, undefined, "private commits must not expose sha");
-  assert.equal(priv.url, "https://github.com/octocat/secret-project", "private url = repo homepage");
+  assert.equal(priv.payload.repo, "private", "private commits must not expose real repo name");
+  assert.equal(priv.payload.branch, undefined, "private commits must not expose branch name");
+  // id must use event id, not the commit SHA (SHA would leak in sources-cache.json)
+  assert.ok(!priv.id.includes("fff999"), "private commit id must not contain the SHA");
+  assert.ok(priv.id.startsWith("github:commit:private-"), "private id uses event id prefix");
   assert.equal(priv.title, "Pushed to secret-project");
 });
 
