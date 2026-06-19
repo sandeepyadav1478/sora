@@ -17,9 +17,6 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,6 +42,7 @@ jobs:
         run: node scripts/sync-sources.mjs --report
         env:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+          GITHUB_READ_TOKEN: ${{ secrets.GITHUB_READ_TOKEN }}
 
       - name: Write fallback report on sync crash
         if: always()
@@ -83,36 +81,71 @@ jobs:
 
       - name: Ensure sync-failure label exists
         if: always() && (steps.report.outputs.failure_count != '0' || steps.fallback_report.outputs.failure_count != '')
+        env:
+          GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh label create "sync-failure" \
-            --color "d73a4a" \
-            --description "Automatic sync failure notification" \
-            --force 2>/dev/null || true
+          curl -s -o /dev/null \
+            -X POST \
+            -H "Authorization: Bearer $GH_API_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/labels" \
+            -d '{"name":"sync-failure","color":"d73a4a","description":"Automatic sync failure notification"}' \
+            || true
+          # 201 = created, 422 = already exists — both acceptable
 
       - name: Open or update failure issue
         if: always() && (steps.report.outputs.failure_count != '0' || steps.fallback_report.outputs.failure_count != '')
+        env:
+          GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          ISSUE_TITLE="[Sora] Sync failures"
-          EXISTING=$(gh issue list --state open \
-            --search "\"$ISSUE_TITLE\" in:title" \
-            --json number --jq '.[0].number // empty')
+          ISSUE_TITLE="%5BSora%5D+Sync+failures"
+          EXISTING=$(curl -s \
+            -H "Authorization: Bearer $GH_API_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/search/issues?q=${ISSUE_TITLE}+in:title+repo:${GH_REPO}+state:open&per_page=1" \
+            | python3 -c "import sys,json; items=json.load(sys.stdin).get('items',[]); print(items[0]['number'] if items else '')")
+          BODY=$(cat /tmp/issue_body.md)
+          BODY_JSON=$(echo "$BODY" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
           if [ -z "$EXISTING" ]; then
-            gh issue create \
-              --title "$ISSUE_TITLE" \
-              --body-file /tmp/issue_body.md \
-              --label "sync-failure"
+            curl -s -o /dev/null \
+              -X POST \
+              -H "Authorization: Bearer $GH_API_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GH_REPO}/issues" \
+              -d "{\"title\":\"[Sora] Sync failures\",\"body\":${BODY_JSON},\"labels\":[\"sync-failure\"]}"
           else
-            gh issue edit "$EXISTING" --body-file /tmp/issue_body.md
+            curl -s -o /dev/null \
+              -X PATCH \
+              -H "Authorization: Bearer $GH_API_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GH_REPO}/issues/${EXISTING}" \
+              -d "{\"body\":${BODY_JSON}}"
           fi
 
       - name: Close failure issue on clean sync
         if: always() && steps.report.outputs.failure_count == '0' && steps.fallback_report.outputs.failure_count == ''
+        env:
+          GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          ISSUE_TITLE="[Sora] Sync failures"
-          EXISTING=$(gh issue list --state open \
-            --search "\"$ISSUE_TITLE\" in:title" \
-            --json number --jq '.[0].number // empty')
+          ISSUE_TITLE="%5BSora%5D+Sync+failures"
+          EXISTING=$(curl -s \
+            -H "Authorization: Bearer $GH_API_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/search/issues?q=${ISSUE_TITLE}+in:title+repo:${GH_REPO}+state:open&per_page=1" \
+            | python3 -c "import sys,json; items=json.load(sys.stdin).get('items',[]); print(items[0]['number'] if items else '')")
           if [ -n "$EXISTING" ]; then
-            gh issue close "$EXISTING" \
-              --comment "All sources synced successfully. Closing."
+            curl -s -o /dev/null \
+              -X PATCH \
+              -H "Authorization: Bearer $GH_API_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GH_REPO}/issues/${EXISTING}" \
+              -d '{"state":"closed"}'
+            curl -s -o /dev/null \
+              -X POST \
+              -H "Authorization: Bearer $GH_API_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GH_REPO}/issues/${EXISTING}/comments" \
+              -d '{"body":"All sources synced successfully. Closing."}'
           fi
