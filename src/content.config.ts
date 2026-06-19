@@ -42,6 +42,8 @@ const works = defineCollection({
       status: z
         .enum(["active", "maintained", "archived", "in-production"])
         .optional(),
+      githubRepo: z.string().optional(),
+      // e.g. "sandeepyadav1478/sqloutbox" — used by the unarchive-alert system (Plan 4d-3)
       highlights: z
         .array(
           z.object({
