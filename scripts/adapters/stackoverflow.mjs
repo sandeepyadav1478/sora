@@ -44,6 +44,8 @@ export function normalizeAnswers(answersRaw, questionsRaw, cfg) {
   const out = [];
   for (const a of items) {
     if (!a || a.answer_id == null || a.creation_date == null) continue;
+    const d = toIso(a.creation_date);
+    if (!d) continue;
     const qTitle = titleByQid.get(a.question_id);
     const title = qTitle
       ? `Answer to: ${qTitle}`
@@ -55,7 +57,7 @@ export function normalizeAnswers(answersRaw, questionsRaw, cfg) {
         kind: "post",
         title,
         url: `https://stackoverflow.com/a/${a.answer_id}`,
-        date: toIso(a.creation_date),
+        date: d,
         payload: {
           feed: "stackoverflow",
           answer_id: a.answer_id,

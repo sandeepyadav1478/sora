@@ -141,3 +141,36 @@ test("normalizeEvents: events with no public field default to visibility:public"
   const out = normalizeEvents(noFlag, { handle: "octocat", maxCommits: 25 });
   assert.equal(out[0].payload.visibility, "public");
 });
+
+test("normalizeEvents: private ReleaseEvent is suppressed (no leak of repo name)", () => {
+  const events = [
+    {
+      id: "privrel01",
+      type: "ReleaseEvent",
+      public: false,
+      repo: { name: "owner/private-repo" },
+      payload: { release: { tag_name: "v1.0", name: "v1.0", html_url: "https://github.com/owner/private-repo/releases/tag/v1.0" } },
+      created_at: "2026-06-20T10:00:00Z",
+    },
+  ];
+  const out = normalizeEvents(events, { handle: "owner", maxCommits: 25 });
+  assert.equal(out.length, 0, "private ReleaseEvent must be suppressed");
+});
+
+test("normalizeEvents: PushEvent with ev.repo={} (no .name) does not throw and returns []", () => {
+  const events = [
+    {
+      id: "badrepo01",
+      type: "PushEvent",
+      public: true,
+      repo: {},
+      payload: { ref: "refs/heads/main", commits: [{ sha: "abc123", message: "test" }] },
+      created_at: "2026-06-20T11:00:00Z",
+    },
+  ];
+  let out;
+  assert.doesNotThrow(() => {
+    out = normalizeEvents(events, { handle: "octocat", maxCommits: 25 });
+  });
+  assert.deepEqual(out, [], "event with missing repo.name must be silently skipped");
+});

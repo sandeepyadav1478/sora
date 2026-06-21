@@ -24,6 +24,7 @@ export function normalizeRss(parsedFeeds, cfg) {
       // url = link (Atom: rel=alternate href; RSS: <link>). No link -> nothing to point at.
       const url = item.link;
       if (!url) continue;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) continue;
 
       // GUARD NaN before makeEnvelope: drop items whose date won't parse.
       const date = safeIso(item.date);

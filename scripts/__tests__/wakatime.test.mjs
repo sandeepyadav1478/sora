@@ -80,3 +80,72 @@ test("fetch_ returns [] when WAKATIME_API_KEY is absent (graceful, no network, n
     if (saved !== undefined) process.env.WAKATIME_API_KEY = saved;
   }
 });
+
+const origFetch = globalThis.fetch;
+
+test("fetch_ sends correct Basic auth header", async () => {
+  const captured = {};
+  const apiKey = "test-api-key-123";
+  const expectedAuth = "Basic " + Buffer.from(apiKey + ":").toString("base64");
+  const savedKey = process.env.WAKATIME_API_KEY;
+  process.env.WAKATIME_API_KEY = apiKey;
+  globalThis.fetch = async (url, opts) => {
+    captured.auth = opts?.headers?.Authorization || opts?.headers?.authorization;
+    return {
+      ok: true,
+      json: async () => ({
+        data: {
+          username: "user",
+          human_readable_total: "10 hrs",
+          total_seconds: 36000,
+          languages: [],
+          editors: [],
+          categories: [],
+        },
+      }),
+    };
+  };
+  try {
+    await wakatimeFetch({ ...cfg, enabled: true });
+    assert.equal(captured.auth, expectedAuth, "WakaTime must use Basic base64(apiKey:) auth");
+  } finally {
+    globalThis.fetch = origFetch;
+    if (savedKey !== undefined) process.env.WAKATIME_API_KEY = savedKey;
+    else delete process.env.WAKATIME_API_KEY;
+  }
+});
+
+test("fetch_ returns [] for missing cfg", async () => {
+  const out = await wakatimeFetch(undefined);
+  assert.deepEqual(out, []);
+});
+
+test("fetch_ returns [] on network error", async () => {
+  const savedKey = process.env.WAKATIME_API_KEY;
+  process.env.WAKATIME_API_KEY = "some-key";
+  globalThis.fetch = async () => {
+    throw new Error("Network failed");
+  };
+  try {
+    const out = await wakatimeFetch({ ...cfg, enabled: true });
+    assert.deepEqual(out, []);
+  } finally {
+    globalThis.fetch = origFetch;
+    if (savedKey !== undefined) process.env.WAKATIME_API_KEY = savedKey;
+    else delete process.env.WAKATIME_API_KEY;
+  }
+});
+
+test("fetch_ returns [] on non-200 HTTP response", async () => {
+  const savedKey = process.env.WAKATIME_API_KEY;
+  process.env.WAKATIME_API_KEY = "some-key";
+  globalThis.fetch = async () => ({ ok: false, status: 429, json: async () => ({}) });
+  try {
+    const out = await wakatimeFetch({ ...cfg, enabled: true });
+    assert.deepEqual(out, []);
+  } finally {
+    globalThis.fetch = origFetch;
+    if (savedKey !== undefined) process.env.WAKATIME_API_KEY = savedKey;
+    else delete process.env.WAKATIME_API_KEY;
+  }
+});

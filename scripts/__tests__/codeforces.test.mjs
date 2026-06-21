@@ -1,7 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeRatings } from "../adapters/codeforces.mjs";
+import { normalizeRatings, fetch_ } from "../adapters/codeforces.mjs";
+
+const origFetch = globalThis.fetch;
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/codeforces.json", import.meta.url), "utf8")
@@ -48,4 +50,52 @@ test("normalizeRatings returns [] on garbage / FAILED status (never throws)", ()
     []
   );
   assert.deepEqual(normalizeRatings({ status: "OK", result: "nope" }, { handle: "x", maxRatings: 50 }), []);
+});
+
+test("fetch_ returns envelopes for a valid handle", async () => {
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      status: "OK",
+      result: [
+        {
+          contestId: 1,
+          contestName: "Codeforces Round 1",
+          rank: 10,
+          ratingUpdateTimeSeconds: 1700000000,
+          oldRating: 1400,
+          newRating: 1500,
+          handle: "user",
+        },
+      ],
+    }),
+  });
+  const out = await fetch_({ handle: "user" });
+  assert.ok(Array.isArray(out));
+  assert.ok(out.length >= 1);
+  assert.equal(out[0].source, "codeforces");
+  globalThis.fetch = origFetch;
+});
+
+test("fetch_ returns [] for missing cfg", async () => {
+  const out = await fetch_(undefined);
+  assert.deepEqual(out, []);
+});
+
+test("fetch_ returns [] on network error", async () => {
+  const orig = globalThis.fetch;
+  globalThis.fetch = async () => {
+    throw new Error("Network failed");
+  };
+  const out = await fetch_({ handle: "user" });
+  assert.deepEqual(out, []);
+  globalThis.fetch = orig;
+});
+
+test("fetch_ returns [] on non-200 HTTP response", async () => {
+  const orig = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: false, status: 429, json: async () => ({}) });
+  const out = await fetch_({ handle: "user" });
+  assert.deepEqual(out, []);
+  globalThis.fetch = orig;
 });

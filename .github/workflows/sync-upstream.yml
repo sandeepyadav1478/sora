@@ -42,13 +42,14 @@ jobs:
           git merge upstream/main --no-edit --allow-unrelated-histories || {
             echo "::warning::Merge conflict detected. Creating a PR instead."
             git merge --abort
-            git checkout -b sync/upstream-$(date +%Y%m%d)
+            git checkout -b sync/upstream-$GITHUB_RUN_ID
             git merge upstream/main --no-edit --allow-unrelated-histories || true
             git diff --check || { echo "::error::Unresolved conflicts after retry — manual fix required"; exit 1; }
             git add -A
             git commit -m "chore: sync upstream template (conflicts)" --allow-empty
             echo "CONFLICT=true" >> $GITHUB_ENV
-            git push origin sync/upstream-$(date +%Y%m%d)-$GITHUB_RUN_ID
+            echo "CONFLICT_BRANCH=sync/upstream-$GITHUB_RUN_ID" >> $GITHUB_ENV
+            git push origin sync/upstream-$GITHUB_RUN_ID
           }
 
       - name: Open PR for conflict branch
@@ -56,14 +57,13 @@ jobs:
         env:
           GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          BRANCH: sync/upstream-${{ github.run_id }}
         run: |
           curl -s -o /dev/null \
             -X POST \
             -H "Authorization: Bearer $GH_API_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${GH_REPO}/pulls" \
-            -d "{\"title\":\"chore: sync upstream template (conflicts)\",\"head\":\"${BRANCH}\",\"base\":\"main\",\"body\":\"Upstream sync produced merge conflicts. Please resolve and merge this PR.\"}"
+            -d "{\"title\":\"chore: sync upstream template (conflicts)\",\"head\":\"${CONFLICT_BRANCH}\",\"base\":\"main\",\"body\":\"Upstream sync produced merge conflicts. Please resolve and merge this PR.\"}"
 
       - name: Push merged changes
         if: env.CONFLICT != 'true'

@@ -23,6 +23,8 @@ export function normalizeRatings(raw, cfg) {
     if (!r || r.contestId == null || r.ratingUpdateTimeSeconds == null) continue;
     const oldRating = r.oldRating ?? 0;
     const newRating = r.newRating ?? 0;
+    const d = toIso(r.ratingUpdateTimeSeconds);
+    if (!d) continue;
     out.push(
       makeEnvelope({
         id: stableId("codeforces", "rating", r.contestId),
@@ -30,7 +32,7 @@ export function normalizeRatings(raw, cfg) {
         kind: "rating",
         title: `${r.contestName || `Contest ${r.contestId}`}: ${oldRating}→${newRating}`,
         url: `https://codeforces.com/contest/${r.contestId}`,
-        date: toIso(r.ratingUpdateTimeSeconds), // UNIX SECONDS -> ISO
+        date: d, // UNIX SECONDS -> ISO
         payload: {
           platform: "codeforces",
           contestId: r.contestId,

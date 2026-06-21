@@ -56,18 +56,23 @@ export async function fetch_(cfg = {}) {
     const pkgs = Array.isArray(cfg.packages) ? cfg.packages : [];
     const out = [];
     for (const name of pkgs) {
-      const enc = encodeURIComponent(name);
-      const registry = await fetchJson(`https://registry.npmjs.org/${enc}`);
-      // best-effort downloads on the SEPARATE host; never let it break the package
-      let downloads;
       try {
-        downloads = await fetchJson(
-          `https://api.npmjs.org/downloads/point/last-month/${enc}`
-        );
+        const enc = encodeURIComponent(name);
+        const registry = await fetchJson(`https://registry.npmjs.org/${enc}`);
+        // best-effort downloads on the SEPARATE host; never let it break the package
+        let downloads;
+        try {
+          downloads = await fetchJson(
+            `https://api.npmjs.org/downloads/point/last-month/${enc}`
+          );
+        } catch {
+          downloads = undefined;
+        }
+        out.push(...normalizeNpm({ registry, downloads }, cfg));
       } catch {
-        downloads = undefined;
+        // skip this package — don't let one 404 kill all results
+        continue;
       }
-      out.push(...normalizeNpm({ registry, downloads }, cfg));
     }
     return out
       .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))

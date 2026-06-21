@@ -21,7 +21,7 @@ export function normalizeEvents(events, cfg) {
   if (!Array.isArray(events)) return [];
   const out = [];
   for (const ev of events) {
-    if (!ev || !ev.repo || !ev.created_at) continue;
+    if (!ev || !ev.repo || !ev.repo.name || !ev.created_at) continue;
     const repo = ev.repo.name;
     const isPublic = ev.public !== false; // default true if field absent
     if (ev.type === "PushEvent" && ev.payload) {
@@ -81,8 +81,10 @@ export function normalizeEvents(events, cfg) {
           })
         );
       }
-    } else if (ev.type === "ReleaseEvent" && ev.payload && ev.payload.release) {
-      const rel = ev.payload.release;
+    } else if (ev.type === "ReleaseEvent" && ev.payload) {
+      if (!isPublic) continue; // skip private releases
+      const rel = ev.payload?.release;
+      if (!rel || !rel.tag_name) continue;
       out.push(
         makeEnvelope({
           id: stableId("github", "release", `${repo}@${rel.tag_name}`),

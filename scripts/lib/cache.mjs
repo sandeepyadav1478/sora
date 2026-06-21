@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, rename, writeFile } from "node:fs/promises";
 import { dedupAndSort } from "./dedup.mjs";
 
 export const CACHE_VERSION = 1;
@@ -41,7 +41,8 @@ export function mergeSources(prev, results, generatedAt) {
       // Guard: treat ok=true with 0 items as suspicious — preserve previous cache rather than
       // silently erasing history on a transient API edge case (e.g. rate-limit returning empty).
       const prevItems = bySource.get(r.source) || [];
-      const newItems = r.items.length > 0 ? r.items : prevItems;
+      const safeItems = Array.isArray(r.items) ? r.items : [];
+      const newItems = safeItems.length > 0 ? safeItems : prevItems;
       bySource.set(r.source, newItems);
       sources[r.source] = {
         status: "ok",
@@ -67,5 +68,7 @@ export function mergeSources(prev, results, generatedAt) {
 
 /** Pretty-write the cache JSON (stable formatting -> clean diffs). */
 export async function writeCache(path, cache) {
-  await writeFile(path, JSON.stringify(cache, null, 2) + "\n", "utf8");
+  const tmp = path + ".tmp";
+  await writeFile(tmp, JSON.stringify(cache, null, 2) + "\n", "utf8");
+  await rename(tmp, path);
 }

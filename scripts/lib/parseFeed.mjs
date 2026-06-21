@@ -27,7 +27,11 @@ function attrFrom(tagStr, a) {
 export function parseFeed(xmlText) {
   const xml = String(xmlText || "");
   const isAtom = /<feed[\s>]/i.test(xml) && !/<rss[\s>]/i.test(xml);
-  const feedTitle = tag(xml, "title");
+  // Scope feedTitle to <channel> (RSS) or <feed> (Atom) to avoid picking up a nested
+  // item <title> that appears before the channel-level <title> in the raw document.
+  const channelMatch = !isAtom && xml.match(/<channel[^>]*>([\s\S]*?)<\/channel>/i);
+  const channelXml = channelMatch ? channelMatch[1] : xml;
+  const feedTitle = tag(channelXml, "title");
   const blocks = isAtom
     ? [...xml.matchAll(/<entry[\s>][\s\S]*?<\/entry>/gi)].map((m) => m[0])
     : [...xml.matchAll(/<item[\s>][\s\S]*?<\/item>/gi)].map((m) => m[0]);

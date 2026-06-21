@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeAnswers } from "../adapters/stackoverflow.mjs";
+import { normalizeAnswers, fetch_ } from "../adapters/stackoverflow.mjs";
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/stackoverflow.json", import.meta.url), "utf8")
@@ -62,4 +62,61 @@ test("returns [] on garbage / non-array input (never throws)", () => {
   assert.deepEqual(normalizeAnswers(null, null, { maxPosts: 25 }), []);
   assert.deepEqual(normalizeAnswers({}, {}, { maxPosts: 25 }), []);
   assert.deepEqual(normalizeAnswers({ items: "nope" }, { items: null }, { maxPosts: 25 }), []);
+});
+
+// ── fetch_ mock tests ──────────────────────────────────────────────────────────
+
+const origFetch = globalThis.fetch;
+
+test("fetch_ returns envelopes for a valid user", async () => {
+  // fetchJson calls fetch twice: once for answers, once for questions.
+  // First call returns an answer item; second call returns the matching question.
+  let callCount = 0;
+  globalThis.fetch = async (_url) => {
+    callCount += 1;
+    if (callCount === 1) {
+      // answers endpoint
+      return {
+        ok: true,
+        json: async () => ({
+          items: [{ answer_id: 42, question_id: 99, creation_date: 1700000000, score: 3, is_accepted: true }],
+        }),
+      };
+    }
+    // questions batch endpoint
+    return {
+      ok: true,
+      json: async () => ({
+        items: [{ question_id: 99, title: "How do I mock fetch?" }],
+      }),
+    };
+  };
+  const out = await fetch_({ handle: "1" });
+  assert.ok(Array.isArray(out));
+  assert.ok(out.length >= 1);
+  assert.equal(out[0].source, "stackoverflow");
+  globalThis.fetch = origFetch;
+});
+
+test("fetch_ returns [] for missing cfg", async () => {
+  const out = await fetch_(undefined);
+  assert.deepEqual(out, []);
+});
+
+test("fetch_ returns [] on network error", async () => {
+  const orig = globalThis.fetch;
+  globalThis.fetch = async () => {
+    throw new Error("Network failed");
+  };
+  const out = await fetch_({ handle: "user" });
+  assert.deepEqual(out, []);
+  globalThis.fetch = orig;
+});
+
+test("fetch_ returns [] on non-200 HTTP response", async () => {
+  const orig = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: false, status: 429, json: async () => ({}) });
+  const out = await fetch_({ handle: "user" });
+  assert.deepEqual(out, []);
+  globalThis.fetch = orig;
 });

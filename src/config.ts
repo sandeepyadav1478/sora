@@ -130,7 +130,7 @@ export const SOCIALS_CONFIG = [
 // SECTIONS — Toggle optional homepage sections (set to true to show)
 // ============================================================================
 export const SECTIONS = {
-  showAbout: true, // safe to leave on — about bio is a starting-state placeholder
+  showAbout: false, // forker: set true once you've written your own bio
   showStartHere: false, // forker: set true once you've filled in your own content
   showExperience: false,
   showSkills: false,
@@ -741,38 +741,8 @@ export interface OpenSourceProject {
   role: string;
 }
 
-export const OPEN_SOURCE: OpenSourceProject[] = [
-  {
-    name: "huggingface/transformers",
-    description:
-      "Added efficient batch decoding for streaming inference pipelines.",
-    stars: "120K",
-    forks: "24K",
-    language: "Python",
-    url: "https://github.com/huggingface/transformers",
-    role: "Contributor",
-  },
-  {
-    name: "vllm-project/vllm",
-    description:
-      "Implemented custom sampling strategies for domain-specific generation.",
-    stars: "35K",
-    forks: "5.2K",
-    language: "Python",
-    url: "https://github.com/vllm-project/vllm",
-    role: "Contributor",
-  },
-  {
-    name: "johndoe/ml-pipeline-kit",
-    description:
-      "Opinionated ML pipeline toolkit for rapid experimentation and deployment.",
-    stars: "1.2K",
-    forks: "180",
-    language: "Python",
-    url: "https://github.com/johndoe/ml-pipeline-kit",
-    role: "Author",
-  },
-];
+// forker: add your OSS contributions here
+export const OPEN_SOURCE: OpenSourceProject[] = [];
 
 // ============================================================================
 // SPEAKING — Talks, presentations, podcast appearances
@@ -787,31 +757,8 @@ export interface SpeakingEntry {
   slidesUrl?: string;
 }
 
-export const SPEAKING: SpeakingEntry[] = [
-  {
-    title: "Building Reliable LLM Applications in Production",
-    event: "AI Engineer Summit 2024",
-    date: "Oct 2024",
-    type: "talk",
-    url: "",
-    videoUrl: "",
-    slidesUrl: "",
-  },
-  {
-    title: "Fine-Tuning at Scale: Lessons from the Trenches",
-    event: "MLOps Community Meetup",
-    date: "Jul 2024",
-    type: "talk",
-    slidesUrl: "",
-  },
-  {
-    title: "The Practical Guide to RAG Systems",
-    event: "The ML Podcast",
-    date: "May 2024",
-    type: "podcast",
-    url: "",
-  },
-];
+// forker: add your speaking engagements here
+export const SPEAKING: SpeakingEntry[] = [];
 
 // ============================================================================
 // FEATURED MODELS — HuggingFace models, trained models showcase

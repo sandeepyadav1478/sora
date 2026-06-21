@@ -1,5 +1,7 @@
-/** Unix SECONDS -> ISO. (Codeforces, StackOverflow return seconds; the missing *1000 silently yields a 1970 date.) */
+/** Unix SECONDS -> ISO, or null for non-finite inputs (NaN, undefined, null, ±Infinity).
+ * (Codeforces, StackOverflow return seconds; the missing *1000 silently yields a 1970 date.) */
 export function toIso(epochSeconds) {
+  if (!Number.isFinite(epochSeconds)) return null;
   return new Date(epochSeconds * 1000).toISOString();
 }
 

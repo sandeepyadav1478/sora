@@ -16,7 +16,7 @@ try {
 
 // Independent redaction layer — upstream already sanitizes, but re-sanitize before
 // any value reaches public GHA outputs (annotations, issue body).
-const secrets = collectSecrets(["WAKATIME_API_KEY"]);
+const secrets = collectSecrets(["WAKATIME_API_KEY", "GITHUB_READ_TOKEN", "YOUTUBE_API_KEY", "STACKOVERFLOW_KEY"]);
 const safeError = (err) => sanitize((err ?? "").replace(/\n/g, " "), secrets);
 
 // Write failure_count to GitHub Actions output (read by if: conditions in workflow)

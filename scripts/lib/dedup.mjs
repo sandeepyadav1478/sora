@@ -7,6 +7,10 @@ export function dedupAndSort(items) {
     seen.add(item.id);
     unique.push(item);
   }
-  unique.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+  unique.sort((a, b) => {
+    const da = Date.parse(b.date);
+    const db = Date.parse(a.date);
+    return (isNaN(da) ? Infinity : da) - (isNaN(db) ? Infinity : db) || 0;
+  });
   return unique;
 }

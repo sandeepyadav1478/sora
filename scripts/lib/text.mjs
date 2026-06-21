@@ -2,8 +2,8 @@ const NAMED = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", apos: "'", nb
 
 export function decodeEntities(s = "") {
   return s
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, n) => { const cp = Number(n); return (cp >= 0 && cp <= 0x10FFFF) ? String.fromCodePoint(cp) : ''; })
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => { const cp = parseInt(h, 16); return (cp >= 0 && cp <= 0x10FFFF) ? String.fromCodePoint(cp) : ''; })
     .replace(/&([a-z0-9#]+);/gi, (m, name) => (name in NAMED ? NAMED[name] : m));
 }
 
@@ -24,7 +24,7 @@ export function truncate(s = "", n = 80) {
 /** First sentence / ~80 chars. NEVER returns empty — falls back so makeEnvelope's title check passes. */
 export function synthTitle(text, fallback) {
   const clean = stripHtml(String(text || "")).trim();
-  if (!clean) return fallback;
+  if (!clean) return fallback || '(untitled)';
   const firstSentence = clean.split(/(?<=[.!?])\s/)[0];
   return truncate(firstSentence || clean, 80);
 }
