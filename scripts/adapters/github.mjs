@@ -1,14 +1,14 @@
 import { makeEnvelope, stableId } from "../lib/envelope.mjs";
 
 export const id = "github";
-export const needs = ["GITHUB_READ_TOKEN"]; // optional — adapter self-validates (returns [] when absent); listed so assertNoSecrets guards it
+export const needs = ["GH_READ_TOKEN"]; // optional — adapter self-validates (returns [] when absent); listed so assertNoSecrets guards it
 
 const API = "https://api.github.com";
 const UA = "sora-portfolio-aggregator";
 
 /** SECURITY: returns the /events/public endpoint.
  * Exported for the security test — verifies this helper always points at the public endpoint.
- * The fetch_ function uses this URL when no GITHUB_READ_TOKEN is present. */
+ * The fetch_ function uses this URL when no GH_READ_TOKEN is present. */
 export function EVENTS_URL(handle) {
   return `${API}/users/${encodeURIComponent(handle)}/events/public`;
 }
@@ -110,13 +110,13 @@ export function normalizeEvents(events, cfg) {
 }
 
 /** Adapter entry point: fetch + normalize. Returns [] on any error (never throws).
- * If GITHUB_READ_TOKEN is set, uses /events (authenticated, sees private events).
+ * If GH_READ_TOKEN is set, uses /events (authenticated, sees private events).
  * Otherwise uses /events/public (unauthenticated). Fetches up to cfg.maxPages pages. */
 export async function fetch_(cfg) {
   try {
     if (!cfg || !cfg.handle) return [];
     const handle = cfg.handle;
-    const token = process.env.GITHUB_READ_TOKEN;
+    const token = process.env.GH_READ_TOKEN;
     const maxPages = cfg.maxPages ?? 1;
     const baseUrl = token
       ? `${API}/users/${encodeURIComponent(handle)}/events`

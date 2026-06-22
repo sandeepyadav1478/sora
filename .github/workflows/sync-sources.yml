@@ -42,7 +42,7 @@ jobs:
         run: node scripts/sync-sources.mjs --report
         env:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-          GITHUB_READ_TOKEN: ${{ secrets.GITHUB_READ_TOKEN }}
+          GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
 
       - name: Write fallback report on sync crash
         if: always()
@@ -71,7 +71,7 @@ jobs:
         run: node scripts/process-report.mjs
         env:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-          GITHUB_READ_TOKEN: ${{ secrets.GITHUB_READ_TOKEN }}
+          GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
 
       - name: Write fallback issue body if process-report crashed
         id: fallback_report
