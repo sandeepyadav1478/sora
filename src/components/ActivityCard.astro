@@ -136,6 +136,15 @@ if (kind === "badge" && issuer === "huggingface") {
   }
 }
 
+if (kind === "badge" && issuer === "credly") {
+  if (ACTIVITY_DISPLAY.credly_expired && p.expired === true)
+    badges.push({ glyph: "⚠", text: "expired" });
+  if (ACTIVITY_DISPLAY.credly_issuer && issuer)
+    badges.push({ glyph: "🏅", text: issuer });
+  if (ACTIVITY_DISPLAY.credly_tooltip && typeof p.description === "string" && p.description)
+    tip = p.description.slice(0, 120);
+}
+
 // ── label + date ────────────────────────────────────────────────────────────
 const KIND_LABEL: Record<string, string> = {
   commit: "Commit",

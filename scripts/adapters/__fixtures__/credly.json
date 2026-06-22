@@ -1,0 +1,54 @@
+[
+  {
+    "id": "badge-001",
+    "state": "accepted",
+    "public_url": "https://www.credly.com/badges/badge-001",
+    "issued_at": "2024-03-15T10:00:00.000Z",
+    "expires_at_date": null,
+    "badge_template": {
+      "name": "AWS Certified Solutions Architect – Associate",
+      "description": "Earners have a comprehensive understanding of AWS services and technologies.",
+      "image_url": "https://images.credly.com/images/aws-saa.png",
+      "issuer": { "name": "Amazon Web Services" }
+    }
+  },
+  {
+    "id": "badge-002",
+    "state": "accepted",
+    "public_url": "https://www.credly.com/badges/badge-002",
+    "issued_at": "2018-06-01T00:00:00.000Z",
+    "expires_at_date": "2020-01-01",
+    "badge_template": {
+      "name": "Google Cloud Professional Data Engineer",
+      "description": "A Professional Data Engineer enables data-driven decision making.",
+      "image_url": "https://images.credly.com/images/gcp-pde.png",
+      "issuer": { "name": "Google Cloud" }
+    }
+  },
+  {
+    "id": "badge-003",
+    "state": "pending",
+    "public_url": "https://www.credly.com/badges/badge-003",
+    "issued_at": "2025-01-01T00:00:00.000Z",
+    "expires_at_date": null,
+    "badge_template": {
+      "name": "Pending Badge",
+      "description": "This badge is pending acceptance.",
+      "image_url": null,
+      "issuer": { "name": "SomeCorp" }
+    }
+  },
+  {
+    "id": "badge-004",
+    "state": "accepted",
+    "public_url": "https://www.credly.com/badges/badge-004",
+    "issued_at": "2023-11-20T00:00:00.000Z",
+    "expires_at_date": null,
+    "badge_template": {
+      "name": "Minimal Badge",
+      "description": "",
+      "image_url": null,
+      "issuer": { "name": "" }
+    }
+  }
+]

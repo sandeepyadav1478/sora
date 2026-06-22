@@ -65,4 +65,10 @@ export const SOURCES = {
     enabled: false, // forker: set true + fill handle
     handle: "", // LeetCode username, e.g. "sandeepyadav1478"
   },
+  credly: {
+    enabled: false,       // forker: set true + fill handle
+    handle: "",           // Credly username (from credly.com/users/<handle>)
+    maxBadges: 50,        // accepted badges kept in the feed (newest-first)
+    includeExpired: true, // set false to hide expired badges entirely
+  },
 };
