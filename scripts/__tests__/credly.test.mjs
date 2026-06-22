@@ -20,7 +20,7 @@ test("normalizeCredy: happy-path badge maps to correct envelope fields", () => {
   assert.equal(e.id, "credly:badge:badge-001");
   assert.equal(e.id.split(":")[1], e.kind, "id-kind invariant");
   assert.equal(e.title, "AWS Certified Solutions Architect – Associate");
-  assert.equal(e.url, "https://www.credly.com/badges/badge-001");
+  assert.equal(e.url, "https://www.credly.com/org/aws/badge/aws-certified-solutions-architect-associate");
   assert.equal(Number.isNaN(Date.parse(e.date)), false);
   assert.equal(e.payload.issuer, "Amazon Web Services");
   assert.equal(e.payload.expired, false);

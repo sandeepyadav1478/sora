@@ -20,10 +20,12 @@ export function normalizeCredy(raw, cfg = {}) {
     const title = bt.name && bt.name.trim();
     if (!title) continue;
 
-    const url = item.public_url;
+    // Real API uses badge_template.url — there is no top-level public_url field
+    const url = bt.url;
     if (!url || (!url.startsWith("https://") && !url.startsWith("http://"))) continue;
 
-    const date = safeIso(item.issued_at);
+    // issued_at is ISO datetime; issued_at_date is YYYY-MM-DD fallback
+    const date = safeIso(item.issued_at) ?? safeIso(item.issued_at_date);
     if (!date) continue;
 
     // Expiry: compute whether this badge has lapsed
@@ -35,7 +37,7 @@ export function normalizeCredy(raw, cfg = {}) {
 
     if (cfg.includeExpired === false && expired) continue;
 
-    const key = item.id != null ? String(item.id) : url;
+    const key = item.id != null ? String(item.id) : (bt.url ?? String(Math.random()));
 
     out.push(
       makeEnvelope({
@@ -46,7 +48,7 @@ export function normalizeCredy(raw, cfg = {}) {
         url,
         date,
         payload: {
-          issuer: bt.issuer?.name ?? "",
+          issuer: item.issuer?.entities?.[0]?.entity?.name ?? bt.issuer?.entities?.[0]?.entity?.name ?? "",
           imageUrl: bt.image_url ?? null,
           description: bt.description ?? "",
           expired,
