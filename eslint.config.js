@@ -13,9 +13,15 @@ export default [
       },
     },
   },
-  { rules: { "no-console": "error" } },
-  // Node CLI build scripts (sync-sources, adapters): console output is the
-  // intended progress/error UX, not stray debugging — allow it here only.
-  { files: ["scripts/**"], rules: { "no-console": "off" } },
-  { ignores: ["dist/**", ".astro", "public/pagefind/**", ".claude/**"] },
+  {
+    rules: {
+      "no-console": "error",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_",
+      }],
+    },
+  },
+  { ignores: ["dist/**", ".astro", "public/pagefind/**"] },
 ];
