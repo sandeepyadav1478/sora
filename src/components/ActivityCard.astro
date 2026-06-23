@@ -91,21 +91,89 @@ if (kind === "rating" && platform === "codeforces") {
     badges.push({ glyph: "#", text: String(p.rank) });
   if (ACTIVITY_DISPLAY.cf_tooltip && typeof p.contestId === "number")
     tip = `Contest #${p.contestId}`;
+  // W6 enriched: peak rating
+  const cfMaxRating = typeof p.maxRating === "number" ? p.maxRating : 0;
+  if (
+    ACTIVITY_DISPLAY.cf_max_rating &&
+    cfMaxRating > 0 &&
+    cfMaxRating !== (p.rating as number)
+  )
+    badges.push({ glyph: "📈", text: `peak ${cfMaxRating}` });
+}
+
+// W6: codeforces profile envelope
+if (kind === "profile" && platform === "codeforces") {
+  const cfProfRating = typeof p.rating === "number" ? p.rating : 0;
+  const cfContests =
+    typeof p.contestsAttended === "number" ? p.contestsAttended : 0;
+  if (cfProfRating > 0) badges.push({ glyph: "⭐", text: `${cfProfRating}` });
+  if (cfContests > 0)
+    badges.push({ glyph: "🏆", text: `${cfContests} contests` });
+  if (typeof p.registrationYear === "number")
+    tip = `Active since ${p.registrationYear}`;
 }
 
 if (kind === "rating" && platform === "wakatime") {
-  const human =
-    typeof p.humanReadableTotal === "string" ? p.humanReadableTotal : "";
-  if (ACTIVITY_DISPLAY.waka_time && human)
-    badges.push({ icon: "clock", text: human });
-  const avg = fmtAvg(p.dailyAverage);
-  if (ACTIVITY_DISPLAY.waka_avg && avg) badges.push({ glyph: "~", text: avg });
-  if (
-    ACTIVITY_DISPLAY.waka_tooltip &&
-    Array.isArray(p.languages) &&
-    p.languages.length
-  )
-    tip = (p.languages as string[]).join(" · ");
+  // subkind === "public" — weekly stats envelope
+  if (p.subkind === "public") {
+    const human =
+      typeof p.humanReadableTotal === "string" ? p.humanReadableTotal : "";
+    if (ACTIVITY_DISPLAY.waka_time && human)
+      badges.push({ icon: "clock", text: human });
+    const avg = fmtAvg(p.dailyAverage);
+    if (ACTIVITY_DISPLAY.waka_avg && avg)
+      badges.push({ glyph: "~", text: avg });
+    // W6: AI coding percent
+    const aiPct =
+      typeof p.aiCodingPercent === "number" ? p.aiCodingPercent : 0;
+    if (ACTIVITY_DISPLAY.waka_ai_pct && aiPct > 0)
+      badges.push({ glyph: "🤖", text: `${Math.round(aiPct)}% AI` });
+    // W6: Claude editor usage tooltip
+    const editors = p.editors as
+      | Array<{ name: string; percent: number }>
+      | undefined;
+    const claudeEditor = editors?.find(e =>
+      e.name?.toLowerCase().includes("claude")
+    );
+    if (ACTIVITY_DISPLAY.waka_ai_tooltip && claudeEditor)
+      tip = `Claude Code: ${Math.round(claudeEditor.percent)}% of all-time editor usage`;
+    // W6: top languages tooltip (falls back if claude tooltip not set)
+    const wakaLangs = p.languages as
+      | Array<{ name: string; percent: number }>
+      | undefined;
+    if (ACTIVITY_DISPLAY.waka_tooltip && wakaLangs?.length)
+      tip =
+        tip ||
+        wakaLangs
+          .slice(0, 3)
+          .map(l => `${l.name} ${Math.round(l.percent)}%`)
+          .join(" · ");
+  } else if (p.subkind === "alltime") {
+    // W6: all_time stats envelope
+    const wakaText = typeof p.text === "string" ? p.text : "";
+    if (ACTIVITY_DISPLAY.waka_alltime && wakaText)
+      badges.push({ glyph: "⏳", text: wakaText });
+    if (
+      ACTIVITY_DISPLAY.waka_tooltip &&
+      typeof p.startDate === "string"
+    )
+      tip = `Coding since ${(p.startDate as string).slice(0, 4)}`;
+  } else {
+    // legacy / no subkind — keep backwards-compatible behaviour
+    const human =
+      typeof p.humanReadableTotal === "string" ? p.humanReadableTotal : "";
+    if (ACTIVITY_DISPLAY.waka_time && human)
+      badges.push({ icon: "clock", text: human });
+    const avg = fmtAvg(p.dailyAverage);
+    if (ACTIVITY_DISPLAY.waka_avg && avg)
+      badges.push({ glyph: "~", text: avg });
+    if (
+      ACTIVITY_DISPLAY.waka_tooltip &&
+      Array.isArray(p.languages) &&
+      p.languages.length
+    )
+      tip = (p.languages as string[]).join(" · ");
+  }
 }
 
 if (kind === "rating" && platform === "leetcode") {
@@ -117,6 +185,51 @@ if (kind === "rating" && platform === "leetcode") {
     badges.push({ glyph: "#", text: rank });
   if (ACTIVITY_DISPLAY.lc_tooltip && solved)
     tip = `Easy ${solved.easy ?? 0} · Medium ${solved.medium ?? 0} · Hard ${solved.hard ?? 0}`;
+  // W6 enriched: beats percentile
+  const lcBeats = p.beats as
+    | { easy?: number; medium?: number }
+    | undefined;
+  if (ACTIVITY_DISPLAY.lc_beats && lcBeats?.easy && lcBeats.easy > 0)
+    badges.push({
+      glyph: "📊",
+      text: `beats ${Math.round(lcBeats.easy)}% easy`,
+    });
+  // W6 enriched: active years from calendar
+  const lcCal = p.calendar as
+    | { activeYears?: number[]; totalActiveDays?: number }
+    | undefined;
+  const lcYears = lcCal?.activeYears?.length ?? 0;
+  if (ACTIVITY_DISPLAY.lc_streak && lcYears >= 2)
+    badges.push({ glyph: "🗓", text: `${lcYears}yr` });
+  // W6 enriched: contest attendance
+  const lcContest = p.contest as
+    | { attended?: number; topPercentage?: number }
+    | undefined;
+  if (
+    ACTIVITY_DISPLAY.lc_contest_rating &&
+    lcContest?.attended &&
+    lcContest.attended >= 1
+  )
+    badges.push({
+      glyph: "🏆",
+      text: `${lcContest.attended} contest${lcContest.attended > 1 ? "s" : ""}`,
+    });
+  // W6 enriched: top tags tooltip (only if lc_tooltip didn't set tip)
+  const lcTags = p.tagBreakdown as
+    | Array<{ tag: string; count: number }>
+    | undefined;
+  if (!tip && lcTags?.length)
+    tip = lcTags
+      .slice(0, 4)
+      .map(t => `${t.tag}:${t.count}`)
+      .join(" · ");
+}
+
+// W6: stackoverflow enriched
+if (kind === "rating" && platform === "stackoverflow") {
+  const soCollectives = p.collectives as string[] | undefined;
+  if (soCollectives?.length)
+    badges.push({ glyph: "🏛", text: soCollectives[0] });
 }
 
 const issuer = typeof p.issuer === "string" ? p.issuer : "";
@@ -147,89 +260,61 @@ if (kind === "badge" && issuer === "credly") {
     p.description
   )
     tip = p.description.slice(0, 120);
+  // W6: type_category validation badge
+  const credlyTypeCategory =
+    typeof p.typeCategory === "string" ? p.typeCategory : "";
+  if (credlyTypeCategory === "Validation")
+    badges.push({ glyph: "✓", text: "validated" });
+  // W6: skills tooltip override (only if description tooltip not set)
+  const credlySkills = p.skills as string[] | undefined;
+  if (!tip && credlySkills?.length)
+    tip = credlySkills.slice(0, 4).join(" · ");
 }
 
-// repo (github)
+// W6: github profile envelope
+if (kind === "profile" && platform === "github") {
+  const ghFollowers = typeof p.followers === "number" ? p.followers : 0;
+  const ghRepos = typeof p.publicRepos === "number" ? p.publicRepos : 0;
+  if (ACTIVITY_DISPLAY.profile_followers && ghFollowers > 0)
+    badges.push({ glyph: "👥", text: `${ghFollowers}` });
+  if (ACTIVITY_DISPLAY.profile_repos && ghRepos > 0)
+    badges.push({ glyph: "📁", text: `${ghRepos} repos` });
+  if (p.hireable === true) badges.push({ glyph: "💼", text: "open to work" });
+  if (
+    ACTIVITY_DISPLAY.profile_tooltip &&
+    typeof p.company === "string" &&
+    p.company
+  )
+    tip = (p.company as string).replace(/^@/, "");
+}
+
+// W6: huggingface profile envelope
+if (kind === "profile" && platform === "huggingface") {
+  const hfOrgs = p.orgs as Array<{ fullname: string }> | undefined;
+  if (hfOrgs?.length) badges.push({ glyph: "🏢", text: hfOrgs[0].fullname });
+  const hfNumModels = typeof p.numModels === "number" ? p.numModels : 0;
+  if (hfNumModels > 0)
+    badges.push({ glyph: "🤗", text: `${hfNumModels} models` });
+  if (typeof p.joinedAt === "string")
+    tip = `Joined ${(p.joinedAt as string).slice(0, 4)}`;
+}
+
+// W6: github repo envelope
 if (kind === "repo") {
-  const stars = fmt(p.stars);
-  const forks = fmt(p.forks);
-  const lang = typeof p.language === "string" ? p.language : "";
-  if (ACTIVITY_DISPLAY.repo_stars && stars && stars !== "0")
-    badges.push({ glyph: "⭐", text: stars });
-  if (ACTIVITY_DISPLAY.repo_forks && forks && forks !== "0")
-    badges.push({ glyph: "🍴", text: forks });
-  if (ACTIVITY_DISPLAY.repo_language && lang)
-    badges.push({ glyph: "◉", text: lang });
-  if (
-    ACTIVITY_DISPLAY.repo_tooltip &&
-    typeof p.description === "string" &&
-    p.description
-  )
-    tip = trunc(p.description);
-}
-
-// profile (github, huggingface)
-if (kind === "profile") {
-  const followers = fmt(p.followers);
-  const repos = fmt(p.public_repos);
-  if (ACTIVITY_DISPLAY.profile_followers && followers && followers !== "0")
-    badges.push({ glyph: "👥", text: followers + " followers" });
-  if (ACTIVITY_DISPLAY.profile_repos && repos && repos !== "0")
-    badges.push({ glyph: "📁", text: repos + " repos" });
-  if (ACTIVITY_DISPLAY.profile_tooltip && typeof p.bio === "string" && p.bio)
-    tip = trunc(p.bio);
-}
-
-// rating — wakatime (enriched: ai metrics, all_time, leaderboard)
-if (
-  kind === "rating" &&
-  platform === "wakatime" &&
-  typeof p.subkind === "string"
-) {
-  if (p.subkind === "alltime") {
-    if (ACTIVITY_DISPLAY.waka_alltime && typeof p.text === "string")
-      badges.push({ glyph: "⏳", text: p.text });
-  }
-  if (p.subkind === "ai") {
-    const aiLines = fmt(p.ai_additions);
-    const aiPct =
-      typeof p.ai_pct === "number" ? `${Math.round(p.ai_pct)}% AI` : "";
-    if (ACTIVITY_DISPLAY.waka_ai_lines && aiLines)
-      badges.push({ glyph: "🤖", text: aiLines + " AI lines" });
-    if (ACTIVITY_DISPLAY.waka_ai_pct && aiPct)
-      badges.push({ glyph: "🤖", text: aiPct });
-    if (
-      ACTIVITY_DISPLAY.waka_ai_tooltip &&
-      Array.isArray(p.ai_agents) &&
-      p.ai_agents.length
-    )
-      tip = (p.ai_agents as string[]).slice(0, 3).join(" · ");
-  }
-}
-
-// rating — leetcode (enriched: tags, streak, contest)
-if (kind === "rating" && platform === "leetcode") {
-  const streak = typeof p.streak === "number" ? p.streak : 0;
-  const beatsPct = typeof p.beats_easy === "number" ? p.beats_easy : null;
-  if (ACTIVITY_DISPLAY.lc_streak && streak > 0)
-    badges.push({ glyph: "🔥", text: `${streak}d streak` });
-  if (ACTIVITY_DISPLAY.lc_beats && beatsPct !== null)
-    badges.push({ glyph: "📊", text: `beats ${Math.round(beatsPct)}% easy` });
-  if (
-    ACTIVITY_DISPLAY.lc_contest_rating &&
-    typeof p.contest_rating === "number"
-  )
-    badges.push({
-      glyph: "🏆",
-      text: `contest ${Math.round(p.contest_rating)}`,
-    });
-}
-
-// rating — codeforces (enriched: max rating, contest history)
-if (kind === "rating" && platform === "codeforces") {
-  const maxRating = typeof p.maxRating === "number" ? p.maxRating : 0;
-  if (ACTIVITY_DISPLAY.cf_max_rating && maxRating > 0)
-    badges.push({ glyph: "📈", text: `peak ${maxRating}` });
+  const repoStars = fmt(p.stars);
+  if (ACTIVITY_DISPLAY.repo_stars && repoStars && repoStars !== "0")
+    badges.push({ glyph: "⭐", text: repoStars });
+  const repoForks = fmt(p.forks);
+  if (ACTIVITY_DISPLAY.repo_forks && repoForks && repoForks !== "0")
+    badges.push({ glyph: "⎇", text: repoForks });
+  if (ACTIVITY_DISPLAY.repo_language && typeof p.language === "string" && p.language)
+    badges.push({ glyph: "●", text: p.language });
+  if (ACTIVITY_DISPLAY.repo_tooltip && typeof p.description === "string" && p.description)
+    tip = trunc(p.description, 120);
+  // W6: topics tooltip (only if description tooltip not set)
+  const repoTopics = p.topics as string[] | undefined;
+  if (repoTopics?.length && !tip)
+    tip = repoTopics.slice(0, 3).join(" · ");
 }
 
 // ── label + date ────────────────────────────────────────────────────────────

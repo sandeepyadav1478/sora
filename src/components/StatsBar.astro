@@ -1,18 +1,194 @@
 ---
+import { getLiveStats } from "@/lib/sources";
 import { STATS } from "@/config";
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+function fmt(n: number): string {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 1_000)     return (n / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  return String(n);
+}
+
+interface StatCard {
+  value: string;
+  label: string;
+  sublabel?: string;
+  url?: string;
+}
+
+// ── build live stat cards ─────────────────────────────────────────────────────
+const live = getLiveStats();
+const liveCards: StatCard[] = [];
+
+// 1. WakaTime hours (all-time preferred, else weekly range)
+const waka = live.wakatimeAllTimeHours ?? live.wakatimeTotalHours;
+if (waka) {
+  liveCards.push({
+    value: waka,
+    label: "coded",
+    sublabel: live.wakatimeTopLanguage ? `top: ${live.wakatimeTopLanguage}` : undefined,
+    url: "https://wakatime.com",
+  });
+}
+
+// 2. GitHub stars
+if (typeof live.githubTotalStars === "number") {
+  liveCards.push({
+    value: fmt(live.githubTotalStars) + " ⭐",
+    label: "GitHub stars",
+    sublabel: live.githubTopRepoName ?? undefined,
+    url: "https://github.com",
+  });
+}
+
+// 3. LeetCode solved
+if (typeof live.leetcodeSolved === "number") {
+  const sub: string[] = [];
+  if (live.wakatimeTopLanguage) sub.push(live.wakatimeTopLanguage);
+  if (typeof live.leetcodeActiveYears === "number") sub.push(`${live.leetcodeActiveYears}yr active`);
+  liveCards.push({
+    value: `${live.leetcodeSolved} solved`,
+    label: "LeetCode",
+    sublabel: sub.length ? sub.join(" · ") : undefined,
+    url: "https://leetcode.com",
+  });
+}
+
+// 4. Credly badges
+if (typeof live.credlyBadgeCount === "number" && live.credlyBadgeCount > 0) {
+  const validCount = live.credlyValidationCount ?? 0;
+  liveCards.push({
+    value: `${live.credlyBadgeCount} badges`,
+    label: "Credly",
+    sublabel: validCount > 0 ? `${validCount} validation` : undefined,
+    url: "https://credly.com",
+  });
+}
+
+// 5. WakaTime AI coding %
+if (typeof live.wakatimeAiPercent === "number") {
+  liveCards.push({
+    value: `${live.wakatimeAiPercent.toFixed(1)}%`,
+    label: "AI-assisted",
+    url: "https://wakatime.com",
+  });
+}
+
+// 6. PyPI downloads
+if (typeof live.pypiMonthlyDownloads === "number") {
+  liveCards.push({
+    value: `${fmt(live.pypiMonthlyDownloads)}/mo`,
+    label: "PyPI downloads",
+    url: "https://pypi.org",
+  });
+}
+
+// 7. Codeforces rating
+if (typeof live.codeforcesRating === "number") {
+  liveCards.push({
+    value: String(live.codeforcesRating),
+    label: "CF rating",
+    url: "https://codeforces.com",
+  });
+}
+
+// ── fall back to config STATS if no live data came through ───────────────────
+const configCards: StatCard[] = STATS.map(s => ({ value: s.value, label: s.label }));
+const displayCards = liveCards.length > 0 ? liveCards : configCards;
 ---
 
 {
-  STATS.length > 0 && (
+  displayCards.length > 0 && (
     <section id="stats" class="stats-section">
       <div class="stats-grid">
-        {STATS.map(stat => (
+        {displayCards.map(stat => (
           <div class="stat-card">
-            <span class="stat-value">{stat.value}</span>
-            <span class="stat-label">{stat.label}</span>
+            {stat.url ? (
+              <a
+                href={stat.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="stat-link"
+              >
+                <span class="stat-value">{stat.value}</span>
+                <span class="stat-label">{stat.label}</span>
+                {stat.sublabel && (
+                  <span class="stat-sublabel">{stat.sublabel}</span>
+                )}
+              </a>
+            ) : (
+              <>
+                <span class="stat-value">{stat.value}</span>
+                <span class="stat-label">{stat.label}</span>
+                {stat.sublabel && (
+                  <span class="stat-sublabel">{stat.sublabel}</span>
+                )}
+              </>
+            )}
           </div>
         ))}
       </div>
     </section>
   )
 }
+
+<style>
+  .stats-section {
+    padding: var(--space-4, 1rem) 0;
+  }
+
+  .stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3, 0.75rem);
+    justify-content: center;
+  }
+
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+    border: 1px solid var(--color-border, rgba(128, 128, 128, 0.2));
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--color-card-bg, transparent);
+    min-width: 100px;
+    text-align: center;
+  }
+
+  .stat-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    gap: 0;
+  }
+
+  .stat-link:hover .stat-value {
+    color: var(--color-accent, oklch(70% 0.2 240));
+  }
+
+  .stat-value {
+    font-size: var(--font-size-xl, 1.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text-primary, inherit);
+    transition: color 0.15s ease;
+  }
+
+  .stat-label {
+    font-size: var(--font-size-xs, 0.75rem);
+    color: var(--color-text-muted, oklch(60% 0 0));
+    margin-top: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-sublabel {
+    font-size: var(--font-size-xs, 0.75rem);
+    color: var(--color-text-muted, oklch(60% 0 0));
+    margin-top: 0.1rem;
+    opacity: 0.7;
+  }
+</style>
