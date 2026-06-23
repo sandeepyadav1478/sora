@@ -11,7 +11,11 @@
       },
       "profile": {
         "ranking": 2215747,
-        "skillTags": ["python"]
+        "skillTags": ["python"],
+        "reputation": 12,
+        "postViewCount": 340,
+        "solutionCount": 5,
+        "categoryDiscussCount": 0
       },
       "tagProblemCounts": {
         "fundamental": [
@@ -47,6 +51,31 @@
         "activeYears": [2022, 2023, 2024, 2025, 2026],
         "streak": 2,
         "totalActiveDays": 17
+      },
+      "submissionCalendar": "{\"1609459200\": 3, \"1609545600\": 1, \"1748649600\": 5, \"1748736000\": 2}",
+      "badges": [
+        {
+          "id": "badge-1",
+          "name": "200DayBadge",
+          "shortName": "200-day",
+          "displayName": "200 Day Badge",
+          "icon": "/static/images/badges/200-day.png",
+          "creationDate": "2025-12-01",
+          "category": "STREAK"
+        },
+        {
+          "id": "badge-2",
+          "name": "AnualBadge2025",
+          "shortName": "2025",
+          "displayName": "2025 Annual Badge",
+          "icon": "/static/images/badges/2025.png",
+          "creationDate": "2025-01-01",
+          "category": "YEARLY"
+        }
+      ],
+      "activeBadge": {
+        "id": "badge-1",
+        "name": "200DayBadge"
       }
     },
     "userContestRanking": {
@@ -59,6 +88,35 @@
       { "difficulty": "Easy",   "percentage": 75.47 },
       { "difficulty": "Medium", "percentage": 45.46 },
       { "difficulty": "Hard",   "percentage": null  }
+    ],
+    "recentAcSubmissionList": [
+      {
+        "id": "1001",
+        "title": "Two Sum",
+        "titleSlug": "two-sum",
+        "timestamp": "1748649600",
+        "lang": "python3",
+        "runtime": "42 ms",
+        "memory": "14.5 MB"
+      },
+      {
+        "id": "1002",
+        "title": "Valid Parentheses",
+        "titleSlug": "valid-parentheses",
+        "timestamp": "1748736000",
+        "lang": "python3",
+        "runtime": "30 ms",
+        "memory": "13.9 MB"
+      },
+      {
+        "id": "1003",
+        "title": "Merge Two Sorted Lists",
+        "titleSlug": "merge-two-sorted-lists",
+        "timestamp": "1748822400",
+        "lang": "",
+        "runtime": "28 ms",
+        "memory": "13.7 MB"
+      }
     ]
   }
 }

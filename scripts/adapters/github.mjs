@@ -23,6 +23,12 @@ export function REPOS_URL(handle) {
   return `${API}/users/${encodeURIComponent(handle)}/repos`;
 }
 
+/** Truncate a string to maxLen chars, appending "…" if cut. */
+function trunc(str, maxLen) {
+  if (!str || typeof str !== "string") return "";
+  return str.length <= maxLen ? str : str.slice(0, maxLen - 1) + "…";
+}
+
 /** Pure transform: GitHub events array -> Envelope[]. No network.
  * ev.public === false => private repo: no sha/message exposed, url = repo homepage.
  * ev.public === true or absent => public: sha + message included.
@@ -32,16 +38,17 @@ export function REPOS_URL(handle) {
  * @param {Set<string>} forkSet - set of fork repo full_names to skip in PushEvents */
 export function normalizeEvents(events, cfg, forkSet = new Set()) {
   if (!Array.isArray(events)) return [];
+  const handle = cfg && cfg.handle ? cfg.handle : "";
   const out = [];
   for (const ev of events) {
     if (!ev || !ev.repo || !ev.repo.name || !ev.created_at) continue;
     const repo = ev.repo.name;
+    const repoShort = repo.includes("/") ? repo.split("/")[1] : repo;
     const isPublic = ev.public !== false; // default true if field absent
     if (ev.type === "PushEvent" && ev.payload) {
       // Skip pushes to forked repos — they represent upstream contributions noise.
       if (forkSet.has(repo)) continue;
       const branch = String(ev.payload.ref || "").replace("refs/heads/", "") || undefined;
-      const repoShort = repo.includes("/") ? repo.split("/")[1] : repo;
       const commits = Array.isArray(ev.payload.commits)
         ? ev.payload.commits.filter((c) => c && c.sha)
         : [];
@@ -51,7 +58,6 @@ export function normalizeEvents(events, cfg, forkSet = new Set()) {
         // and does not expose private commit SHAs in sources-cache.json.
         // url must NOT include the real repo path — point to the user's profile instead.
         if (!ev.id) continue;
-        const handle = cfg && cfg.handle ? cfg.handle : "";
         const safeUrl = handle
           ? `https://github.com/${encodeURIComponent(handle)}`
           : "https://github.com";
@@ -111,17 +117,105 @@ export function normalizeEvents(events, cfg, forkSet = new Set()) {
           payload: { repo, version: rel.tag_name },
         })
       );
+    } else if (ev.type === "PullRequestEvent" && ev.payload) {
+      const pr = ev.payload.pull_request;
+      const action = ev.payload.action;
+      const merged = pr?.merged || pr?.merged_at != null;
+      // Skip closed-without-merge PRs (not opened and not merged)
+      if (!merged && action !== "opened") continue;
+      const prNumber = pr?.number;
+      const prTitle = pr?.title;
+      const headRef = pr?.head?.ref;
+      const baseRef = pr?.base?.ref;
+      const isExternal = !repo.startsWith(handle + "/");
+      const rawTitle = prTitle || headRef || "pull request";
+      const titleStr = trunc(`PR #${prNumber}: ${rawTitle}`, 80);
+      out.push(
+        makeEnvelope({
+          id: stableId("github", "commit", `pr-${repo}-${prNumber}-${action}`),
+          source: "github",
+          kind: "commit",
+          title: titleStr,
+          url: pr?.html_url || `https://github.com/${repo}/pulls`,
+          date: ev.created_at,
+          payload: {
+            eventType: "pull_request",
+            action,
+            prNumber,
+            prTitle,
+            headRef,
+            baseRef,
+            merged,
+            repo,
+            isExternal,
+            visibility: ev.public !== false ? "public" : "private",
+          },
+        })
+      );
+    } else if (ev.type === "IssueCommentEvent" && ev.payload) {
+      const issue = ev.payload.issue;
+      const comment = ev.payload.comment;
+      const commentBody = trunc(comment?.body, 120);
+      if (!commentBody) continue; // skip empty comments
+      const issueNumber = issue?.number;
+      const issueTitle = issue?.title;
+      const isExternal = !repo.startsWith(handle + "/");
+      out.push(
+        makeEnvelope({
+          id: stableId("github", "post", `ic-${repo}-${issueNumber}-${comment?.id || ev.id}`),
+          source: "github",
+          kind: "post",
+          title: `Commented on #${issueNumber}: ${issueTitle || "issue"}`,
+          url: comment?.html_url || `https://github.com/${repo}/issues/${issueNumber}`,
+          date: ev.created_at,
+          payload: {
+            eventType: "issue_comment",
+            issueNumber,
+            issueTitle,
+            commentBody,
+            repo,
+            isExternal,
+          },
+        })
+      );
+    } else if (ev.type === "CreateEvent" && ev.payload) {
+      const refType = ev.payload.ref_type;
+      const ref = ev.payload.ref;
+      // Skip dependabot/renovate branches — they are low-signal noise
+      if (refType === "branch" && ref && (ref.startsWith("dependabot") || ref.startsWith("renovate"))) continue;
+      const kind = refType === "tag" ? "release" : "commit";
+      out.push(
+        makeEnvelope({
+          id: stableId("github", kind, `create-${repo}-${refType}-${ref}`),
+          source: "github",
+          kind,
+          title: `Created ${refType} ${ref} in ${repoShort}`,
+          url: refType === "tag"
+            ? `https://github.com/${repo}/releases/tag/${encodeURIComponent(ref)}`
+            : `https://github.com/${repo}/tree/${encodeURIComponent(ref)}`,
+          date: ev.created_at,
+          payload: {
+            eventType: "branch_create",
+            refType,
+            ref,
+            description: ev.payload.description,
+            repo,
+          },
+        })
+      );
     }
-    // other event types intentionally ignored
+    // ForkEvent: intentionally not emitted (low signal)
+    // WatchEvent and other event types intentionally ignored
   }
 
-  // Cap commits at maxCommits (latest first), keep all releases.
+  // Cap commits at maxCommits (latest first), keep all releases and posts.
   const commits = out
     .filter((e) => e.kind === "commit")
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
     .slice(0, cfg?.maxCommits ?? 25);
   const releases = out.filter((e) => e.kind === "release");
-  return [...commits, ...releases];
+  const posts = out.filter((e) => e.kind === "post");
+  return [...commits, ...releases, ...posts];
 }
 
 /** Pure transform: GitHub user object -> profile Envelope or null. No network. */
@@ -154,8 +248,10 @@ function normalizeProfile(user) {
 }
 
 /** Pure transform: GitHub repos array -> repo Envelope[]. No network.
- * Filters: non-fork, non-archived, stars >= 1. Caps at top 10 by stars. */
-function normalizeRepos(repos) {
+ * Filters: non-fork, non-archived, stars >= 1. Caps at top 10 by stars.
+ * @param {object[]} repos - raw GitHub repos array
+ * @param {Map<string,object>} [langMap] - optional map of full_name -> languageBytes object */
+function normalizeRepos(repos, langMap = new Map()) {
   if (!Array.isArray(repos)) return [];
   return repos
     .filter(
@@ -168,8 +264,9 @@ function normalizeRepos(repos) {
     )
     .sort((a, b) => b.stargazers_count - a.stargazers_count)
     .slice(0, 10)
-    .map((r) =>
-      makeEnvelope({
+    .map((r) => {
+      const languageBytes = langMap.get(r.full_name) || undefined;
+      return makeEnvelope({
         id: stableId("github", "repo", r.full_name),
         source: "github",
         kind: "repo",
@@ -187,9 +284,10 @@ function normalizeRepos(repos) {
           isTemplate: r.is_template,
           hasPages: r.has_pages,
           description: r.description,
+          ...(languageBytes !== undefined ? { languageBytes } : {}),
         },
-      })
-    );
+      });
+    });
 }
 
 /** Adapter entry point: fetch + normalize. Returns [] on any error (never throws).
@@ -247,6 +345,19 @@ export async function fetch_(cfg) {
       }
     }
 
+    /** Fetch language bytes for a single repo. Returns null on failure. */
+    async function fetchLanguages(repo) {
+      try {
+        const url = `${API}/repos/${repo.full_name}/languages`;
+        const res = await fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return typeof data === "object" && data !== null ? data : null;
+      } catch {
+        return null;
+      }
+    }
+
     const [eventsData, userData, reposData] = await Promise.all([
       fetchEvents(),
       fetchUser(),
@@ -256,9 +367,23 @@ export async function fetch_(cfg) {
     // Build fork set from the repos fetch — used to suppress fork PushEvents.
     const forkSet = new Set(reposData.filter((r) => r && r.fork).map((r) => r.full_name));
 
+    // Fetch per-repo language data in parallel for top 10 non-fork repos with stars >= 1.
+    const top10Repos = reposData
+      .filter((r) => r && !r.fork && !r.archived && typeof r.stargazers_count === "number" && r.stargazers_count >= 1)
+      .sort((a, b) => b.stargazers_count - a.stargazers_count)
+      .slice(0, 10);
+
+    const langResults = await Promise.all(top10Repos.map((r) => fetchLanguages(r)));
+    const langMap = new Map();
+    for (let i = 0; i < top10Repos.length; i++) {
+      if (langResults[i] !== null) {
+        langMap.set(top10Repos[i].full_name, langResults[i]);
+      }
+    }
+
     const eventEnvelopes = normalizeEvents(eventsData, cfg, forkSet);
     const profileEnvelope = normalizeProfile(userData);
-    const repoEnvelopes = normalizeRepos(reposData);
+    const repoEnvelopes = normalizeRepos(reposData, langMap);
 
     return [
       ...(profileEnvelope ? [profileEnvelope] : []),

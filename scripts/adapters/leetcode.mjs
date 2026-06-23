@@ -109,6 +109,56 @@ export function normalizeStats(raw, cfg, generatedAt) {
           }
         : undefined;
 
+    // --- Submission calendar (heatmap) ---
+    let submissionCalendar;
+    let submissionCalendarTotal;
+    const rawCalStr = user.submissionCalendar;
+    if (typeof rawCalStr === "string" && rawCalStr.length > 2) {
+      try {
+        const calObj = JSON.parse(rawCalStr);
+        const total = Object.values(calObj).reduce((sum, v) => sum + (Number(v) || 0), 0);
+        if (total > 0) {
+          submissionCalendar = rawCalStr;
+          submissionCalendarTotal = total;
+        }
+      } catch {
+        // malformed — skip
+      }
+    }
+
+    // --- Recent accepted submissions ---
+    const rawRecent = raw?.data?.recentAcSubmissionList ?? [];
+    const recentSubmissions = rawRecent
+      .filter((s) => s.lang && String(s.lang).trim() !== "" && Number(s.timestamp) > 0)
+      .map((s) => ({
+        title:     s.title,
+        titleSlug: s.titleSlug,
+        timestamp: s.timestamp,
+        lang:      s.lang,
+        runtime:   s.runtime,
+        memory:    s.memory,
+      }));
+
+    // --- Badges ---
+    const rawBadges = user.badges ?? [];
+    const badges = rawBadges
+      .map((b) => ({
+        name:         b.name,
+        displayName:  b.displayName,
+        category:     b.category,
+        creationDate: b.creationDate,
+      }))
+      .filter((b) => b.name);
+
+    const rawActive = user.activeBadge;
+    const activeBadge = rawActive?.name ? { name: rawActive.name } : null;
+
+    // --- Profile extras (only include when > 0) ---
+    const profile = user.profile ?? {};
+    const reputation   = (profile.reputation   > 0) ? profile.reputation   : undefined;
+    const postViews    = (profile.postViewCount > 0) ? profile.postViewCount : undefined;
+    const solutionCount = (profile.solutionCount > 0) ? profile.solutionCount : undefined;
+
     // Build title
     const titleSuffix =
       python3Count > 0 && python3Count !== all
@@ -128,11 +178,19 @@ export function normalizeStats(raw, cfg, generatedAt) {
           platform: "leetcode",
           solved:   { all, easy, medium, hard },
           ranking,
-          ...(tagBreakdown.length > 0  ? { tagBreakdown } : {}),
-          ...(languages.length > 0     ? { languages }    : {}),
-          ...(calendar                 ? { calendar }     : {}),
-          ...(beats                    ? { beats }        : {}),
-          ...(contest                  ? { contest }      : {}),
+          ...(tagBreakdown.length > 0      ? { tagBreakdown }          : {}),
+          ...(languages.length > 0         ? { languages }             : {}),
+          ...(calendar                     ? { calendar }              : {}),
+          ...(beats                        ? { beats }                 : {}),
+          ...(contest                      ? { contest }               : {}),
+          ...(submissionCalendar !== undefined
+            ? { submissionCalendar, submissionCalendarTotal }           : {}),
+          ...(recentSubmissions.length > 0 ? { recentSubmissions }     : {}),
+          ...(badges.length > 0            ? { badges }                : {}),
+          ...(activeBadge                  ? { activeBadge }           : {}),
+          ...(reputation   !== undefined   ? { reputation }            : {}),
+          ...(postViews    !== undefined   ? { postViews }             : {}),
+          ...(solutionCount !== undefined  ? { solutionCount }         : {}),
         },
       }),
     ];
@@ -162,6 +220,10 @@ query UserFullStats($handle: String!) {
     profile {
       ranking
       skillTags
+      reputation
+      postViewCount
+      solutionCount
+      categoryDiscussCount
     }
     tagProblemCounts {
       advanced     { tagName problemsSolved }
@@ -174,12 +236,18 @@ query UserFullStats($handle: String!) {
       streak
       totalActiveDays
     }
+    submissionCalendar
+    badges { id name shortName displayName icon creationDate category }
+    activeBadge { id name }
   }
   userContestRanking(username: $handle) {
     attendedContestsCount
     rating
     globalRanking
     topPercentage
+  }
+  recentAcSubmissionList(username: $handle, limit: 10) {
+    id title titleSlug timestamp lang runtime memory
   }
 }`,
         variables: { handle: cfg.handle },

@@ -1,7 +1,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeStats, normalizePublicStats } from "../adapters/wakatime.mjs";
+import {
+  normalizeStats,
+  normalizePublicStats,
+  normalizeAgentName,
+  normalizeDurations,
+  normalizeSummaries,
+  normalizeProjects,
+  normalizeLeaderboard,
+} from "../adapters/wakatime.mjs";
 import { fetch_ as wakatimeFetch } from "../adapters/wakatime.mjs";
 
 const fixture = JSON.parse(
@@ -281,4 +289,302 @@ test("fetch_ returns [] on non-200 HTTP response", async () => {
     if (savedKey !== undefined) process.env.WAKATIME_API_KEY = savedKey;
     else delete process.env.WAKATIME_API_KEY;
   }
+});
+
+// ---------------------------------------------------------------------------
+// normalizeAgentName
+// ---------------------------------------------------------------------------
+
+test("normalizeAgentName: maps Claude variants", () => {
+  assert.equal(normalizeAgentName("claude-3-opus"), "Claude");
+  assert.equal(normalizeAgentName("Claude Sonnet"), "Claude");
+  assert.equal(normalizeAgentName("claude-haiku"), "Claude");
+  assert.equal(normalizeAgentName("Cursor"), "Claude");
+});
+
+test("normalizeAgentName: maps Copilot variants", () => {
+  assert.equal(normalizeAgentName("GitHub Copilot"), "Copilot");
+  assert.equal(normalizeAgentName("github-copilot-chat"), "Copilot");
+  assert.equal(normalizeAgentName("copilot"), "Copilot");
+});
+
+test("normalizeAgentName: maps GPT variants", () => {
+  assert.equal(normalizeAgentName("gpt-4o"), "GPT");
+  assert.equal(normalizeAgentName("OpenAI"), "GPT");
+  assert.equal(normalizeAgentName("openai-codex"), "GPT");
+});
+
+test("normalizeAgentName: returns null for unknown agents", () => {
+  assert.equal(normalizeAgentName("Gemini"), null);
+  assert.equal(normalizeAgentName("llama-3"), null);
+  assert.equal(normalizeAgentName(""), null);
+  assert.equal(normalizeAgentName(null), null);
+  assert.equal(normalizeAgentName(42), null);
+});
+
+// ---------------------------------------------------------------------------
+// normalizeDurations
+// ---------------------------------------------------------------------------
+
+const durationDay1 = {
+  data: [
+    {
+      ai_additions: 3000,
+      ai_deletions: 200,
+      human_additions: 500,
+      human_deletions: 100,
+      ai_sessions: 5,
+      ai_prompt_events_total: 20,
+      ai_input_tokens: 10000,
+      ai_output_tokens: 5000,
+      ai_agent_line_changes: { "claude-3-opus": 2800, "GitHub Copilot": 200 },
+      ai_agent_costs: { "claude-3-opus": 0.04 },
+    },
+  ],
+};
+
+const durationDay2 = {
+  data: [
+    {
+      ai_additions: 1000,
+      ai_deletions: 0,
+      human_additions: 200,
+      human_deletions: 50,
+      ai_sessions: 2,
+      ai_prompt_events_total: 8,
+      ai_input_tokens: 4000,
+      ai_output_tokens: 2000,
+      ai_agent_line_changes: { "claude-sonnet": 1000 },
+      ai_agent_costs: { "claude-sonnet": 0.01 },
+    },
+  ],
+};
+
+test("normalizeDurations: aggregates across multiple days and emits one envelope", () => {
+  const out = normalizeDurations([durationDay1, durationDay2], cfg);
+  assert.equal(out.length, 1);
+  const [item] = out;
+  assert.equal(item.id, "wakatime:rating:ai-agents-7d");
+  assert.equal(item.source, "wakatime");
+  assert.equal(item.kind, "rating");
+  assert.equal(item.payload.subkind, "ai-agents");
+  assert.equal(item.payload.platform, "wakatime");
+});
+
+test("normalizeDurations: totals are summed correctly", () => {
+  const [item] = normalizeDurations([durationDay1, durationDay2], cfg);
+  // ai: 3000+200+1000 = 4200; human: 500+100+200+50 = 850
+  assert.equal(item.payload.totalAiLines, 4200);
+  assert.equal(item.payload.totalHumanLines, 850);
+  assert.equal(item.payload.totalAiSessions, 7);
+  assert.equal(item.payload.totalPromptEvents, 28);
+  assert.equal(item.payload.totalAiTokens, 21000); // (10000+5000)+(4000+2000)
+});
+
+test("normalizeDurations: agent names are normalized and summed", () => {
+  const [item] = normalizeDurations([durationDay1, durationDay2], cfg);
+  // claude-3-opus -> Claude: 2800, GitHub Copilot -> Copilot: 200, claude-sonnet -> Claude: 1000
+  assert.equal(item.payload.agentLineChanges.Claude, 3800);
+  assert.equal(item.payload.agentLineChanges.Copilot, 200);
+  assert.equal(item.payload.agentCosts.Claude, 0.05); // 0.04 + 0.01
+});
+
+test("normalizeDurations: aiLinePercent is rounded integer", () => {
+  const [item] = normalizeDurations([durationDay1, durationDay2], cfg);
+  const expected = Math.round(4200 / (4200 + 850) * 100);
+  assert.equal(item.payload.aiLinePercent, expected);
+});
+
+test("normalizeDurations: returns [] when totalAiLines is 0", () => {
+  const noAi = { data: [{ human_additions: 100, human_deletions: 50 }] };
+  assert.deepEqual(normalizeDurations([noAi], cfg), []);
+});
+
+test("normalizeDurations: returns [] on empty input", () => {
+  assert.deepEqual(normalizeDurations([], cfg), []);
+  assert.deepEqual(normalizeDurations(null, cfg), []);
+  assert.deepEqual(normalizeDurations([null, undefined], cfg), []);
+});
+
+test("normalizeDurations: skips null daily responses gracefully", () => {
+  const out = normalizeDurations([null, durationDay1, null], cfg);
+  assert.equal(out.length, 1);
+});
+
+// ---------------------------------------------------------------------------
+// normalizeSummaries
+// ---------------------------------------------------------------------------
+
+function makeSummaryDay(date, totalSeconds, aiCodingSeconds) {
+  return {
+    range: { date },
+    grand_total: { total_seconds: totalSeconds, ai_coding_seconds: aiCodingSeconds },
+  };
+}
+
+const summaries30dRaw = {
+  data: [
+    makeSummaryDay("2026-05-24", 7200, 1800),
+    makeSummaryDay("2026-05-25", 10800, 5400),
+    makeSummaryDay("2026-05-26", 3600, 900),
+    makeSummaryDay("2026-05-27", 0, 0), // no activity
+    makeSummaryDay("2026-05-28", 14400, 7200),
+  ],
+};
+
+test("normalizeSummaries: happy path emits one envelope with correct id", () => {
+  const out = normalizeSummaries(summaries30dRaw, cfg);
+  assert.equal(out.length, 1);
+  const [item] = out;
+  assert.equal(item.id, "wakatime:rating:summaries-30d");
+  assert.equal(item.source, "wakatime");
+  assert.equal(item.kind, "rating");
+  assert.equal(item.payload.subkind, "summaries");
+  assert.equal(item.payload.platform, "wakatime");
+});
+
+test("normalizeSummaries: daysWithData counts only non-zero days", () => {
+  const [item] = normalizeSummaries(summaries30dRaw, cfg);
+  assert.equal(item.payload.daysWithData, 4); // the zero-activity day excluded
+});
+
+test("normalizeSummaries: days array is correctly structured", () => {
+  const [item] = normalizeSummaries(summaries30dRaw, cfg);
+  assert.equal(item.payload.days.length, 5);
+  const day0 = item.payload.days[0];
+  assert.equal(day0.date, "2026-05-24");
+  assert.equal(day0.totalSeconds, 7200);
+  assert.equal(day0.aiSeconds, 1800);
+  assert.equal(day0.humanSeconds, 5400);
+  assert.equal(day0.aiPercent, 25);
+});
+
+test("normalizeSummaries: avgAiPercent averages only non-zero days", () => {
+  const [item] = normalizeSummaries(summaries30dRaw, cfg);
+  // percents: 25, 50, 25, 0(excluded), 50 -> avg of [25,50,25,50] = 37.5 -> round 38
+  assert.equal(item.payload.avgAiPercent, 38);
+});
+
+test("normalizeSummaries: returns [] when daysWithData < 3", () => {
+  const sparse = {
+    data: [
+      makeSummaryDay("2026-05-24", 7200, 1800),
+      makeSummaryDay("2026-05-25", 3600, 900),
+    ],
+  };
+  assert.deepEqual(normalizeSummaries(sparse, cfg), []);
+});
+
+test("normalizeSummaries: returns [] on empty / garbage input", () => {
+  assert.deepEqual(normalizeSummaries(null, cfg), []);
+  assert.deepEqual(normalizeSummaries({}, cfg), []);
+  assert.deepEqual(normalizeSummaries({ data: [] }, cfg), []);
+});
+
+// ---------------------------------------------------------------------------
+// normalizeProjects
+// ---------------------------------------------------------------------------
+
+const projectsRaw = {
+  data: [
+    { name: "sora", last_heartbeat_at: "2026-06-20T18:30:00Z" },
+    { name: "personal-site", last_heartbeat_at: "2026-06-18T10:00:00Z" },
+    { name: "dotfiles" }, // no last_heartbeat_at
+  ],
+};
+
+test("normalizeProjects: happy path emits one envelope with correct id", () => {
+  const out = normalizeProjects(projectsRaw, cfg);
+  assert.equal(out.length, 1);
+  const [item] = out;
+  assert.equal(item.id, "wakatime:rating:projects");
+  assert.equal(item.source, "wakatime");
+  assert.equal(item.kind, "rating");
+  assert.equal(item.payload.subkind, "projects");
+  assert.equal(item.payload.platform, "wakatime");
+});
+
+test("normalizeProjects: projects array is correct", () => {
+  const [item] = normalizeProjects(projectsRaw, cfg);
+  assert.equal(item.payload.projects.length, 3);
+  assert.equal(item.payload.projects[0].name, "sora");
+  assert.equal(item.payload.projects[0].lastHeartbeatAt, "2026-06-20T18:30:00Z");
+  assert.equal(item.payload.projects[2].name, "dotfiles");
+  assert.equal(item.payload.projects[2].lastHeartbeatAt, undefined);
+});
+
+test("normalizeProjects: caps at 20 projects", () => {
+  const raw = {
+    data: Array.from({ length: 25 }, (_, i) => ({ name: `project-${i}` })),
+  };
+  const [item] = normalizeProjects(raw, cfg);
+  assert.equal(item.payload.projects.length, 20);
+});
+
+test("normalizeProjects: returns [] when data is empty", () => {
+  assert.deepEqual(normalizeProjects({ data: [] }, cfg), []);
+  assert.deepEqual(normalizeProjects({ data: [null, undefined] }, cfg), []);
+});
+
+test("normalizeProjects: returns [] on garbage input", () => {
+  assert.deepEqual(normalizeProjects(null, cfg), []);
+  assert.deepEqual(normalizeProjects({}, cfg), []);
+});
+
+// ---------------------------------------------------------------------------
+// normalizeLeaderboard
+// ---------------------------------------------------------------------------
+
+const leaderboardRaw = {
+  current_user: {
+    rank: 42,
+    running_total: {
+      languages: [
+        { name: "Python", total_seconds: 120000 },
+        { name: "TypeScript", total_seconds: 80000 },
+      ],
+    },
+  },
+  range: { slug: "last_7_days", name: "Last 7 Days" },
+};
+
+test("normalizeLeaderboard: happy path emits one envelope with correct id", () => {
+  const out = normalizeLeaderboard(leaderboardRaw, cfg);
+  assert.equal(out.length, 1);
+  const [item] = out;
+  assert.equal(item.id, "wakatime:rating:leaderboard");
+  assert.equal(item.source, "wakatime");
+  assert.equal(item.kind, "rating");
+  assert.equal(item.payload.subkind, "leaderboard");
+  assert.equal(item.payload.platform, "wakatime");
+});
+
+test("normalizeLeaderboard: rank and rangeLabel are correct", () => {
+  const [item] = normalizeLeaderboard(leaderboardRaw, cfg);
+  assert.equal(item.payload.rank, 42);
+  assert.equal(item.payload.rangeLabel, "last_7_days");
+});
+
+test("normalizeLeaderboard: languages are mapped correctly", () => {
+  const [item] = normalizeLeaderboard(leaderboardRaw, cfg);
+  assert.deepEqual(item.payload.languages, [
+    { name: "Python", totalSeconds: 120000 },
+    { name: "TypeScript", totalSeconds: 80000 },
+  ]);
+});
+
+test("normalizeLeaderboard: returns [] when current_user is absent (unauthenticated)", () => {
+  const noUser = { data: [{ rank: 1 }], range: { slug: "last_7_days" } };
+  assert.deepEqual(normalizeLeaderboard(noUser, cfg), []);
+});
+
+test("normalizeLeaderboard: returns [] when rank is missing", () => {
+  const noRank = { current_user: { running_total: { languages: [] } } };
+  assert.deepEqual(normalizeLeaderboard(noRank, cfg), []);
+});
+
+test("normalizeLeaderboard: returns [] on garbage input", () => {
+  assert.deepEqual(normalizeLeaderboard(null, cfg), []);
+  assert.deepEqual(normalizeLeaderboard({}, cfg), []);
+  assert.deepEqual(normalizeLeaderboard("nope", cfg), []);
 });

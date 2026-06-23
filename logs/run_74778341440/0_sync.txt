@@ -1,0 +1,328 @@
+﻿2026-06-18T11:31:44.8771479Z Current runner version: '2.335.1'
+2026-06-18T11:31:44.8796068Z ##[group]Runner Image Provisioner
+2026-06-18T11:31:44.8796995Z Hosted Compute Agent
+2026-06-18T11:31:44.8797599Z Version: 20260611.554
+2026-06-18T11:31:44.8798289Z Commit: 5e0782fdc9014723d3be820dd114dd31555c2bd1
+2026-06-18T11:31:44.8799319Z Build Date: 2026-06-11T21:40:46Z
+2026-06-18T11:31:44.8800081Z Worker ID: {cda75199-55b4-4ad4-bfd6-01195c2173ed}
+2026-06-18T11:31:44.8800853Z Azure Region: westus
+2026-06-18T11:31:44.8801428Z ##[endgroup]
+2026-06-18T11:31:44.8802991Z ##[group]Operating System
+2026-06-18T11:31:44.8803665Z Ubuntu
+2026-06-18T11:31:44.8804182Z 24.04.4
+2026-06-18T11:31:44.8804861Z LTS
+2026-06-18T11:31:44.8805375Z ##[endgroup]
+2026-06-18T11:31:44.8806010Z ##[group]Runner Image
+2026-06-18T11:31:44.8806639Z Image: ubuntu-24.04
+2026-06-18T11:31:44.8807226Z Version: 20260615.205.1
+2026-06-18T11:31:44.8808565Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260615.205/images/ubuntu/Ubuntu2404-Readme.md
+2026-06-18T11:31:44.8810950Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260615.205
+2026-06-18T11:31:44.8811943Z ##[endgroup]
+2026-06-18T11:31:44.8813221Z ##[group]GITHUB_TOKEN Permissions
+2026-06-18T11:31:44.8815376Z Contents: write
+2026-06-18T11:31:44.8815996Z Issues: write
+2026-06-18T11:31:44.8816715Z Metadata: read
+2026-06-18T11:31:44.8817339Z ##[endgroup]
+2026-06-18T11:31:44.8819904Z Secret source: Actions
+2026-06-18T11:31:44.8820719Z Prepare workflow directory
+2026-06-18T11:31:44.9446034Z Prepare all required actions
+2026-06-18T11:31:44.9484216Z Getting action download info
+2026-06-18T11:31:45.3956616Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-06-18T11:31:45.4728641Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+2026-06-18T11:31:45.9891958Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-06-18T11:31:46.2316796Z Complete job name: sync
+2026-06-18T11:31:46.3024925Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-18T11:31:46.3034195Z ##[group]Run actions/checkout@v4
+2026-06-18T11:31:46.3034955Z with:
+2026-06-18T11:31:46.3039260Z   token: ***
+2026-06-18T11:31:46.3039837Z   repository: sandeepyadav1478/sandeepyadav1478.github.io
+2026-06-18T11:31:46.3040488Z   ssh-strict: true
+2026-06-18T11:31:46.3040925Z   ssh-user: git
+2026-06-18T11:31:46.3041381Z   persist-credentials: true
+2026-06-18T11:31:46.3041872Z   clean: true
+2026-06-18T11:31:46.3042314Z   sparse-checkout-cone-mode: true
+2026-06-18T11:31:46.3042841Z   fetch-depth: 1
+2026-06-18T11:31:46.3043273Z   fetch-tags: false
+2026-06-18T11:31:46.3043731Z   show-progress: true
+2026-06-18T11:31:46.3044209Z   lfs: false
+2026-06-18T11:31:46.3044666Z   submodules: false
+2026-06-18T11:31:46.3045121Z   set-safe-directory: true
+2026-06-18T11:31:46.3045865Z env:
+2026-06-18T11:31:46.3049997Z   GH_TOKEN: ***
+2026-06-18T11:31:46.3050431Z ##[endgroup]
+2026-06-18T11:31:46.4022913Z Syncing repository: sandeepyadav1478/sandeepyadav1478.github.io
+2026-06-18T11:31:46.4024816Z ##[group]Getting Git version info
+2026-06-18T11:31:46.4026040Z Working directory is '/home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io'
+2026-06-18T11:31:46.4027273Z [command]/usr/bin/git version
+2026-06-18T11:31:46.4098083Z git version 2.54.0
+2026-06-18T11:31:46.4119937Z ##[endgroup]
+2026-06-18T11:31:46.4135631Z Temporarily overriding HOME='/home/runner/work/_temp/a00f8f9d-6bfb-4175-bdde-f99f508211c7' before making global git config changes
+2026-06-18T11:31:46.4138073Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-18T11:31:46.4141803Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io
+2026-06-18T11:31:46.4193941Z Deleting the contents of '/home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io'
+2026-06-18T11:31:46.4197842Z ##[group]Initializing the repository
+2026-06-18T11:31:46.4202761Z [command]/usr/bin/git init /home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io
+2026-06-18T11:31:46.4322959Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-06-18T11:31:46.4325019Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-06-18T11:31:46.4326579Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-06-18T11:31:46.4327598Z hint: call:
+2026-06-18T11:31:46.4328139Z hint:
+2026-06-18T11:31:46.4329029Z hint: 	git config --global init.defaultBranch <name>
+2026-06-18T11:31:46.4329896Z hint:
+2026-06-18T11:31:46.4330696Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-06-18T11:31:46.4332050Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-06-18T11:31:46.4333007Z hint:
+2026-06-18T11:31:46.4333423Z hint: 	git branch -m <name>
+2026-06-18T11:31:46.4333902Z hint:
+2026-06-18T11:31:46.4334531Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-06-18T11:31:46.4342258Z Initialized empty Git repository in /home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io/.git/
+2026-06-18T11:31:46.4353631Z [command]/usr/bin/git remote add origin https://github.com/sandeepyadav1478/sandeepyadav1478.github.io
+2026-06-18T11:31:46.4398228Z ##[endgroup]
+2026-06-18T11:31:46.4399543Z ##[group]Disabling automatic garbage collection
+2026-06-18T11:31:46.4402261Z [command]/usr/bin/git config --local gc.auto 0
+2026-06-18T11:31:46.4430976Z ##[endgroup]
+2026-06-18T11:31:46.4431727Z ##[group]Setting up auth
+2026-06-18T11:31:46.4439362Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-18T11:31:46.4473051Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-18T11:31:46.4862675Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-18T11:31:46.4894125Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-18T11:31:46.5117317Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-18T11:31:46.5148208Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-18T11:31:46.5370400Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-06-18T11:31:46.5405539Z ##[endgroup]
+2026-06-18T11:31:46.5406531Z ##[group]Fetching the repository
+2026-06-18T11:31:46.5415125Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a9d50560d00a1db04f8f7bee90888c085e655d49:refs/remotes/origin/main
+2026-06-18T11:31:47.1679693Z From https://github.com/sandeepyadav1478/sandeepyadav1478.github.io
+2026-06-18T11:31:47.1681861Z  * [new ref]         a9d50560d00a1db04f8f7bee90888c085e655d49 -> origin/main
+2026-06-18T11:31:47.1714302Z ##[endgroup]
+2026-06-18T11:31:47.1715355Z ##[group]Determining the checkout info
+2026-06-18T11:31:47.1717480Z ##[endgroup]
+2026-06-18T11:31:47.1723440Z [command]/usr/bin/git sparse-checkout disable
+2026-06-18T11:31:47.1770836Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-06-18T11:31:47.1798362Z ##[group]Checking out the ref
+2026-06-18T11:31:47.1803048Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-06-18T11:31:47.1987613Z Switched to a new branch 'main'
+2026-06-18T11:31:47.1991598Z branch 'main' set up to track 'origin/main'.
+2026-06-18T11:31:47.1998625Z ##[endgroup]
+2026-06-18T11:31:47.2044926Z [command]/usr/bin/git log -1 --format=%H
+2026-06-18T11:31:47.2070557Z a9d50560d00a1db04f8f7bee90888c085e655d49
+2026-06-18T11:31:47.2442747Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-18T11:31:47.2448707Z ##[group]Run pnpm/action-setup@v4
+2026-06-18T11:31:47.2449918Z with:
+2026-06-18T11:31:47.2450622Z   version: 10.11.1
+2026-06-18T11:31:47.2451408Z   dest: ~/setup-pnpm
+2026-06-18T11:31:47.2452213Z   run_install: null
+2026-06-18T11:31:47.2452963Z   cache: false
+2026-06-18T11:31:47.2453775Z   cache_dependency_path: pnpm-lock.yaml
+2026-06-18T11:31:47.2454926Z   package_json_file: package.json
+2026-06-18T11:31:47.2455941Z   standalone: false
+2026-06-18T11:31:47.2456662Z env:
+2026-06-18T11:31:47.2467847Z   GH_TOKEN: ***
+2026-06-18T11:31:47.2468608Z ##[endgroup]
+2026-06-18T11:31:47.3982914Z ##[group]Running self-installer...
+2026-06-18T11:31:47.8396369Z (node:2267) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-06-18T11:31:47.8403343Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-18T11:31:47.9643667Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-06-18T11:31:47.9738519Z Packages: +1
+2026-06-18T11:31:47.9740310Z +
+2026-06-18T11:31:48.4041354Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+2026-06-18T11:31:48.4320092Z 
+2026-06-18T11:31:48.4321663Z dependencies:
+2026-06-18T11:31:48.4323251Z + pnpm 10.11.1 (11.8.0 is available)
+2026-06-18T11:31:48.4324401Z 
+2026-06-18T11:31:48.4352942Z Done in 856ms
+2026-06-18T11:31:48.4535479Z ##[endgroup]
+2026-06-18T11:31:48.4536482Z Installation Completed!
+2026-06-18T11:31:48.4778547Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-18T11:31:48.4781168Z ##[group]Run actions/setup-node@v4
+2026-06-18T11:31:48.4782058Z with:
+2026-06-18T11:31:48.4782840Z   node-version: 22
+2026-06-18T11:31:48.4783653Z   cache: pnpm
+2026-06-18T11:31:48.4784492Z   always-auth: false
+2026-06-18T11:31:48.4785313Z   check-latest: false
+2026-06-18T11:31:48.4789335Z   token: ***
+2026-06-18T11:31:48.4790131Z env:
+2026-06-18T11:31:48.4793846Z   GH_TOKEN: ***
+2026-06-18T11:31:48.4794774Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:48.4795756Z ##[endgroup]
+2026-06-18T11:31:48.6279923Z Found in cache @ /opt/hostedtoolcache/node/22.22.3/x64
+2026-06-18T11:31:48.6285689Z (node:2282) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-18T11:31:48.6287525Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-18T11:31:48.6289761Z ##[group]Environment details
+2026-06-18T11:31:51.3190124Z node: v22.22.3
+2026-06-18T11:31:51.3190796Z npm: 10.9.8
+2026-06-18T11:31:51.3208422Z yarn: 1.22.22
+2026-06-18T11:31:51.3209705Z ##[endgroup]
+2026-06-18T11:31:51.3239818Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+2026-06-18T11:31:51.9109241Z /home/runner/setup-pnpm/node_modules/.bin/store/v10
+2026-06-18T11:31:52.1842811Z pnpm cache is not found
+2026-06-18T11:31:52.1972888Z ##[group]Run pnpm install --frozen-lockfile
+2026-06-18T11:31:52.1973314Z [36;1mpnpm install --frozen-lockfile[0m
+2026-06-18T11:31:52.2169141Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:52.2169742Z env:
+2026-06-18T11:31:52.2173154Z   GH_TOKEN: ***
+2026-06-18T11:31:52.2173470Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:52.2173829Z ##[endgroup]
+2026-06-18T11:31:52.6209504Z Lockfile is up to date, resolution step is skipped
+2026-06-18T11:31:52.6705494Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-06-18T11:31:52.7770196Z Packages: +553
+2026-06-18T11:31:52.7775683Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2026-06-18T11:31:53.6707964Z Progress: resolved 553, reused 0, downloaded 131, added 79
+2026-06-18T11:31:54.6779700Z Progress: resolved 553, reused 0, downloaded 383, added 266
+2026-06-18T11:31:55.6814449Z Progress: resolved 553, reused 0, downloaded 552, added 552
+2026-06-18T11:31:55.9154433Z Progress: resolved 553, reused 0, downloaded 553, added 553, done
+2026-06-18T11:31:56.1888843Z 
+2026-06-18T11:31:56.1890172Z dependencies:
+2026-06-18T11:31:56.1890746Z + @astrojs/rss 4.0.14
+2026-06-18T11:31:56.1891125Z + @astrojs/sitemap 3.6.0
+2026-06-18T11:31:56.1891452Z + @resvg/resvg-js 2.6.2
+2026-06-18T11:31:56.1891742Z + @tailwindcss/vite 4.1.18
+2026-06-18T11:31:56.1891981Z + astro 5.16.6
+2026-06-18T11:31:56.1892207Z + dayjs 1.11.19
+2026-06-18T11:31:56.1892461Z + lodash.kebabcase 4.1.1
+2026-06-18T11:31:56.1892755Z + remark-collapse 0.1.2
+2026-06-18T11:31:56.1893022Z + remark-toc 9.0.0
+2026-06-18T11:31:56.1893245Z + satori 0.18.3
+2026-06-18T11:31:56.1894492Z + sharp 0.34.5
+2026-06-18T11:31:56.1894734Z + slugify 1.6.6
+2026-06-18T11:31:56.1894957Z + tailwindcss 4.1.18
+2026-06-18T11:31:56.1895101Z 
+2026-06-18T11:31:56.1895195Z devDependencies:
+2026-06-18T11:31:56.1895450Z + @astrojs/check 0.9.6
+2026-06-18T11:31:56.1895712Z + @pagefind/default-ui 1.4.0
+2026-06-18T11:31:56.1896018Z + @shikijs/transformers 3.20.0
+2026-06-18T11:31:56.1896379Z + @tailwindcss/typography 0.5.19
+2026-06-18T11:31:56.1896818Z + @types/lodash.kebabcase 4.1.9
+2026-06-18T11:31:56.1897429Z + @typescript-eslint/parser 8.51.0
+2026-06-18T11:31:56.1897886Z + eslint 9.39.2
+2026-06-18T11:31:56.1898148Z + eslint-plugin-astro 1.5.0
+2026-06-18T11:31:56.1898459Z + globals 16.5.0
+2026-06-18T11:31:56.1898663Z + pagefind 1.4.0
+2026-06-18T11:31:56.1899240Z + prettier 3.7.4
+2026-06-18T11:31:56.1899565Z + prettier-plugin-astro 0.14.1
+2026-06-18T11:31:56.1900028Z + prettier-plugin-tailwindcss 0.7.2
+2026-06-18T11:31:56.1900413Z + typescript 5.9.3
+2026-06-18T11:31:56.1900660Z + typescript-eslint 8.51.0
+2026-06-18T11:31:56.1900822Z 
+2026-06-18T11:31:56.1901391Z ╭ Warning ─────────────────────────────────────────────────────────────────────╮
+2026-06-18T11:31:56.1901951Z │                                                                              │
+2026-06-18T11:31:56.1902541Z │   Ignored build scripts: esbuild, sharp.                                     │
+2026-06-18T11:31:56.1903239Z │   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+2026-06-18T11:31:56.1903865Z │   to run scripts.                                                            │
+2026-06-18T11:31:56.1904435Z │                                                                              │
+2026-06-18T11:31:56.1904985Z ╰──────────────────────────────────────────────────────────────────────────────╯
+2026-06-18T11:31:56.1905237Z 
+2026-06-18T11:31:56.2137254Z Done in 3.9s using pnpm v10.11.1
+2026-06-18T11:31:56.2428447Z ##[group]Run node scripts/sync-sources.mjs --report
+2026-06-18T11:31:56.2429177Z [36;1mnode scripts/sync-sources.mjs --report[0m
+2026-06-18T11:31:56.2462178Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:56.2462435Z env:
+2026-06-18T11:31:56.2465321Z   GH_TOKEN: ***
+2026-06-18T11:31:56.2465600Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:56.2466005Z   WAKATIME_API_KEY: ***
+2026-06-18T11:31:56.2466229Z ##[endgroup]
+2026-06-18T11:31:56.8124406Z - github: 12 item(s)
+2026-06-18T11:31:57.0981615Z - codeforces: 2 item(s)
+2026-06-18T11:31:57.1756896Z - pypi: 1 item(s)
+2026-06-18T11:31:57.1757387Z - npm: skipped (disabled)
+2026-06-18T11:31:57.1757920Z - rss: skipped (disabled)
+2026-06-18T11:31:57.1758968Z - youtube: skipped (disabled)
+2026-06-18T11:31:57.1759418Z - stackoverflow: skipped (disabled)
+2026-06-18T11:31:57.1759789Z - bluesky: skipped (disabled)
+2026-06-18T11:31:57.1760145Z - mastodon: skipped (disabled)
+2026-06-18T11:31:57.2849838Z - huggingface: 0 item(s)
+2026-06-18T11:31:57.5274568Z - wakatime: 1 item(s)
+2026-06-18T11:31:57.7583813Z - leetcode: 1 item(s)
+2026-06-18T11:31:57.7596218Z 
+2026-06-18T11:31:57.7598170Z Wrote 17 item(s) to /home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io/src/data/sources-cache.json
+2026-06-18T11:31:57.7601096Z Sync report: 0 failure(s), 6 success(es)
+2026-06-18T11:31:57.7703236Z ##[group]Run if [ ! -f sync-report.json ]; then
+2026-06-18T11:31:57.7703617Z [36;1mif [ ! -f sync-report.json ]; then[0m
+2026-06-18T11:31:57.7704383Z [36;1m  echo '{"generatedAt":"'"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"'","failures":[{"source":"sync-script","error":"Fatal crash — see Actions log for details"}],"successes":[]}' > sync-report.json[0m
+2026-06-18T11:31:57.7705132Z [36;1mfi[0m
+2026-06-18T11:31:57.7738422Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:57.7738669Z env:
+2026-06-18T11:31:57.7741929Z   GH_TOKEN: ***
+2026-06-18T11:31:57.7742224Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:57.7742537Z ##[endgroup]
+2026-06-18T11:31:57.7820459Z ##[group]Run git config user.name "github-actions[bot]"
+2026-06-18T11:31:57.7820881Z [36;1mgit config user.name "github-actions[bot]"[0m
+2026-06-18T11:31:57.7821324Z [36;1mgit config user.email "github-actions[bot]@users.noreply.github.com"[0m
+2026-06-18T11:31:57.7821824Z [36;1mif git diff --quiet src/data/sources-cache.json; then[0m
+2026-06-18T11:31:57.7822219Z [36;1m  echo "Cache unchanged — skipping commit"[0m
+2026-06-18T11:31:57.7822520Z [36;1melse[0m
+2026-06-18T11:31:57.7822751Z [36;1m  git add src/data/sources-cache.json[0m
+2026-06-18T11:31:57.7823100Z [36;1m  git commit -m "chore(sync): update sources cache"[0m
+2026-06-18T11:31:57.7823418Z [36;1m  git push[0m
+2026-06-18T11:31:57.7823642Z [36;1mfi[0m
+2026-06-18T11:31:57.7851807Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:57.7852067Z env:
+2026-06-18T11:31:57.7854904Z   GH_TOKEN: ***
+2026-06-18T11:31:57.7855183Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:57.7855532Z ##[endgroup]
+2026-06-18T11:31:57.8103420Z [main 7920af8] chore(sync): update sources cache
+2026-06-18T11:31:57.8104160Z  1 file changed, 289 insertions(+), 3 deletions(-)
+2026-06-18T11:31:58.8114859Z To https://github.com/sandeepyadav1478/sandeepyadav1478.github.io
+2026-06-18T11:31:58.8115740Z    a9d5056..7920af8  main -> main
+2026-06-18T11:31:58.8189417Z ##[group]Run node scripts/process-report.mjs
+2026-06-18T11:31:58.8189873Z [36;1mnode scripts/process-report.mjs[0m
+2026-06-18T11:31:58.8221019Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:58.8221279Z env:
+2026-06-18T11:31:58.8224185Z   GH_TOKEN: ***
+2026-06-18T11:31:58.8224466Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:58.8224813Z ##[endgroup]
+2026-06-18T11:31:58.8636585Z ##[group]Run if [ ! -f /tmp/issue_body.md ]; then
+2026-06-18T11:31:58.8636986Z [36;1mif [ ! -f /tmp/issue_body.md ]; then[0m
+2026-06-18T11:31:58.8637562Z [36;1m  printf '## Sync failures\n\n_Report processing failed — check the Actions log._\n' > /tmp/issue_body.md[0m
+2026-06-18T11:31:58.8638165Z [36;1m  echo "failure_count=1" >> "$GITHUB_OUTPUT"[0m
+2026-06-18T11:31:58.8638474Z [36;1mfi[0m
+2026-06-18T11:31:58.8669997Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:58.8670255Z env:
+2026-06-18T11:31:58.8673169Z   GH_TOKEN: ***
+2026-06-18T11:31:58.8673454Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:58.8673776Z ##[endgroup]
+2026-06-18T11:31:58.8783711Z ##[group]Run ISSUE_TITLE="[Sora] Sync failures"
+2026-06-18T11:31:58.8784106Z [36;1mISSUE_TITLE="[Sora] Sync failures"[0m
+2026-06-18T11:31:58.8784451Z [36;1mEXISTING=$(gh issue list --state open \[0m
+2026-06-18T11:31:58.8784810Z [36;1m  --search "\"$ISSUE_TITLE\" in:title" \[0m
+2026-06-18T11:31:58.8785333Z [36;1m  --json number --jq '.[0].number // empty')[0m
+2026-06-18T11:31:58.8785664Z [36;1mif [ -n "$EXISTING" ]; then[0m
+2026-06-18T11:31:58.8785950Z [36;1m  gh issue close "$EXISTING" \[0m
+2026-06-18T11:31:58.8786305Z [36;1m    --comment "All sources synced successfully. Closing."[0m
+2026-06-18T11:31:58.8786656Z [36;1mfi[0m
+2026-06-18T11:31:58.8815926Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:58.8816184Z env:
+2026-06-18T11:31:58.8819403Z   GH_TOKEN: ***
+2026-06-18T11:31:58.8819707Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:58.8820041Z ##[endgroup]
+2026-06-18T11:32:00.1136378Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-18T11:32:00.1137698Z Post job cleanup.
+2026-06-18T11:32:00.2367898Z (node:2435) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-18T11:32:00.2369191Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-18T11:32:00.2569943Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io --files-from manifest.txt --use-compress-program zstdmt
+2026-06-18T11:32:01.7190703Z (node:2435) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-06-18T11:32:02.7104417Z Sent 17956864 of 131073700 (13.7%), 17.1 MBs/sec
+2026-06-18T11:32:03.7106111Z Sent 65667072 of 131073700 (50.1%), 31.3 MBs/sec
+2026-06-18T11:32:04.7108591Z Sent 115081216 of 131073700 (87.8%), 36.6 MBs/sec
+2026-06-18T11:32:05.2190126Z Sent 131073700 of 131073700 (100.0%), 35.6 MBs/sec
+2026-06-18T11:32:05.5109722Z Cache saved with the key: node-cache-Linux-x64-pnpm-62564f47836cad84a9770f33cd9b53e848ea8bb04cd70f9e3cafaf67230d8722
+2026-06-18T11:32:05.5240953Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-18T11:32:05.5242265Z Post job cleanup.
+2026-06-18T11:32:05.6775135Z Pruning is unnecessary.
+2026-06-18T11:32:05.6948143Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-18T11:32:05.6949722Z Post job cleanup.
+2026-06-18T11:32:05.7766062Z [command]/usr/bin/git version
+2026-06-18T11:32:05.7802427Z git version 2.54.0
+2026-06-18T11:32:05.7872369Z Temporarily overriding HOME='/home/runner/work/_temp/7bd4249a-64db-465d-9b70-12c5b61631f5' before making global git config changes
+2026-06-18T11:32:05.7873685Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-18T11:32:05.7878356Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/sandeepyadav1478.github.io/sandeepyadav1478.github.io
+2026-06-18T11:32:05.7914769Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-18T11:32:05.7945835Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-18T11:32:05.8168072Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-18T11:32:05.8193458Z http.https://github.com/.extraheader
+2026-06-18T11:32:05.8203747Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-06-18T11:32:05.8234380Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-18T11:32:05.8448987Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-18T11:32:05.8478303Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-18T11:32:05.8820385Z Cleaning up orphan processes
+2026-06-18T11:32:05.9221043Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

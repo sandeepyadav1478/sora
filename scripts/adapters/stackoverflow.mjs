@@ -25,6 +25,24 @@ function userProfileUrl(userId) {
   return `${API}/users/${encodeURIComponent(userId)}?site=${SITE}`;
 }
 
+function topAnswerTagsUrl(userId) {
+  return `${API}/users/${encodeURIComponent(userId)}/top-answer-tags?site=${SITE}`;
+}
+
+function tagsUrl(userId) {
+  return (
+    `${API}/users/${encodeURIComponent(userId)}/tags` +
+    `?site=${SITE}&order=desc&sort=popular`
+  );
+}
+
+function badgesUrl(userId) {
+  return (
+    `${API}/users/${encodeURIComponent(userId)}/badges` +
+    `?site=${SITE}&order=desc&sort=rank`
+  );
+}
+
 /** Build a question_id -> title map from the questions response. */
 function buildTitleMap(questionsRaw) {
   const map = new Map();
@@ -80,11 +98,11 @@ export function normalizeAnswers(answersRaw, questionsRaw, cfg) {
 }
 
 /**
- * Pure transform: user profile response -> rating Envelope or null. No network.
+ * Pure transform: user profile response + optional enrichment responses -> rating Envelope or null. No network.
  * Emits only when reputation >= 10 OR the user belongs to at least one collective.
  * (Low reputation alone is not worth showcasing; collective membership is a strong signal.)
  */
-export function normalizeProfile(profileRaw) {
+export function normalizeProfile(profileRaw, topTagsRaw, tagsRaw, badgesRaw) {
   const items = profileRaw && Array.isArray(profileRaw.items) ? profileRaw.items : [];
   const user = items[0];
   if (!user || user.user_id == null) return null;
@@ -103,6 +121,35 @@ export function normalizeProfile(profileRaw) {
     ? `Stack Overflow: ${reputation} reputation · ${collectiveName}`
     : `Stack Overflow: ${reputation} reputation · member`;
 
+  // --- top-answer-tags ---
+  const topAnswerTagItems = topTagsRaw && Array.isArray(topTagsRaw.items) ? topTagsRaw.items : [];
+  const topAnswerTags = topAnswerTagItems
+    .filter((t) => t && typeof t.answer_count === "number" && t.answer_count >= 1)
+    .sort((a, b) => (b.answer_score ?? 0) - (a.answer_score ?? 0))
+    .slice(0, 10)
+    .map((t) => ({ tag: t.tag_name, answerScore: t.answer_score ?? 0, answerCount: t.answer_count }));
+
+  // --- all tags ---
+  const tagItems = tagsRaw && Array.isArray(tagsRaw.items) ? tagsRaw.items : [];
+  const allTags = tagItems
+    .filter((t) => t && typeof t.count === "number" && t.count >= 1)
+    .slice(0, 20)
+    .map((t) => ({ tag: t.name, count: t.count }));
+
+  // --- badges ---
+  const badgeItems = badgesRaw && Array.isArray(badgesRaw.items) ? badgesRaw.items : [];
+  const badges = badgeItems.map((b) => ({
+    name: b.name,
+    rank: b.rank,
+    type: b.badge_type,
+    awardCount: b.award_count ?? 1,
+  }));
+  const badgeSummary = { gold: 0, silver: 0, bronze: 0 };
+  for (const b of badgeItems) {
+    const r = b.rank;
+    if (r === "gold" || r === "silver" || r === "bronze") badgeSummary[r]++;
+  }
+
   return makeEnvelope({
     id: stableId("stackoverflow", "rating", String(user.user_id)),
     source: "stackoverflow",
@@ -118,20 +165,28 @@ export function normalizeProfile(profileRaw) {
       location: user.location,
       memberSinceYear: new Date(user.creation_date * 1000).getFullYear(),
       lastActiveYear: new Date(user.last_access_date * 1000).getFullYear(),
+      topAnswerTags,
+      allTags,
+      badges,
+      badgeSummary,
     },
   });
 }
 
-/** Adapter entry point: fetch answers + batch-fetch their questions + user profile + normalize. Never throws. */
+/** Adapter entry point: fetch answers + user profile + enrichment data in parallel, then batch-fetch questions. Never throws. */
 export async function fetch_(cfg) {
   try {
     if (!cfg || !cfg.handle) return []; // handle is the SO numeric user_id
+    const userId = cfg.userId ?? cfg.handle;
     const pageSize = Math.min(Math.max(cfg.maxPosts ?? 25, 1), 100);
     const headers = { "Accept-Encoding": "gzip" }; // API is gzipped; fetchJson sets UA + timeout
 
-    const [answersRaw, profileRaw] = await Promise.all([
+    const [answersRaw, userRaw, topTagsRaw, tagsRaw, badgesRaw] = await Promise.all([
       fetchJson(answersUrl(cfg.handle, pageSize), { headers }),
-      fetchJson(userProfileUrl(cfg.handle), { headers }),
+      fetchJson(userProfileUrl(userId), { headers }),
+      fetchJson(topAnswerTagsUrl(userId), { headers }),
+      fetchJson(tagsUrl(userId), { headers }),
+      fetchJson(badgesUrl(userId), { headers }),
     ]);
 
     const ids = (Array.isArray(answersRaw.items) ? answersRaw.items : [])
@@ -141,7 +196,7 @@ export async function fetch_(cfg) {
     const questionsRaw = uniqueIds.length ? await fetchJson(questionsUrl(uniqueIds), { headers }) : { items: [] };
 
     const postEnvelopes = normalizeAnswers(answersRaw, questionsRaw, cfg);
-    const profileEnvelope = normalizeProfile(profileRaw);
+    const profileEnvelope = normalizeProfile(userRaw, topTagsRaw, tagsRaw, badgesRaw);
 
     return profileEnvelope ? [profileEnvelope, ...postEnvelopes] : postEnvelopes;
   } catch {

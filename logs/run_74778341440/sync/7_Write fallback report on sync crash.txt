@@ -1,0 +1,9 @@
+﻿2026-06-18T11:31:57.7703228Z ##[group]Run if [ ! -f sync-report.json ]; then
+2026-06-18T11:31:57.7703614Z [36;1mif [ ! -f sync-report.json ]; then[0m
+2026-06-18T11:31:57.7704380Z [36;1m  echo '{"generatedAt":"'"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"'","failures":[{"source":"sync-script","error":"Fatal crash — see Actions log for details"}],"successes":[]}' > sync-report.json[0m
+2026-06-18T11:31:57.7705130Z [36;1mfi[0m
+2026-06-18T11:31:57.7738415Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:57.7738667Z env:
+2026-06-18T11:31:57.7741923Z   GH_TOKEN: ***
+2026-06-18T11:31:57.7742221Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:57.7742535Z ##[endgroup]

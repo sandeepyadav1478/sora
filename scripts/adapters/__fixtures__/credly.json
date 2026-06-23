@@ -4,20 +4,36 @@
     "state": "accepted",
     "issued_at": "2024-03-15T10:00:00.000Z",
     "issued_at_date": "2024-03-15",
+    "accepted_at": "2024-03-15T10:05:00.000Z",
+    "last_updated_at": "2024-03-16T08:00:00.000Z",
     "expires_at_date": null,
-    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Amazon Web Services" } }] },
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Amazon Web Services", "vanity_url": "https://www.credly.com/org/amazon-web-services", "verified": true } }] },
     "badge_template": {
       "name": "AWS Certified Solutions Architect – Associate",
       "description": "Earners have a comprehensive understanding of AWS services and technologies.",
       "image_url": "https://images.credly.com/images/aws-saa.png",
       "url": "https://www.credly.com/org/aws/badge/aws-certified-solutions-architect-associate",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Amazon Web Services" } }] },
+      "earn_this_badge_url": "https://www.credly.com/org/amazon-web-services/badge/aws-certified-solutions-architect-associate",
+      "enable_earn_this_badge": true,
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Amazon Web Services", "vanity_url": "https://www.credly.com/org/amazon-web-services", "verified": true } }] },
       "skills": [
         { "name": "AWS", "canonical": true },
         { "name": "Cloud Architecture", "canonical": true },
         { "name": "Amazon EC2", "canonical": true },
         { "name": "Amazon S3", "canonical": true },
         { "name": "Solutions Architecture" }
+      ],
+      "alignments": [
+        { "name": "IBM Design Thinking", "url": "https://www.ibm.com/design/thinking/" },
+        { "name": "AWS Well-Architected Framework", "url": "https://aws.amazon.com/architecture/well-architected/" }
+      ],
+      "badge_template_activities": [
+        { "activity_type": "Exam", "title": "AWS Certified Solutions Architect – Associate exam", "url": "https://aws.amazon.com/certification/certified-solutions-architect-associate/" },
+        { "activity_type": "Course", "title": "AWS Training", "url": "https://aws.amazon.com/training/" }
+      ],
+      "endorsements": [
+        { "id": "end-001", "body": "Excellent badge" },
+        { "id": "end-002", "body": "Highly recommended" }
       ],
       "level": "Associate",
       "type_category": "Certification",
@@ -30,14 +46,18 @@
     "state": "accepted",
     "issued_at": "2018-06-01T00:00:00.000Z",
     "issued_at_date": "2018-06-01",
+    "accepted_at": "2018-06-02T00:00:00.000Z",
+    "last_updated_at": "2018-06-02T00:00:00.000Z",
     "expires_at_date": "2020-01-01",
-    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud" } }] },
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud", "vanity_url": null, "verified": false } }] },
     "badge_template": {
       "name": "Cybersecurity Fundamentals",
       "description": "A Professional Data Engineer enables data-driven decision making.",
       "image_url": "https://images.credly.com/images/gcp-pde.png",
       "url": "https://www.credly.com/org/google/badge/google-cloud-professional-data-engineer",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud" } }] },
+      "earn_this_badge_url": null,
+      "enable_earn_this_badge": false,
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud", "vanity_url": null, "verified": false } }] },
       "skills": [
         { "name": "Cryptography", "canonical": true },
         { "name": "Cybersecurity", "canonical": true },
@@ -55,6 +75,9 @@
         { "name": "Malware Analysis" },
         { "name": "Cloud Security", "canonical": true }
       ],
+      "alignments": [],
+      "badge_template_activities": [],
+      "endorsements": [],
       "level": "Intermediate",
       "type_category": "Learning",
       "cost": "Free",
@@ -66,15 +89,22 @@
     "state": "pending",
     "issued_at": "2025-01-01T00:00:00.000Z",
     "issued_at_date": "2025-01-01",
+    "accepted_at": null,
+    "last_updated_at": null,
     "expires_at_date": null,
-    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "SomeCorp" } }] },
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "SomeCorp", "vanity_url": null, "verified": false } }] },
     "badge_template": {
       "name": "Pending Badge",
       "description": "This badge is pending.",
       "image_url": null,
       "url": "https://www.credly.com/org/somecorp/badge/pending-badge",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "SomeCorp" } }] },
+      "earn_this_badge_url": null,
+      "enable_earn_this_badge": false,
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "SomeCorp", "vanity_url": null, "verified": false } }] },
       "skills": [],
+      "alignments": [],
+      "badge_template_activities": [],
+      "endorsements": [],
       "level": null,
       "type_category": null,
       "cost": null,
@@ -86,6 +116,8 @@
     "state": "accepted",
     "issued_at": "2023-11-20T00:00:00.000Z",
     "issued_at_date": "2023-11-20",
+    "accepted_at": "2023-11-20T12:00:00.000Z",
+    "last_updated_at": "2023-11-21T00:00:00.000Z",
     "expires_at_date": null,
     "issuer": { "entities": [] },
     "badge_template": {
@@ -93,6 +125,8 @@
       "description": "",
       "image_url": null,
       "url": "https://www.credly.com/org/minimal/badge/minimal-badge",
+      "earn_this_badge_url": null,
+      "enable_earn_this_badge": false,
       "issuer": { "entities": [] },
       "skills": [
         { "name": "AI", "canonical": true },
@@ -101,6 +135,13 @@
         { "name": "Design Thinking", "canonical": true },
         { "name": "Problem Solving" }
       ],
+      "alignments": [
+        { "name": "IBM Design Thinking", "url": "https://www.ibm.com/design/thinking/" }
+      ],
+      "badge_template_activities": [
+        { "activity_type": "Course", "title": "Enterprise Design Thinking Practitioner", "url": "https://www.ibm.com/training/badge/enterprise-design-thinking-practitioner" }
+      ],
+      "endorsements": [],
       "level": "Foundational",
       "type_category": "Learning",
       "cost": "Paid",
@@ -112,20 +153,31 @@
     "state": "accepted",
     "issued_at": "2023-05-10T00:00:00.000Z",
     "issued_at_date": "2023-05-10",
+    "accepted_at": "2023-05-10T09:00:00.000Z",
+    "last_updated_at": "2023-05-11T00:00:00.000Z",
     "expires_at_date": null,
-    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM", "vanity_url": "https://www.credly.com/org/ibm", "verified": true } }] },
     "badge_template": {
       "name": "IBM AI Foundations for Business",
       "description": "Demonstrate foundational knowledge of AI concepts, terminology, and applications.",
       "image_url": "https://images.credly.com/images/ibm-ai-foundations.png",
       "url": "https://www.credly.com/org/ibm/badge/ibm-ai-foundations-for-business",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+      "earn_this_badge_url": "https://www.credly.com/org/ibm/badge/ibm-ai-foundations-for-business",
+      "enable_earn_this_badge": true,
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM", "vanity_url": "https://www.credly.com/org/ibm", "verified": true } }] },
       "skills": [
         { "name": "Artificial Intelligence", "canonical": true },
         { "name": "Machine Learning", "canonical": true },
         { "name": "Natural Language Processing", "canonical": true },
         { "name": "AI Strategy" },
         { "name": "Deep Learning", "canonical": true }
+      ],
+      "alignments": [],
+      "badge_template_activities": [
+        { "activity_type": "Course", "title": "AI Foundations for Business", "url": "https://www.ibm.com/training/course/ZL1SPSS" }
+      ],
+      "endorsements": [
+        { "id": "end-003", "body": "Great course" }
       ],
       "level": "Foundational",
       "type_category": "Learning",
@@ -138,20 +190,30 @@
     "state": "accepted",
     "issued_at": "2024-08-22T00:00:00.000Z",
     "issued_at_date": "2024-08-22",
+    "accepted_at": "2024-08-22T15:00:00.000Z",
+    "last_updated_at": "2024-08-23T00:00:00.000Z",
     "expires_at_date": null,
-    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM", "vanity_url": "https://www.credly.com/org/ibm", "verified": true } }] },
     "badge_template": {
       "name": "Python for Data Science",
       "description": "Demonstrates proficiency in Python programming for data science applications.",
       "image_url": "https://images.credly.com/images/python-data-science.png",
       "url": "https://www.credly.com/org/ibm/badge/python-for-data-science",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+      "earn_this_badge_url": "https://www.credly.com/org/ibm/badge/python-for-data-science",
+      "enable_earn_this_badge": true,
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM", "vanity_url": "https://www.credly.com/org/ibm", "verified": true } }] },
       "skills": [
         { "name": "Data Science", "canonical": true },
         { "name": "Pandas", "canonical": true },
         { "name": "Python", "canonical": true },
         { "name": "Python Programming" }
       ],
+      "alignments": [],
+      "badge_template_activities": [
+        { "activity_type": "Course", "title": "Python for Data Science and AI", "url": "https://www.coursera.org/learn/python-for-applied-data-science-ai" },
+        { "activity_type": "Project", "title": "Hands-on Lab", "url": "https://skills.network/" }
+      ],
+      "endorsements": [],
       "level": "Foundational",
       "type_category": "Validation",
       "cost": "Free",
@@ -163,14 +225,21 @@
     "state": "accepted",
     "issued_at": "2022-09-01T00:00:00.000Z",
     "issued_at_date": "2022-09-01",
+    "accepted_at": "2022-09-01T00:00:00.000Z",
+    "last_updated_at": "2022-09-02T00:00:00.000Z",
     "expires_at_date": null,
-    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Linux Foundation" } }] },
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Linux Foundation", "vanity_url": "https://www.credly.com/org/the-linux-foundation", "verified": true } }] },
     "badge_template": {
       "name": "No-Skills Badge",
       "description": "A badge with no skills array at all.",
       "image_url": null,
       "url": "https://www.credly.com/org/linux-foundation/badge/no-skills-badge",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Linux Foundation" } }] },
+      "earn_this_badge_url": null,
+      "enable_earn_this_badge": false,
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Linux Foundation", "vanity_url": "https://www.credly.com/org/the-linux-foundation", "verified": true } }] },
+      "alignments": [],
+      "badge_template_activities": [],
+      "endorsements": [],
       "level": null,
       "type_category": null,
       "cost": null,

@@ -47,6 +47,32 @@ export function normalizeCredy(raw, cfg = {}) {
           .slice(0, 10)
       : [];
 
+    // All skill names regardless of canonical flag, capped at 15
+    const allSkills = Array.isArray(bt.skills)
+      ? bt.skills
+          .filter(s => s && typeof s.name === "string")
+          .map(s => s.name)
+          .slice(0, 15)
+      : [];
+
+    // Framework alignments — only include if non-empty
+    const alignmentsRaw = Array.isArray(bt.alignments) ? bt.alignments : [];
+    const alignments = alignmentsRaw
+      .filter(a => a && typeof a.name === "string")
+      .map(a => ({ name: a.name, url: a.url ?? null }));
+
+    // Earning criteria from badge_template_activities, capped at 5
+    const earningCriteria = Array.isArray(bt.badge_template_activities)
+      ? bt.badge_template_activities
+          .filter(a => a && typeof a.title === "string")
+          .map(a => ({ activityType: a.activity_type ?? null, title: a.title, url: a.url ?? null }))
+          .slice(0, 5)
+      : [];
+
+    // Issuer details from the real issuer source
+    const issuerEntity =
+      item.issuer?.entities?.[0]?.entity ?? bt.issuer?.entities?.[0]?.entity ?? {};
+
     out.push(
       makeEnvelope({
         id: stableId("credly", "badge", key),
@@ -56,12 +82,22 @@ export function normalizeCredy(raw, cfg = {}) {
         url,
         date,
         payload: {
-          issuer: item.issuer?.entities?.[0]?.entity?.name ?? bt.issuer?.entities?.[0]?.entity?.name ?? "",
+          issuer: issuerEntity.name ?? "",
+          issuerUrl: issuerEntity.vanity_url ?? null,
+          issuerVerified: issuerEntity.verified ?? false,
           imageUrl: bt.image_url ?? null,
           description: bt.description ?? "",
           expired,
           expiresAt: item.expires_at_date ?? null,
+          acceptedAt: item.accepted_at ?? null,
+          lastUpdatedAt: item.last_updated_at ?? null,
           skills,
+          allSkills,
+          ...(alignments.length > 0 ? { alignments } : {}),
+          earnThisBadgeUrl: bt.earn_this_badge_url ?? null,
+          enableEarnThisBadge: bt.enable_earn_this_badge ?? false,
+          earningCriteria,
+          endorsementCount: bt.endorsements?.length ?? 0,
           level: bt.level ?? null,
           typeCategory: bt.type_category ?? null,
           cost: bt.cost ?? null,

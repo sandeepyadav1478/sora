@@ -1,0 +1,10 @@
+﻿2026-06-18T11:31:58.8636571Z ##[group]Run if [ ! -f /tmp/issue_body.md ]; then
+2026-06-18T11:31:58.8636983Z [36;1mif [ ! -f /tmp/issue_body.md ]; then[0m
+2026-06-18T11:31:58.8637558Z [36;1m  printf '## Sync failures\n\n_Report processing failed — check the Actions log._\n' > /tmp/issue_body.md[0m
+2026-06-18T11:31:58.8638163Z [36;1m  echo "failure_count=1" >> "$GITHUB_OUTPUT"[0m
+2026-06-18T11:31:58.8638472Z [36;1mfi[0m
+2026-06-18T11:31:58.8669989Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:58.8670253Z env:
+2026-06-18T11:31:58.8673167Z   GH_TOKEN: ***
+2026-06-18T11:31:58.8673451Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:58.8673774Z ##[endgroup]

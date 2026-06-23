@@ -1,0 +1,14 @@
+﻿2026-06-18T11:31:58.8783700Z ##[group]Run ISSUE_TITLE="[Sora] Sync failures"
+2026-06-18T11:31:58.8784103Z [36;1mISSUE_TITLE="[Sora] Sync failures"[0m
+2026-06-18T11:31:58.8784449Z [36;1mEXISTING=$(gh issue list --state open \[0m
+2026-06-18T11:31:58.8784808Z [36;1m  --search "\"$ISSUE_TITLE\" in:title" \[0m
+2026-06-18T11:31:58.8785331Z [36;1m  --json number --jq '.[0].number // empty')[0m
+2026-06-18T11:31:58.8785661Z [36;1mif [ -n "$EXISTING" ]; then[0m
+2026-06-18T11:31:58.8785948Z [36;1m  gh issue close "$EXISTING" \[0m
+2026-06-18T11:31:58.8786302Z [36;1m    --comment "All sources synced successfully. Closing."[0m
+2026-06-18T11:31:58.8786654Z [36;1mfi[0m
+2026-06-18T11:31:58.8815921Z shell: /usr/bin/bash -e {0}
+2026-06-18T11:31:58.8816182Z env:
+2026-06-18T11:31:58.8819397Z   GH_TOKEN: ***
+2026-06-18T11:31:58.8819704Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-06-18T11:31:58.8820038Z ##[endgroup]
