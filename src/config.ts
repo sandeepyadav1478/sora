@@ -196,34 +196,62 @@ export const ACTIVITY_DISPLAY = {
   hf_tooltip: false, // hover: label + top 3 tags
 
   // badge — credly
-  credly_expired: false,  // ⚠ "expired" warning when payload.expired === true
-  credly_issuer: false,   // 🏅 issuing organisation name badge
-  credly_tooltip: false,  // hover: badge description (first 120 chars)
+  credly_expired: false, // ⚠ "expired" warning when payload.expired === true
+  credly_issuer: false, // 🏅 issuing organisation name badge
+  credly_tooltip: false, // hover: badge description (first 120 chars)
 
   // repo (github)
-  repo_stars: false,      // ⭐ star count badge
-  repo_forks: false,      // 🍴 fork count badge
-  repo_language: false,   // ◉ primary language badge
-  repo_tooltip: false,    // hover: repo description
+  repo_stars: false, // ⭐ star count badge
+  repo_forks: false, // 🍴 fork count badge
+  repo_language: false, // ◉ primary language badge
+  repo_tooltip: false, // hover: repo description
 
   // profile (github, huggingface)
   profile_followers: false, // 👥 follower count badge
-  profile_repos: false,     // 📁 public repo count badge
-  profile_tooltip: false,   // hover: bio
+  profile_repos: false, // 📁 public repo count badge
+  profile_tooltip: false, // hover: bio
 
   // rating — wakatime enriched
-  waka_alltime: false,    // ⏳ all-time coding hours (e.g. "2,370 hrs since Jul 2021")
-  waka_ai_lines: false,   // 🤖 AI-generated line count badge
-  waka_ai_pct: false,     // 🤖 % of lines AI-generated
+  waka_alltime: false, // ⏳ all-time coding hours (e.g. "2,370 hrs since Jul 2021")
+  waka_ai_lines: false, // 🤖 AI-generated line count badge
+  waka_ai_pct: false, // 🤖 % of lines AI-generated
   waka_ai_tooltip: false, // hover: AI tool names (Claude Code, Copilot, etc.)
 
   // rating — leetcode enriched
-  lc_streak: false,           // 🔥 current daily streak
-  lc_beats: false,            // 📊 "beats X% on Easy" percentile
-  lc_contest_rating: false,   // 🏆 contest rating
+  lc_streak: false, // 🔥 current daily streak
+  lc_beats: false, // 📊 "beats X% on Easy" percentile
+  lc_contest_rating: false, // 🏆 contest rating
 
   // rating — codeforces enriched
-  cf_max_rating: false,   // 📈 peak (max) rating badge
+  cf_max_rating: false, // 📈 peak (max) rating badge
+} as const;
+
+// ============================================================================
+// ACTIVITY_FILTER — Minimum thresholds before an item is shown at all.
+// Items below these thresholds are silently omitted from the activity feed.
+// Zero / null = no filter (show everything).
+// ============================================================================
+export const ACTIVITY_FILTER = {
+  // repo: minimum stars to show a repo card (avoids showing empty/personal repos)
+  repo_min_stars: 1,
+
+  // package: minimum monthly downloads to show a package card
+  package_min_downloads: 10,
+
+  // video: minimum view count to show a video card
+  video_min_views: 100,
+
+  // leetcode: minimum solved count to show a rating card
+  leetcode_min_solved: 5,
+
+  // codeforces: minimum rating to show a rating card (0 = unrated, hide)
+  codeforces_min_rating: 1,
+
+  // stackoverflow: minimum reputation to show a rating card
+  stackoverflow_min_reputation: 10,
+
+  // wakatime: minimum total seconds in range to show a rating card (3600 = 1hr)
+  wakatime_min_seconds: 3600,
 } as const;
 
 // ============================================================================

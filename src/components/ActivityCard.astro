@@ -141,7 +141,11 @@ if (kind === "badge" && issuer === "credly") {
     badges.push({ glyph: "⚠", text: "expired" });
   if (ACTIVITY_DISPLAY.credly_issuer && issuer)
     badges.push({ glyph: "🏅", text: issuer });
-  if (ACTIVITY_DISPLAY.credly_tooltip && typeof p.description === "string" && p.description)
+  if (
+    ACTIVITY_DISPLAY.credly_tooltip &&
+    typeof p.description === "string" &&
+    p.description
+  )
     tip = p.description.slice(0, 120);
 }
 
@@ -156,7 +160,11 @@ if (kind === "repo") {
     badges.push({ glyph: "🍴", text: forks });
   if (ACTIVITY_DISPLAY.repo_language && lang)
     badges.push({ glyph: "◉", text: lang });
-  if (ACTIVITY_DISPLAY.repo_tooltip && typeof p.description === "string" && p.description)
+  if (
+    ACTIVITY_DISPLAY.repo_tooltip &&
+    typeof p.description === "string" &&
+    p.description
+  )
     tip = trunc(p.description);
 }
 
@@ -173,17 +181,28 @@ if (kind === "profile") {
 }
 
 // rating — wakatime (enriched: ai metrics, all_time, leaderboard)
-if (kind === "rating" && platform === "wakatime" && typeof p.subkind === "string") {
+if (
+  kind === "rating" &&
+  platform === "wakatime" &&
+  typeof p.subkind === "string"
+) {
   if (p.subkind === "alltime") {
     if (ACTIVITY_DISPLAY.waka_alltime && typeof p.text === "string")
       badges.push({ glyph: "⏳", text: p.text });
   }
   if (p.subkind === "ai") {
     const aiLines = fmt(p.ai_additions);
-    const aiPct = typeof p.ai_pct === "number" ? `${Math.round(p.ai_pct)}% AI` : "";
-    if (ACTIVITY_DISPLAY.waka_ai_lines && aiLines) badges.push({ glyph: "🤖", text: aiLines + " AI lines" });
-    if (ACTIVITY_DISPLAY.waka_ai_pct && aiPct) badges.push({ glyph: "🤖", text: aiPct });
-    if (ACTIVITY_DISPLAY.waka_ai_tooltip && Array.isArray(p.ai_agents) && p.ai_agents.length)
+    const aiPct =
+      typeof p.ai_pct === "number" ? `${Math.round(p.ai_pct)}% AI` : "";
+    if (ACTIVITY_DISPLAY.waka_ai_lines && aiLines)
+      badges.push({ glyph: "🤖", text: aiLines + " AI lines" });
+    if (ACTIVITY_DISPLAY.waka_ai_pct && aiPct)
+      badges.push({ glyph: "🤖", text: aiPct });
+    if (
+      ACTIVITY_DISPLAY.waka_ai_tooltip &&
+      Array.isArray(p.ai_agents) &&
+      p.ai_agents.length
+    )
       tip = (p.ai_agents as string[]).slice(0, 3).join(" · ");
   }
 }
@@ -196,8 +215,14 @@ if (kind === "rating" && platform === "leetcode") {
     badges.push({ glyph: "🔥", text: `${streak}d streak` });
   if (ACTIVITY_DISPLAY.lc_beats && beatsPct !== null)
     badges.push({ glyph: "📊", text: `beats ${Math.round(beatsPct)}% easy` });
-  if (ACTIVITY_DISPLAY.lc_contest_rating && typeof p.contest_rating === "number")
-    badges.push({ glyph: "🏆", text: `contest ${Math.round(p.contest_rating)}` });
+  if (
+    ACTIVITY_DISPLAY.lc_contest_rating &&
+    typeof p.contest_rating === "number"
+  )
+    badges.push({
+      glyph: "🏆",
+      text: `contest ${Math.round(p.contest_rating)}`,
+    });
 }
 
 // rating — codeforces (enriched: max rating, contest history)
