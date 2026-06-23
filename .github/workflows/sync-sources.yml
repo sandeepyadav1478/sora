@@ -1,6 +1,12 @@
 name: Sync content sources
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/adapters/**"
+      - "scripts/sync-sources.mjs"
+      - "src/config.sources.mjs"
   schedule:
     - cron: "0 2 * * *" # Daily at 2am UTC
   workflow_dispatch: # Manual trigger from the Actions UI
