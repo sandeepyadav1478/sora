@@ -58,7 +58,7 @@ test("normalizeStats: payload carries the PROVISIONAL stats shape", () => {
 });
 
 test("normalizeStats: falls back to generatedAt when no usable end date", () => {
-  const noDate = { data: { total_seconds: 10, human_readable_total: "10 secs" } };
+  const noDate = { data: { total_seconds: 7200, human_readable_total: "2 hrs" } };
   const [item] = normalizeStats(noDate, { ...cfg, generatedAt: "2026-06-11T00:00:00.000Z" });
   assert.equal(item.date, "2026-06-11T00:00:00.000Z");
 });

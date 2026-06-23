@@ -23,6 +23,9 @@ export function normalizeStats(raw, cfg, generatedAt) {
     const ranking = user.profile?.ranking ?? 0;
     const handle  = cfg?.handle ?? "unknown";
 
+    // Skip if fewer than 5 problems solved — not a meaningful signal yet
+    if (all < 5) return [];
+
     const rankLabel = ranking > 0 ? `rank #${fmtRank(ranking)}` : "unranked";
 
     return [

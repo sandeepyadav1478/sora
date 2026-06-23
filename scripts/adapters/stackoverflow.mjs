@@ -44,6 +44,8 @@ export function normalizeAnswers(answersRaw, questionsRaw, cfg) {
   const out = [];
   for (const a of items) {
     if (!a || a.answer_id == null || a.creation_date == null) continue;
+    // Skip downvoted answers (negative score = not worth showcasing)
+    if (typeof a.score === "number" && a.score < 0) continue;
     const d = toIso(a.creation_date);
     if (!d) continue;
     const qTitle = titleByQid.get(a.question_id);

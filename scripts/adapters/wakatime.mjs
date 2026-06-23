@@ -17,6 +17,9 @@ export function normalizeStats(raw, cfg) {
   const d = raw.data;
   if (!d || typeof d !== "object") return [];
 
+  // Skip if less than 1 hour tracked — not worth showing
+  if (typeof d.total_seconds === "number" && d.total_seconds < 3600) return [];
+
   const range = (cfg && cfg.range) || d.range || "last_7_days";
   const human = d.human_readable_total || "some";
   // Prefer the precise full-ISO top-level `end`; fall back to date-only `data.end_date`;

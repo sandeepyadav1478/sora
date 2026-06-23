@@ -23,6 +23,8 @@ export function normalizeRatings(raw, cfg) {
     if (!r || r.contestId == null || r.ratingUpdateTimeSeconds == null) continue;
     const oldRating = r.oldRating ?? 0;
     const newRating = r.newRating ?? 0;
+    // Skip unrated entries (rating stays at 0 — no meaningful signal)
+    if (newRating < 1) continue;
     const d = toIso(r.ratingUpdateTimeSeconds);
     if (!d) continue;
     out.push(

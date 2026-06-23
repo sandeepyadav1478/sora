@@ -34,6 +34,9 @@ export function normalizeNpm(raw, cfg = {}) {
   const downloads =
     dl && typeof dl.downloads === "number" ? dl.downloads : undefined;
 
+  // Skip packages with < 10 monthly downloads — no meaningful traction yet
+  if (typeof downloads === "number" && downloads < 10) return [];
+
   const payload = { registry: "npm", version: latest };
   if (downloads !== undefined) payload.downloads = downloads;
 

@@ -227,34 +227,6 @@ export const ACTIVITY_DISPLAY = {
 } as const;
 
 // ============================================================================
-// ACTIVITY_FILTER — Minimum thresholds before an item is shown at all.
-// Items below these thresholds are silently omitted from the activity feed.
-// Zero / null = no filter (show everything).
-// ============================================================================
-export const ACTIVITY_FILTER = {
-  // repo: minimum stars to show a repo card (avoids showing empty/personal repos)
-  repo_min_stars: 1,
-
-  // package: minimum monthly downloads to show a package card
-  package_min_downloads: 10,
-
-  // video: minimum view count to show a video card
-  video_min_views: 100,
-
-  // leetcode: minimum solved count to show a rating card
-  leetcode_min_solved: 5,
-
-  // codeforces: minimum rating to show a rating card (0 = unrated, hide)
-  codeforces_min_rating: 1,
-
-  // stackoverflow: minimum reputation to show a rating card
-  stackoverflow_min_reputation: 10,
-
-  // wakatime: minimum total seconds in range to show a rating card (3600 = 1hr)
-  wakatime_min_seconds: 3600,
-} as const;
-
-// ============================================================================
 // BOARD — Works board layout & display options
 // ============================================================================
 export const BOARD = {
