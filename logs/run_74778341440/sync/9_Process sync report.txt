@@ -1,7 +1,0 @@
-﻿2026-06-18T11:31:58.8189397Z ##[group]Run node scripts/process-report.mjs
-2026-06-18T11:31:58.8189862Z [36;1mnode scripts/process-report.mjs[0m
-2026-06-18T11:31:58.8221011Z shell: /usr/bin/bash -e {0}
-2026-06-18T11:31:58.8221277Z env:
-2026-06-18T11:31:58.8224182Z   GH_TOKEN: ***
-2026-06-18T11:31:58.8224464Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
-2026-06-18T11:31:58.8224811Z ##[endgroup]

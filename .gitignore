@@ -31,5 +31,7 @@ archive-alerts.json
 .claude/
 
 # pagefind
+public/pagefind/
 
-public/pagefindlogs/
+# workflow run logs
+logs/
