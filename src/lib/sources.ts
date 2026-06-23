@@ -4,13 +4,15 @@ export interface ActivityItem {
   id: string;
   source: string;
   kind:
-    | "commit"
-    | "release"
-    | "post"
-    | "video"
-    | "package"
-    | "rating"
-    | "badge";
+    | "commit"   // git push / commit activity
+    | "release"  // tagged release
+    | "post"     // blog post / social post
+    | "video"    // youtube video
+    | "package"  // published package (npm, pypi)
+    | "rating"   // score / stat snapshot (wakatime, leetcode, codeforces, stackoverflow)
+    | "badge"    // credential / certification (credly, huggingface)
+    | "repo"     // repository snapshot (github stars, topics, language)
+    | "profile"; // user profile snapshot (github, huggingface)
   title: string;
   url: string;
   date: string;

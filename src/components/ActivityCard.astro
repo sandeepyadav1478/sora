@@ -145,6 +145,68 @@ if (kind === "badge" && issuer === "credly") {
     tip = p.description.slice(0, 120);
 }
 
+// repo (github)
+if (kind === "repo") {
+  const stars = fmt(p.stars);
+  const forks = fmt(p.forks);
+  const lang = typeof p.language === "string" ? p.language : "";
+  if (ACTIVITY_DISPLAY.repo_stars && stars && stars !== "0")
+    badges.push({ glyph: "⭐", text: stars });
+  if (ACTIVITY_DISPLAY.repo_forks && forks && forks !== "0")
+    badges.push({ glyph: "🍴", text: forks });
+  if (ACTIVITY_DISPLAY.repo_language && lang)
+    badges.push({ glyph: "◉", text: lang });
+  if (ACTIVITY_DISPLAY.repo_tooltip && typeof p.description === "string" && p.description)
+    tip = trunc(p.description);
+}
+
+// profile (github, huggingface)
+if (kind === "profile") {
+  const followers = fmt(p.followers);
+  const repos = fmt(p.public_repos);
+  if (ACTIVITY_DISPLAY.profile_followers && followers && followers !== "0")
+    badges.push({ glyph: "👥", text: followers + " followers" });
+  if (ACTIVITY_DISPLAY.profile_repos && repos && repos !== "0")
+    badges.push({ glyph: "📁", text: repos + " repos" });
+  if (ACTIVITY_DISPLAY.profile_tooltip && typeof p.bio === "string" && p.bio)
+    tip = trunc(p.bio);
+}
+
+// rating — wakatime (enriched: ai metrics, all_time, leaderboard)
+if (kind === "rating" && platform === "wakatime" && typeof p.subkind === "string") {
+  if (p.subkind === "alltime") {
+    if (ACTIVITY_DISPLAY.waka_alltime && typeof p.text === "string")
+      badges.push({ glyph: "⏳", text: p.text });
+  }
+  if (p.subkind === "ai") {
+    const aiLines = fmt(p.ai_additions);
+    const aiPct = typeof p.ai_pct === "number" ? `${Math.round(p.ai_pct)}% AI` : "";
+    if (ACTIVITY_DISPLAY.waka_ai_lines && aiLines) badges.push({ glyph: "🤖", text: aiLines + " AI lines" });
+    if (ACTIVITY_DISPLAY.waka_ai_pct && aiPct) badges.push({ glyph: "🤖", text: aiPct });
+    if (ACTIVITY_DISPLAY.waka_ai_tooltip && Array.isArray(p.ai_agents) && p.ai_agents.length)
+      tip = (p.ai_agents as string[]).slice(0, 3).join(" · ");
+  }
+}
+
+// rating — leetcode (enriched: tags, streak, contest)
+if (kind === "rating" && platform === "leetcode") {
+  const streak = typeof p.streak === "number" ? p.streak : 0;
+  const beatsPct = typeof p.beats_easy === "number" ? p.beats_easy : null;
+  if (ACTIVITY_DISPLAY.lc_streak && streak > 0)
+    badges.push({ glyph: "🔥", text: `${streak}d streak` });
+  if (ACTIVITY_DISPLAY.lc_beats && beatsPct !== null)
+    badges.push({ glyph: "📊", text: `beats ${Math.round(beatsPct)}% easy` });
+  if (ACTIVITY_DISPLAY.lc_contest_rating && typeof p.contest_rating === "number")
+    badges.push({ glyph: "🏆", text: `contest ${Math.round(p.contest_rating)}` });
+}
+
+// rating — codeforces (enriched: max rating, contest history)
+if (kind === "rating" && platform === "codeforces") {
+  const maxRating = typeof p.maxRating === "number" ? p.maxRating : 0;
+  if (ACTIVITY_DISPLAY.cf_max_rating && maxRating > 0)
+    badges.push({ glyph: "📈", text: `peak ${maxRating}` });
+}
+
 // ── label + date ────────────────────────────────────────────────────────────
 const KIND_LABEL: Record<string, string> = {
   commit: "Commit",
@@ -154,6 +216,8 @@ const KIND_LABEL: Record<string, string> = {
   package: "Package",
   rating: "Rating",
   badge: "Badge",
+  repo: "Repo",
+  profile: "Profile",
 };
 const label = KIND_LABEL[item.kind] ?? item.kind;
 const when = new Date(item.date).toLocaleDateString("en-US", {

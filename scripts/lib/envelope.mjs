@@ -2,7 +2,17 @@
 // Depth lives in `payload`, discriminated by `kind`.
 
 /** Allowed item kinds. */
-export const KINDS = ["commit", "release", "post", "video", "package", "rating", "badge"];
+export const KINDS = [
+  "commit",   // git push / commit activity
+  "release",  // tagged release
+  "post",     // blog post / social post
+  "video",    // youtube video
+  "package",  // published package (npm, pypi)
+  "rating",   // score / stat snapshot (wakatime, leetcode, codeforces, stackoverflow)
+  "badge",    // credential / certification (credly, huggingface)
+  "repo",     // repository snapshot (github stars, topics, language)
+  "profile",  // user profile snapshot (github, huggingface)
+];
 
 /**
  * Build a validated envelope. Throws if a required field is missing —
