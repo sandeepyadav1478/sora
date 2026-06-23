@@ -39,6 +39,14 @@ export function normalizeCredy(raw, cfg = {}) {
 
     const key = item.id != null ? String(item.id) : (bt.url ?? String(Math.random()));
 
+    // Extract canonical skill names only, capped at 10
+    const skills = Array.isArray(bt.skills)
+      ? bt.skills
+          .filter(s => s && s.canonical === true && typeof s.name === "string")
+          .map(s => s.name)
+          .slice(0, 10)
+      : [];
+
     out.push(
       makeEnvelope({
         id: stableId("credly", "badge", key),
@@ -53,6 +61,11 @@ export function normalizeCredy(raw, cfg = {}) {
           description: bt.description ?? "",
           expired,
           expiresAt: item.expires_at_date ?? null,
+          skills,
+          level: bt.level ?? null,
+          typeCategory: bt.type_category ?? null,
+          cost: bt.cost ?? null,
+          timeToEarn: bt.time_to_earn ?? null,
         },
       })
     );

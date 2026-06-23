@@ -3,15 +3,62 @@
     "matchedUser": {
       "submitStats": {
         "acSubmissionNum": [
-          { "difficulty": "All",    "count": 61 },
-          { "difficulty": "Easy",   "count": 48 },
-          { "difficulty": "Medium", "count": 13 },
-          { "difficulty": "Hard",   "count": 0  }
+          { "difficulty": "All",    "count": 61, "submissions": 120 },
+          { "difficulty": "Easy",   "count": 48, "submissions": 80  },
+          { "difficulty": "Medium", "count": 13, "submissions": 35  },
+          { "difficulty": "Hard",   "count": 0,  "submissions": 5   }
         ]
       },
       "profile": {
-        "ranking": 2215747
+        "ranking": 2215747,
+        "skillTags": ["python"]
+      },
+      "tagProblemCounts": {
+        "fundamental": [
+          { "tagName": "Array",       "problemsSolved": 25 },
+          { "tagName": "String",      "problemsSolved": 14 },
+          { "tagName": "TwoPointers", "problemsSolved": 8  },
+          { "tagName": "Sorting",     "problemsSolved": 6  },
+          { "tagName": "Stack",       "problemsSolved": 5  }
+        ],
+        "intermediate": [
+          { "tagName": "Hash Table",    "problemsSolved": 10 },
+          { "tagName": "Tree",          "problemsSolved": 10 },
+          { "tagName": "Depth-First Search", "problemsSolved": 11 },
+          { "tagName": "Binary Search", "problemsSolved": 4  },
+          { "tagName": "Breadth-First Search", "problemsSolved": 5 },
+          { "tagName": "Bit Manipulation", "problemsSolved": 3 },
+          { "tagName": "Database",      "problemsSolved": 3  },
+          { "tagName": "Math",          "problemsSolved": 8  }
+        ],
+        "advanced": [
+          { "tagName": "Dynamic Programming", "problemsSolved": 6 },
+          { "tagName": "Divide and Conquer",  "problemsSolved": 3 },
+          { "tagName": "Backtracking",        "problemsSolved": 1 },
+          { "tagName": "Trie",                "problemsSolved": 1 }
+        ]
+      },
+      "languageProblemCount": [
+        { "languageName": "Python3",    "problemsSolved": 56 },
+        { "languageName": "PostgreSQL", "problemsSolved": 3  },
+        { "languageName": "Bash",       "problemsSolved": 2  }
+      ],
+      "userCalendar": {
+        "activeYears": [2022, 2023, 2024, 2025, 2026],
+        "streak": 2,
+        "totalActiveDays": 17
       }
-    }
+    },
+    "userContestRanking": {
+      "attendedContestsCount": 3,
+      "rating": 1450,
+      "globalRanking": 98000,
+      "topPercentage": 48.5
+    },
+    "problemsSolvedBeatsStats": [
+      { "difficulty": "Easy",   "percentage": 75.47 },
+      { "difficulty": "Medium", "percentage": 45.46 },
+      { "difficulty": "Hard",   "percentage": null  }
+    ]
   }
 }

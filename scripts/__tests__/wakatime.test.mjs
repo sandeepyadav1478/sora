@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeStats } from "../adapters/wakatime.mjs";
+import { normalizeStats, normalizePublicStats } from "../adapters/wakatime.mjs";
 import { fetch_ as wakatimeFetch } from "../adapters/wakatime.mjs";
 
 const fixture = JSON.parse(
@@ -70,18 +70,148 @@ test("normalizeStats: returns [] on garbage / empty input (never throws)", () =>
   assert.deepEqual(normalizeStats("nope", cfg), []);
 });
 
-test("fetch_ returns [] when WAKATIME_API_KEY is absent (graceful, no network, no throw)", async () => {
-  const saved = process.env.WAKATIME_API_KEY;
-  delete process.env.WAKATIME_API_KEY;
-  try {
-    const out = await wakatimeFetch(cfg);
-    assert.deepEqual(out, [], "missing secret -> [] without throwing");
-  } finally {
-    if (saved !== undefined) process.env.WAKATIME_API_KEY = saved;
-  }
+// --- normalizePublicStats tests ---
+
+const publicFixture = {
+  data: {
+    categories: [
+      { name: "Coding", percent: 69.91 },
+      { name: "AI Coding", percent: 13.68 },
+      { name: "Meeting", percent: 12.25 },
+    ],
+    editors: [
+      { name: "VS Code", percent: 80.65 },
+      { name: "Claude Code", percent: 5.5 },
+      { name: "PyCharm", percent: 1.47 },
+      { name: "Vim", percent: 0.3 },
+    ],
+    languages: [
+      { name: "Python", percent: 60.48 },
+      { name: "Terraform", percent: 1.75 },
+      { name: "Docker", percent: 1.09 },
+      { name: "Bash", percent: 0.98 },
+      { name: "YAML", percent: 0.2 },
+    ],
+    operating_systems: [
+      { name: "Mac", percent: 53.19 },
+      { name: "Linux", percent: 20.82 },
+      { name: "Windows", percent: 13.74 },
+      { name: "Unknown", percent: 0.5 },
+    ],
+  },
+};
+
+test("normalizePublicStats: happy path produces one envelope with correct id", () => {
+  const out = normalizePublicStats(publicFixture, cfg);
+  assert.equal(out.length, 1);
+  const [item] = out;
+  assert.equal(item.id, "wakatime:rating:public-alltime");
+  assert.equal(item.source, "wakatime");
+  assert.equal(item.kind, "rating");
+  assert.equal(item.payload.subkind, "public");
+  assert.equal(item.payload.platform, "wakatime");
+});
+
+test("normalizePublicStats: categories are filtered to percent > 0", () => {
+  const [item] = normalizePublicStats(publicFixture, cfg);
+  assert.deepEqual(item.payload.categories, [
+    { name: "Coding", percent: 69.91 },
+    { name: "AI Coding", percent: 13.68 },
+    { name: "Meeting", percent: 12.25 },
+  ]);
+});
+
+test("normalizePublicStats: editors top 5 filtered to percent > 0.5", () => {
+  const [item] = normalizePublicStats(publicFixture, cfg);
+  // Vim at 0.3 should be filtered out
+  assert.deepEqual(item.payload.editors, [
+    { name: "VS Code", percent: 80.65 },
+    { name: "Claude Code", percent: 5.5 },
+    { name: "PyCharm", percent: 1.47 },
+  ]);
+});
+
+test("normalizePublicStats: languages filtered to percent >= 0.5", () => {
+  const [item] = normalizePublicStats(publicFixture, cfg);
+  // YAML at 0.2 should be filtered out
+  assert.deepEqual(item.payload.languages, [
+    { name: "Python", percent: 60.48 },
+    { name: "Terraform", percent: 1.75 },
+    { name: "Docker", percent: 1.09 },
+    { name: "Bash", percent: 0.98 },
+  ]);
+});
+
+test("normalizePublicStats: os filtered to percent > 1", () => {
+  const [item] = normalizePublicStats(publicFixture, cfg);
+  // Unknown at 0.5 should be filtered out
+  assert.deepEqual(item.payload.os, [
+    { name: "Mac", percent: 53.19 },
+    { name: "Linux", percent: 20.82 },
+    { name: "Windows", percent: 13.74 },
+  ]);
+});
+
+test("normalizePublicStats: extracts aiCodingPercent correctly", () => {
+  const [item] = normalizePublicStats(publicFixture, cfg);
+  assert.equal(item.payload.aiCodingPercent, 13.68);
+});
+
+test("normalizePublicStats: aiCodingPercent is 0 when no AI Coding category", () => {
+  const raw = {
+    data: {
+      categories: [{ name: "Coding", percent: 100 }],
+      editors: [],
+      languages: [],
+      operating_systems: [],
+    },
+  };
+  const [item] = normalizePublicStats(raw, cfg);
+  assert.equal(item.payload.aiCodingPercent, 0);
+});
+
+test("normalizePublicStats: returns [] when categories is missing", () => {
+  const raw = { data: { editors: [], languages: [], operating_systems: [] } };
+  assert.deepEqual(normalizePublicStats(raw, cfg), []);
+});
+
+test("normalizePublicStats: returns [] when all categories have percent 0", () => {
+  const raw = {
+    data: {
+      categories: [{ name: "Coding", percent: 0 }],
+      editors: [],
+      languages: [],
+      operating_systems: [],
+    },
+  };
+  assert.deepEqual(normalizePublicStats(raw, cfg), []);
+});
+
+test("normalizePublicStats: returns [] on garbage / empty input (never throws)", () => {
+  assert.deepEqual(normalizePublicStats(null, cfg), []);
+  assert.deepEqual(normalizePublicStats({}, cfg), []);
+  assert.deepEqual(normalizePublicStats({ data: null }, cfg), []);
+  assert.deepEqual(normalizePublicStats("nope", cfg), []);
 });
 
 const origFetch = globalThis.fetch;
+
+test("fetch_ returns [] when WAKATIME_API_KEY is absent (graceful, no throw)", async () => {
+  const saved = process.env.WAKATIME_API_KEY;
+  delete process.env.WAKATIME_API_KEY;
+  // Stub fetch so the public endpoint call (which needs no key) returns empty categories -> []
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({ data: { categories: [], editors: [], languages: [], operating_systems: [] } }),
+  });
+  try {
+    const out = await wakatimeFetch(cfg);
+    assert.deepEqual(out, [], "missing key + empty public stats -> [] without throwing");
+  } finally {
+    globalThis.fetch = origFetch;
+    if (saved !== undefined) process.env.WAKATIME_API_KEY = saved;
+  }
+});
 
 test("fetch_ sends correct Basic auth header", async () => {
   const captured = {};
@@ -90,7 +220,9 @@ test("fetch_ sends correct Basic auth header", async () => {
   const savedKey = process.env.WAKATIME_API_KEY;
   process.env.WAKATIME_API_KEY = apiKey;
   globalThis.fetch = async (url, opts) => {
-    captured.auth = opts?.headers?.Authorization || opts?.headers?.authorization;
+    // Only capture the auth header when it is present (the authed endpoints)
+    const authHeader = opts?.headers?.Authorization || opts?.headers?.authorization;
+    if (authHeader) captured.auth = authHeader;
     return {
       ok: true,
       json: async () => ({
@@ -101,6 +233,7 @@ test("fetch_ sends correct Basic auth header", async () => {
           languages: [],
           editors: [],
           categories: [],
+          operating_systems: [],
         },
       }),
     };

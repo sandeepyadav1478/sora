@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeAnswers, fetch_ } from "../adapters/stackoverflow.mjs";
+import { normalizeAnswers, normalizeProfile, fetch_ } from "../adapters/stackoverflow.mjs";
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/stackoverflow.json", import.meta.url), "utf8")
@@ -64,18 +64,123 @@ test("returns [] on garbage / non-array input (never throws)", () => {
   assert.deepEqual(normalizeAnswers({ items: "nope" }, { items: null }, { maxPosts: 25 }), []);
 });
 
+// ── normalizeProfile tests ────────────────────────────────────────────────────
+
+test("normalizeProfile emits a rating envelope from fixture profile", () => {
+  const env = normalizeProfile(fixture.profile);
+  assert.ok(env, "profile envelope must be emitted");
+  assert.equal(env.source, "stackoverflow");
+  assert.equal(env.kind, "rating");
+  assert.equal(env.id, "stackoverflow:rating:8440245");
+  assert.equal(env.url, "https://stackoverflow.com/users/8440245/sandeepyadav1478");
+  assert.equal(env.payload.platform, "stackoverflow");
+  assert.equal(env.payload.reputation, 11);
+  assert.deepEqual(env.payload.badgeCounts, { bronze: 3, silver: 0, gold: 0 });
+  assert.equal(env.payload.location, "Jaipur");
+  assert.equal(env.payload.memberSinceYear, 2017);
+  assert.equal(env.payload.lastActiveYear, 2025);
+});
+
+test("normalizeProfile extracts collectives into payload", () => {
+  const env = normalizeProfile(fixture.profile);
+  assert.ok(env, "envelope must be present");
+  assert.deepEqual(env.payload.collectives, ["Google Cloud"]);
+  assert.match(env.title, /Google Cloud/);
+});
+
+test("normalizeProfile title format includes reputation and collective", () => {
+  const env = normalizeProfile(fixture.profile);
+  assert.ok(env);
+  assert.equal(env.title, "Stack Overflow: 11 reputation · Google Cloud");
+});
+
+test("normalizeProfile title says 'member' when no collectives", () => {
+  const profileNoCollective = {
+    items: [{
+      user_id: 999,
+      reputation: 15,
+      badge_counts: { bronze: 1, silver: 0, gold: 0 },
+      collectives: [],
+      location: "London",
+      creation_date: 1502286661,
+      last_access_date: 1738714340,
+      link: "https://stackoverflow.com/users/999/test",
+    }],
+  };
+  const env = normalizeProfile(profileNoCollective);
+  assert.ok(env);
+  assert.equal(env.title, "Stack Overflow: 15 reputation · member");
+  assert.deepEqual(env.payload.collectives, []);
+});
+
+test("normalizeProfile: emits when reputation >= 10 with no collectives (passes filter)", () => {
+  const profileHighRep = {
+    items: [{
+      user_id: 1,
+      reputation: 10,
+      badge_counts: { bronze: 0, silver: 0, gold: 0 },
+      collectives: [],
+      location: null,
+      creation_date: 1502286661,
+      last_access_date: 1738714340,
+      link: "https://stackoverflow.com/users/1/test",
+    }],
+  };
+  const env = normalizeProfile(profileHighRep);
+  assert.ok(env, "must emit when reputation === 10");
+});
+
+test("normalizeProfile: emits when reputation < 10 but collective membership exists (passes filter)", () => {
+  const profileLowRepWithCollective = {
+    items: [{
+      user_id: 2,
+      reputation: 5,
+      badge_counts: { bronze: 0, silver: 0, gold: 0 },
+      collectives: [{ collective: { name: "Google Cloud", slug: "google-cloud", tags: [] } }],
+      location: null,
+      creation_date: 1502286661,
+      last_access_date: 1738714340,
+      link: "https://stackoverflow.com/users/2/test",
+    }],
+  };
+  const env = normalizeProfile(profileLowRepWithCollective);
+  assert.ok(env, "must emit when collective membership exists even with low rep");
+  assert.deepEqual(env.payload.collectives, ["Google Cloud"]);
+});
+
+test("normalizeProfile: suppressed when reputation < 10 AND no collectives", () => {
+  const profileLowRep = {
+    items: [{
+      user_id: 3,
+      reputation: 9,
+      badge_counts: { bronze: 0, silver: 0, gold: 0 },
+      collectives: [],
+      location: null,
+      creation_date: 1502286661,
+      last_access_date: 1738714340,
+      link: "https://stackoverflow.com/users/3/test",
+    }],
+  };
+  const env = normalizeProfile(profileLowRep);
+  assert.equal(env, null, "must suppress profile when reputation < 10 and no collectives");
+});
+
+test("normalizeProfile returns null on empty/garbage input", () => {
+  assert.equal(normalizeProfile(null), null);
+  assert.equal(normalizeProfile({}), null);
+  assert.equal(normalizeProfile({ items: [] }), null);
+  assert.equal(normalizeProfile({ items: [null] }), null);
+});
+
 // ── fetch_ mock tests ──────────────────────────────────────────────────────────
 
 const origFetch = globalThis.fetch;
 
 test("fetch_ returns envelopes for a valid user", async () => {
-  // fetchJson calls fetch twice: once for answers, once for questions.
-  // First call returns an answer item; second call returns the matching question.
-  let callCount = 0;
-  globalThis.fetch = async (_url) => {
-    callCount += 1;
-    if (callCount === 1) {
-      // answers endpoint
+  // fetchJson calls fetch in parallel for answers + profile, then sequentially for questions.
+  // We distinguish by URL pattern: /answers -> answers, /users/1? -> profile, /questions/ -> questions.
+  globalThis.fetch = async (url) => {
+    if (url.includes("/answers")) {
       return {
         ok: true,
         json: async () => ({
@@ -83,11 +188,28 @@ test("fetch_ returns envelopes for a valid user", async () => {
         }),
       };
     }
-    // questions batch endpoint
+    if (url.includes("/questions/")) {
+      return {
+        ok: true,
+        json: async () => ({
+          items: [{ question_id: 99, title: "How do I mock fetch?" }],
+        }),
+      };
+    }
+    // user profile endpoint
     return {
       ok: true,
       json: async () => ({
-        items: [{ question_id: 99, title: "How do I mock fetch?" }],
+        items: [{
+          user_id: 1,
+          reputation: 11,
+          badge_counts: { bronze: 1, silver: 0, gold: 0 },
+          collectives: [{ collective: { name: "Google Cloud", slug: "google-cloud", tags: [] } }],
+          location: "Test City",
+          creation_date: 1502286661,
+          last_access_date: 1700000000,
+          link: "https://stackoverflow.com/users/1/test",
+        }],
       }),
     };
   };
@@ -95,6 +217,9 @@ test("fetch_ returns envelopes for a valid user", async () => {
   assert.ok(Array.isArray(out));
   assert.ok(out.length >= 1);
   assert.equal(out[0].source, "stackoverflow");
+  // First envelope should be the rating profile envelope
+  assert.equal(out[0].kind, "rating");
+  assert.equal(out[0].id, "stackoverflow:rating:1");
   globalThis.fetch = origFetch;
 });
 

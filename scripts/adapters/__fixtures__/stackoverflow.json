@@ -248,5 +248,48 @@
     "has_more": false,
     "quota_max": 300,
     "quota_remaining": 297
+  },
+  "profile": {
+    "items": [
+      {
+        "badge_counts": { "bronze": 3, "silver": 0, "gold": 0 },
+        "account_id": 9872694,
+        "is_employee": false,
+        "last_modified_date": 1738714340,
+        "last_access_date": 1738714340,
+        "reputation_change_year": 0,
+        "reputation_change_quarter": 0,
+        "reputation_change_month": 0,
+        "reputation_change_week": 0,
+        "reputation_change_day": 0,
+        "reputation": 11,
+        "creation_date": 1502286661,
+        "user_type": "registered",
+        "user_id": 8440245,
+        "location": "Jaipur",
+        "link": "https://stackoverflow.com/users/8440245/sandeepyadav1478",
+        "display_name": "sandeepyadav1478",
+        "collectives": [
+          {
+            "collective": {
+              "tags": ["google-cloud-platform", "google-cloud-storage"],
+              "description": "Q&A for developers and users of Google Cloud Platform",
+              "link": "https://stackoverflow.com/collectives/google-cloud",
+              "slug": "google-cloud",
+              "name": "Google Cloud",
+              "external_links": [
+                { "type": "website", "link": "https://cloud.google.com" }
+              ]
+            },
+            "reputation": 0,
+            "user_id": 8440245,
+            "role": "member"
+          }
+        ]
+      }
+    ],
+    "has_more": false,
+    "quota_max": 300,
+    "quota_remaining": 296
   }
 }

@@ -8,6 +8,9 @@ export const needs = []; // zero-secret: public read-only endpoints
 
 const MAX_TAGS = 12;
 
+const OVERVIEW_URL = (handle) =>
+  `https://huggingface.co/api/users/${encodeURIComponent(handle)}/overview`;
+
 // Drop noisy machine tags, keep the human-meaningful ones, cap the count.
 function trimTags(tags) {
   if (!Array.isArray(tags)) return [];
@@ -62,6 +65,40 @@ function toBadge(raw, kindOf) {
   });
 }
 
+export function toProfileEnvelope(overview, handle) {
+  if (!overview || typeof overview !== "object") return null;
+  const orgs = Array.isArray(overview.orgs) ? overview.orgs : [];
+  const numModels = num(overview.numModels);
+  const numUpvotes = num(overview.numUpvotes);
+  // Only emit if the profile has something worth showing
+  if (orgs.length === 0 && numModels === 0 && numUpvotes === 0) return null;
+
+  const titleActivity =
+    numModels > 0 ? `${numModels} model${numModels === 1 ? "" : "s"}` : "Active member";
+  const titleOrg = orgs.length > 0 ? ` · ${orgs[0].fullname}` : "";
+
+  return makeEnvelope({
+    id: stableId("huggingface", "profile", handle),
+    source: "huggingface",
+    kind: "profile",
+    title: `HuggingFace: ${titleActivity}${titleOrg}`,
+    url: `https://huggingface.co/${handle}`,
+    date: overview.createdAt,
+    payload: {
+      platform: "huggingface",
+      numModels,
+      numDatasets: num(overview.numDatasets),
+      numSpaces: num(overview.numSpaces),
+      numDiscussions: num(overview.numDiscussions),
+      numUpvotes,
+      numLikes: num(overview.numLikes),
+      numFollowers: num(overview.numFollowers),
+      orgs: orgs.map((o) => ({ name: o.name, fullname: o.fullname })),
+      joinedAt: overview.createdAt,
+    },
+  });
+}
+
 export function normalizeHuggingface(raw, cfg) {
   if (!raw || typeof raw !== "object") return [];
   const models = Array.isArray(raw.models) ? raw.models : [];
@@ -83,11 +120,14 @@ export async function fetch_(cfg) {
     if (!cfg || !cfg.handle) return [];
     const author = encodeURIComponent(cfg.handle);
     const limit = cfg && Number.isFinite(cfg.maxBadges) ? cfg.maxBadges : 50;
-    const [models, datasets] = await Promise.all([
+    const [models, datasets, overview] = await Promise.all([
       fetchJson(`https://huggingface.co/api/models?author=${author}&limit=${limit}`),
       fetchJson(`https://huggingface.co/api/datasets?author=${author}&limit=${limit}`),
+      fetchJson(OVERVIEW_URL(cfg.handle)),
     ]);
-    return normalizeHuggingface({ models, datasets }, cfg);
+    const badges = normalizeHuggingface({ models, datasets }, cfg);
+    const profile = toProfileEnvelope(overview, cfg.handle);
+    return profile ? [profile, ...badges] : badges;
   } catch {
     return []; // never throw out of fetch
   }

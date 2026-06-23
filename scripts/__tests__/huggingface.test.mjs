@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { normalizeHuggingface, fetch_ as huggingfaceFetch } from "../adapters/huggingface.mjs";
+import { normalizeHuggingface, toProfileEnvelope, fetch_ as huggingfaceFetch } from "../adapters/huggingface.mjs";
 
 const fixture = JSON.parse(
   await readFile(new URL("../adapters/__fixtures__/huggingface.json", import.meta.url), "utf8"),
@@ -66,4 +66,57 @@ test("huggingface: returns [] on garbage input", () => {
 test("fetch_ returns [] when handle is missing (graceful, no network, no throw)", async () => {
   const out = await huggingfaceFetch({ enabled: true, handle: "" });
   assert.deepEqual(out, []);
+});
+
+test("huggingface: toProfileEnvelope emits profile when overview has org membership", () => {
+  const overview = {
+    isPro: false,
+    fullname: "Sandeep Yadav",
+    numModels: 0,
+    numDatasets: 0,
+    numSpaces: 0,
+    numDiscussions: 1,
+    numPapers: 0,
+    numUpvotes: 1,
+    numLikes: 1,
+    numFollowers: 0,
+    numFollowing: 1,
+    orgs: [{ name: "allanite-ml", fullname: "Allanite Machine Learning" }],
+    user: "sandeepyadav1478",
+    createdAt: "2023-08-02T08:48:26.000Z",
+  };
+  const envelope = toProfileEnvelope(overview, "sandeepyadav1478");
+  assert.ok(envelope !== null, "should emit a profile envelope");
+  assert.equal(envelope.source, "huggingface");
+  assert.equal(envelope.kind, "profile");
+  assert.ok(envelope.title.startsWith("HuggingFace: "), "title has HuggingFace prefix");
+  assert.ok(envelope.title.includes("Allanite Machine Learning"), "title includes org fullname");
+  assert.equal(envelope.url, "https://huggingface.co/sandeepyadav1478");
+  assert.equal(envelope.payload.platform, "huggingface");
+  assert.equal(envelope.payload.orgs.length, 1);
+  assert.equal(envelope.payload.orgs[0].name, "allanite-ml");
+  assert.equal(envelope.payload.orgs[0].fullname, "Allanite Machine Learning");
+  assert.equal(envelope.payload.joinedAt, "2023-08-02T08:48:26.000Z");
+  assert.equal(envelope.id.split(":")[1], "profile", "id-kind invariant: id segment[1] === envelope.kind");
+});
+
+test("huggingface: toProfileEnvelope suppresses profile when all counts are zero and no orgs", () => {
+  const overview = {
+    isPro: false,
+    fullname: "Ghost User",
+    numModels: 0,
+    numDatasets: 0,
+    numSpaces: 0,
+    numDiscussions: 0,
+    numPapers: 0,
+    numUpvotes: 0,
+    numLikes: 0,
+    numFollowers: 0,
+    numFollowing: 0,
+    orgs: [],
+    user: "ghost",
+    createdAt: "2024-01-01T00:00:00.000Z",
+  };
+  const envelope = toProfileEnvelope(overview, "ghost");
+  assert.equal(envelope, null, "should return null when profile has no meaningful data");
 });

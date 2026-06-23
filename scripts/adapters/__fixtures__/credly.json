@@ -11,7 +11,18 @@
       "description": "Earners have a comprehensive understanding of AWS services and technologies.",
       "image_url": "https://images.credly.com/images/aws-saa.png",
       "url": "https://www.credly.com/org/aws/badge/aws-certified-solutions-architect-associate",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Amazon Web Services" } }] }
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Amazon Web Services" } }] },
+      "skills": [
+        { "name": "AWS", "canonical": true },
+        { "name": "Cloud Architecture", "canonical": true },
+        { "name": "Amazon EC2", "canonical": true },
+        { "name": "Amazon S3", "canonical": true },
+        { "name": "Solutions Architecture" }
+      ],
+      "level": "Associate",
+      "type_category": "Certification",
+      "cost": "Paid",
+      "time_to_earn": "Months"
     }
   },
   {
@@ -22,11 +33,32 @@
     "expires_at_date": "2020-01-01",
     "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud" } }] },
     "badge_template": {
-      "name": "Google Cloud Professional Data Engineer",
+      "name": "Cybersecurity Fundamentals",
       "description": "A Professional Data Engineer enables data-driven decision making.",
       "image_url": "https://images.credly.com/images/gcp-pde.png",
       "url": "https://www.credly.com/org/google/badge/google-cloud-professional-data-engineer",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud" } }] }
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Google Cloud" } }] },
+      "skills": [
+        { "name": "Cryptography", "canonical": true },
+        { "name": "Cybersecurity", "canonical": true },
+        { "name": "Incident Response", "canonical": true },
+        { "name": "Threat Detection", "canonical": true },
+        { "name": "Vulnerability Management", "canonical": true },
+        { "name": "Network Security", "canonical": true },
+        { "name": "Risk Management", "canonical": true },
+        { "name": "Security Operations", "canonical": true },
+        { "name": "Identity Management", "canonical": true },
+        { "name": "Firewall Configuration", "canonical": true },
+        { "name": "SIEM Tools", "canonical": true },
+        { "name": "Penetration Testing", "canonical": true },
+        { "name": "Security Awareness" },
+        { "name": "Malware Analysis" },
+        { "name": "Cloud Security", "canonical": true }
+      ],
+      "level": "Intermediate",
+      "type_category": "Learning",
+      "cost": "Free",
+      "time_to_earn": "Days"
     }
   },
   {
@@ -41,7 +73,12 @@
       "description": "This badge is pending.",
       "image_url": null,
       "url": "https://www.credly.com/org/somecorp/badge/pending-badge",
-      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "SomeCorp" } }] }
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "SomeCorp" } }] },
+      "skills": [],
+      "level": null,
+      "type_category": null,
+      "cost": null,
+      "time_to_earn": null
     }
   },
   {
@@ -52,11 +89,92 @@
     "expires_at_date": null,
     "issuer": { "entities": [] },
     "badge_template": {
-      "name": "Minimal Badge",
+      "name": "Enterprise Design Thinking - Team Essentials for AI",
       "description": "",
       "image_url": null,
       "url": "https://www.credly.com/org/minimal/badge/minimal-badge",
-      "issuer": { "entities": [] }
+      "issuer": { "entities": [] },
+      "skills": [
+        { "name": "AI", "canonical": true },
+        { "name": "Artificial Intelligence", "canonical": true },
+        { "name": "Critical Thinking", "canonical": true },
+        { "name": "Design Thinking", "canonical": true },
+        { "name": "Problem Solving" }
+      ],
+      "level": "Foundational",
+      "type_category": "Learning",
+      "cost": "Paid",
+      "time_to_earn": "Hours"
+    }
+  },
+  {
+    "id": "badge-005",
+    "state": "accepted",
+    "issued_at": "2023-05-10T00:00:00.000Z",
+    "issued_at_date": "2023-05-10",
+    "expires_at_date": null,
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+    "badge_template": {
+      "name": "IBM AI Foundations for Business",
+      "description": "Demonstrate foundational knowledge of AI concepts, terminology, and applications.",
+      "image_url": "https://images.credly.com/images/ibm-ai-foundations.png",
+      "url": "https://www.credly.com/org/ibm/badge/ibm-ai-foundations-for-business",
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+      "skills": [
+        { "name": "Artificial Intelligence", "canonical": true },
+        { "name": "Machine Learning", "canonical": true },
+        { "name": "Natural Language Processing", "canonical": true },
+        { "name": "AI Strategy" },
+        { "name": "Deep Learning", "canonical": true }
+      ],
+      "level": "Foundational",
+      "type_category": "Learning",
+      "cost": "Free",
+      "time_to_earn": "Hours"
+    }
+  },
+  {
+    "id": "badge-006",
+    "state": "accepted",
+    "issued_at": "2024-08-22T00:00:00.000Z",
+    "issued_at_date": "2024-08-22",
+    "expires_at_date": null,
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+    "badge_template": {
+      "name": "Python for Data Science",
+      "description": "Demonstrates proficiency in Python programming for data science applications.",
+      "image_url": "https://images.credly.com/images/python-data-science.png",
+      "url": "https://www.credly.com/org/ibm/badge/python-for-data-science",
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "IBM" } }] },
+      "skills": [
+        { "name": "Data Science", "canonical": true },
+        { "name": "Pandas", "canonical": true },
+        { "name": "Python", "canonical": true },
+        { "name": "Python Programming" }
+      ],
+      "level": "Foundational",
+      "type_category": "Validation",
+      "cost": "Free",
+      "time_to_earn": "Days"
+    }
+  },
+  {
+    "id": "badge-007",
+    "state": "accepted",
+    "issued_at": "2022-09-01T00:00:00.000Z",
+    "issued_at_date": "2022-09-01",
+    "expires_at_date": null,
+    "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Linux Foundation" } }] },
+    "badge_template": {
+      "name": "No-Skills Badge",
+      "description": "A badge with no skills array at all.",
+      "image_url": null,
+      "url": "https://www.credly.com/org/linux-foundation/badge/no-skills-badge",
+      "issuer": { "entities": [{ "label": "Issued by", "primary": true, "entity": { "name": "Linux Foundation" } }] },
+      "level": null,
+      "type_category": null,
+      "cost": null,
+      "time_to_earn": null
     }
   }
 ]

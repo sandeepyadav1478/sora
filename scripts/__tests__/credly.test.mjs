@@ -56,7 +56,7 @@ test("normalizeCredy: caps at maxBadges and sorts newest-first", () => {
 test("normalizeCredy: minimal badge (empty issuer/description/imageUrl) still valid", () => {
   const out = normalizeCredy(fixture, { maxBadges: 50 });
   const e = out.find(x => x.id.includes("badge-004"));
-  assert.ok(e, "minimal badge-004 must be present");
+  assert.ok(e, "badge-004 must be present");
   assert.equal(e.payload.expired, false);
   assert.equal(e.payload.expiresAt, null);
   assert.equal(e.payload.imageUrl, null);
@@ -72,6 +72,54 @@ test("normalizeCredy: returns [] on null/empty/garbage input", () => {
 test("normalizeCredy: accepts { data: [...] } wrapper shape", () => {
   const out = normalizeCredy({ data: fixture }, { maxBadges: 50 });
   assert.ok(out.length >= 1, "must handle wrapped data key");
+});
+
+test("normalizeCredy: skills extracted — canonical only, non-canonical filtered out", () => {
+  const out = normalizeCredy(fixture, { maxBadges: 50 });
+  // badge-006 Python for Data Science: 3 canonical + 1 non-canonical "Python Programming"
+  const e = out.find(x => x.id.includes("badge-006"));
+  assert.ok(e, "badge-006 must be present");
+  assert.ok(Array.isArray(e.payload.skills), "skills must be an array");
+  assert.ok(e.payload.skills.includes("Python"), "Python (canonical) must be included");
+  assert.ok(e.payload.skills.includes("Data Science"), "Data Science (canonical) must be included");
+  assert.ok(e.payload.skills.includes("Pandas"), "Pandas (canonical) must be included");
+  assert.equal(e.payload.skills.includes("Python Programming"), false, "non-canonical skill must be excluded");
+  assert.equal(e.payload.skills.length, 3);
+});
+
+test("normalizeCredy: typeCategory is 'Validation' for Python badge (badge-006)", () => {
+  const out = normalizeCredy(fixture, { maxBadges: 50 });
+  const e = out.find(x => x.id.includes("badge-006"));
+  assert.ok(e, "badge-006 must be present");
+  assert.equal(e.payload.typeCategory, "Validation");
+});
+
+test("normalizeCredy: level is present when provided, null when absent", () => {
+  const out = normalizeCredy(fixture, { maxBadges: 50 });
+  // badge-006 has level "Foundational"
+  const e6 = out.find(x => x.id.includes("badge-006"));
+  assert.ok(e6, "badge-006 must be present");
+  assert.equal(e6.payload.level, "Foundational");
+  // badge-007 has level: null
+  const e7 = out.find(x => x.id.includes("badge-007"));
+  assert.ok(e7, "badge-007 must be present");
+  assert.equal(e7.payload.level, null);
+});
+
+test("normalizeCredy: skills is [] when badge_template has no skills array", () => {
+  const out = normalizeCredy(fixture, { maxBadges: 50 });
+  // badge-007 has no skills key at all
+  const e = out.find(x => x.id.includes("badge-007"));
+  assert.ok(e, "badge-007 must be present");
+  assert.deepEqual(e.payload.skills, []);
+});
+
+test("normalizeCredy: cost and timeToEarn are set correctly", () => {
+  const out = normalizeCredy(fixture, { maxBadges: 50 });
+  const e = out.find(x => x.id.includes("badge-006"));
+  assert.ok(e, "badge-006 must be present");
+  assert.equal(e.payload.cost, "Free");
+  assert.equal(e.payload.timeToEarn, "Days");
 });
 
 // ── fetch_ ─────────────────────────────────────────────────────────────────

@@ -13,11 +13,24 @@ export function EVENTS_URL(handle) {
   return `${API}/users/${encodeURIComponent(handle)}/events/public`;
 }
 
+/** Returns the /users/{handle} endpoint URL. */
+export function USER_URL(handle) {
+  return `${API}/users/${encodeURIComponent(handle)}`;
+}
+
+/** Returns the /users/{handle}/repos endpoint URL. */
+export function REPOS_URL(handle) {
+  return `${API}/users/${encodeURIComponent(handle)}/repos`;
+}
+
 /** Pure transform: GitHub events array -> Envelope[]. No network.
  * ev.public === false => private repo: no sha/message exposed, url = repo homepage.
  * ev.public === true or absent => public: sha + message included.
- * Both produce payload.visibility field. */
-export function normalizeEvents(events, cfg) {
+ * Both produce payload.visibility field.
+ * @param {object[]} events - raw GitHub events array
+ * @param {object} cfg - adapter config (handle, maxCommits, …)
+ * @param {Set<string>} forkSet - set of fork repo full_names to skip in PushEvents */
+export function normalizeEvents(events, cfg, forkSet = new Set()) {
   if (!Array.isArray(events)) return [];
   const out = [];
   for (const ev of events) {
@@ -25,6 +38,8 @@ export function normalizeEvents(events, cfg) {
     const repo = ev.repo.name;
     const isPublic = ev.public !== false; // default true if field absent
     if (ev.type === "PushEvent" && ev.payload) {
+      // Skip pushes to forked repos — they represent upstream contributions noise.
+      if (forkSet.has(repo)) continue;
       const branch = String(ev.payload.ref || "").replace("refs/heads/", "") || undefined;
       const repoShort = repo.includes("/") ? repo.split("/")[1] : repo;
       const commits = Array.isArray(ev.payload.commits)
@@ -109,33 +124,147 @@ export function normalizeEvents(events, cfg) {
   return [...commits, ...releases];
 }
 
+/** Pure transform: GitHub user object -> profile Envelope or null. No network. */
+function normalizeProfile(user) {
+  if (!user || typeof user !== "object" || !user.html_url || !user.updated_at) return null;
+  if (!(user.public_repos > 0)) return null;
+  const handle = user.login;
+  return makeEnvelope({
+    id: stableId("github", "profile", handle),
+    source: "github",
+    kind: "profile",
+    title: `GitHub: ${user.public_repos} repos · ${user.followers} followers`,
+    url: user.html_url,
+    date: user.updated_at,
+    payload: {
+      platform: "github",
+      name: user.name,
+      company: user.company,
+      location: user.location,
+      hireable: user.hireable,
+      followers: user.followers,
+      publicRepos: user.public_repos,
+      accountAgeYears: Math.floor(
+        (Date.now() - Date.parse(user.created_at)) / (365.25 * 86400 * 1000)
+      ),
+      createdAt: user.created_at,
+      bio: user.bio,
+    },
+  });
+}
+
+/** Pure transform: GitHub repos array -> repo Envelope[]. No network.
+ * Filters: non-fork, non-archived, stars >= 1. Caps at top 10 by stars. */
+function normalizeRepos(repos) {
+  if (!Array.isArray(repos)) return [];
+  return repos
+    .filter(
+      (r) =>
+        r &&
+        !r.fork &&
+        !r.archived &&
+        typeof r.stargazers_count === "number" &&
+        r.stargazers_count >= 1
+    )
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 10)
+    .map((r) =>
+      makeEnvelope({
+        id: stableId("github", "repo", r.full_name),
+        source: "github",
+        kind: "repo",
+        title: `${r.name}: ${r.description || r.name}`,
+        url: r.html_url,
+        date: r.pushed_at,
+        payload: {
+          platform: "github",
+          name: r.name,
+          stars: r.stargazers_count,
+          forks: r.forks_count,
+          language: r.language,
+          topics: r.topics || [],
+          license: r.license?.spdx_id || null,
+          isTemplate: r.is_template,
+          hasPages: r.has_pages,
+          description: r.description,
+        },
+      })
+    );
+}
+
 /** Adapter entry point: fetch + normalize. Returns [] on any error (never throws).
  * If GH_READ_TOKEN is set, uses /events (authenticated, sees private events).
- * Otherwise uses /events/public (unauthenticated). Fetches up to cfg.maxPages pages. */
+ * Otherwise uses /events/public (unauthenticated). Fetches up to cfg.maxPages pages.
+ * Also fetches /users/{handle} (profile) and /users/{handle}/repos in parallel. */
 export async function fetch_(cfg) {
   try {
     if (!cfg || !cfg.handle) return [];
     const handle = cfg.handle;
     const token = process.env.GH_READ_TOKEN;
     const maxPages = cfg.maxPages ?? 1;
-    const baseUrl = token
-      ? `${API}/users/${encodeURIComponent(handle)}/events`
-      : `${API}/users/${encodeURIComponent(handle)}/events/public`;
+    const headers = { "User-Agent": UA, Accept: "application/vnd.github+json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    let allEvents = [];
-    for (let page = 1; page <= maxPages; page++) {
-      const url = `${baseUrl}?per_page=100&page=${page}`;
-      const headers = { "User-Agent": UA, Accept: "application/vnd.github+json" };
-      if (token) headers["Authorization"] = `Bearer ${token}`;
-      const res = await fetch(url, { headers, signal: AbortSignal.timeout(15_000) });
-      if (!res.ok) break;
-      const pageEvents = await res.json();
-      if (!Array.isArray(pageEvents) || pageEvents.length === 0) break;
-      allEvents = allEvents.concat(pageEvents);
-      // Stop when page is partial — no further pages exist.
-      if (pageEvents.length < 100) break;
+    /** Fetch all events pages sequentially, returning a flat array. */
+    async function fetchEvents() {
+      const baseUrl = token
+        ? `${API}/users/${encodeURIComponent(handle)}/events`
+        : `${API}/users/${encodeURIComponent(handle)}/events/public`;
+      let allEvents = [];
+      for (let page = 1; page <= maxPages; page++) {
+        const url = `${baseUrl}?per_page=100&page=${page}`;
+        const res = await fetch(url, { headers, signal: AbortSignal.timeout(15_000) });
+        if (!res.ok) break;
+        const pageEvents = await res.json();
+        if (!Array.isArray(pageEvents) || pageEvents.length === 0) break;
+        allEvents = allEvents.concat(pageEvents);
+        if (pageEvents.length < 100) break;
+      }
+      return allEvents;
     }
-    return normalizeEvents(allEvents, cfg);
+
+    /** Fetch the user profile object. Returns null on failure. */
+    async function fetchUser() {
+      try {
+        const res = await fetch(USER_URL(handle), { headers, signal: AbortSignal.timeout(10_000) });
+        if (!res.ok) return null;
+        return await res.json();
+      } catch {
+        return null;
+      }
+    }
+
+    /** Fetch all non-paginated repos (first 100, sorted by updated). Returns [] on failure. */
+    async function fetchRepos() {
+      try {
+        const url = `${REPOS_URL(handle)}?per_page=100&sort=updated`;
+        const res = await fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    }
+
+    const [eventsData, userData, reposData] = await Promise.all([
+      fetchEvents(),
+      fetchUser(),
+      fetchRepos(),
+    ]);
+
+    // Build fork set from the repos fetch — used to suppress fork PushEvents.
+    const forkSet = new Set(reposData.filter((r) => r && r.fork).map((r) => r.full_name));
+
+    const eventEnvelopes = normalizeEvents(eventsData, cfg, forkSet);
+    const profileEnvelope = normalizeProfile(userData);
+    const repoEnvelopes = normalizeRepos(reposData);
+
+    return [
+      ...(profileEnvelope ? [profileEnvelope] : []),
+      ...repoEnvelopes,
+      ...eventEnvelopes,
+    ];
   } catch {
     return [];
   }
