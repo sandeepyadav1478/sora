@@ -122,8 +122,12 @@ export function normalizePackage(raw, cfg, statsRaw, overallRaw, pythonRaw, syst
 
   const devStatus = extractClassifier(classifiers, "Development Status");
 
+  // Yanked releases are removed from PyPI — skip entirely.
+  if (info.yanked === true) return [];
+
   // Build payload
-  const payload = { registry: "pypi", version };
+  const payload = { registry: "pypi", version, yanked: false };
+  if (info.summary) payload.summary = info.summary || undefined;
 
   if (monthlyDownloads !== null) payload.monthlyDownloads = monthlyDownloads;
   if (weeklyDownloads !== null) payload.weeklyDownloads = weeklyDownloads;
@@ -258,9 +262,17 @@ export function normalizePackage(raw, cfg, statsRaw, overallRaw, pythonRaw, syst
     payload.requiresDist = info.requires_dist;
   }
 
-  // vulnerabilities: count from top-level vulnerabilities array (0 = no known CVEs).
+  // vulnerabilities: count + details from top-level vulnerabilities array (0 = no known CVEs).
   const vulns = Array.isArray(raw.vulnerabilities) ? raw.vulnerabilities : [];
   payload.vulnerabilities = vulns.length;
+  if (vulns.length > 0) {
+    payload.vulnerabilityDetails = vulns.slice(0, 10).map(v => ({
+      id: v.id,
+      details: v.details?.slice(0, 200) || undefined,
+      fixedIn: Array.isArray(v.fixed_in) ? v.fixed_in : [],
+      link: v.link || undefined,
+    }));
+  }
 
   // Build title — include download stats when available.
   const title =

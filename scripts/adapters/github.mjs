@@ -114,7 +114,14 @@ export function normalizeEvents(events, cfg, forkSet = new Set()) {
           title: `${repo} ${rel.name || rel.tag_name}`,
           url: rel.html_url || `https://github.com/${repo}/releases`,
           date: ev.created_at,
-          payload: { repo, version: rel.tag_name },
+          payload: {
+            repo,
+            version: rel.tag_name,
+            releaseBody: rel.body ? rel.body.slice(0, 300) : undefined,
+            isDraft: rel.draft === true,
+            isPrerelease: rel.prerelease === true,
+            assetDownloads: Array.isArray(rel.assets) ? rel.assets.reduce((s, a) => s + (a.download_count || 0), 0) : undefined,
+          },
         })
       );
     } else if (ev.type === "PullRequestEvent" && ev.payload) {
@@ -149,6 +156,9 @@ export function normalizeEvents(events, cfg, forkSet = new Set()) {
             repo,
             isExternal,
             visibility: ev.public !== false ? "public" : "private",
+            additions: pr?.additions ?? undefined,
+            deletions: pr?.deletions ?? undefined,
+            changedFiles: pr?.changed_files ?? undefined,
           },
         })
       );
@@ -243,6 +253,8 @@ function normalizeProfile(user) {
       ),
       createdAt: user.created_at,
       bio: user.bio,
+      avatarUrl: user.avatar_url || undefined,
+      twitterUsername: user.twitter_username || undefined,
     },
   });
 }
@@ -283,6 +295,7 @@ function normalizeRepos(repos, langMap = new Map()) {
           license: r.license?.spdx_id || null,
           isTemplate: r.is_template,
           hasPages: r.has_pages,
+          hasDiscussions: r.has_discussions === true,
           description: r.description,
           ...(languageBytes !== undefined ? { languageBytes } : {}),
         },

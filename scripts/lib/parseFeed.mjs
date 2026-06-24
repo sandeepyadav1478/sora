@@ -37,7 +37,7 @@ export function parseFeed(xmlText) {
     : [...xml.matchAll(/<item[\s>][\s\S]*?<\/item>/gi)].map((m) => m[0]);
 
   const items = blocks.map((b) => {
-    const rawDesc = isAtom ? tag(b, "summary") || tag(b, "content") : tag(b, "description");
+    const rawDesc = isAtom ? tag(b, "summary") || tag(b, "content") : tag(b, "content:encoded") || tag(b, "description");
     return {
       title: tag(b, "title"),
       link: isAtom ? atomLink(b) : tag(b, "link"),

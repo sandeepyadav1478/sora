@@ -48,10 +48,11 @@ export function normalizeStats(raw, cfg, generatedAt) {
 
     const rankLabel = ranking > 0 ? `rank #${fmtRank(ranking)}` : "unranked";
 
-    // --- Tag breakdown: advanced + intermediate, >= 3 solved, no excluded tags ---
+    // --- Tag breakdown: advanced + intermediate + fundamental (>= 5 solved), >= 3 solved, no excluded tags ---
     const rawTags = [
       ...(user.tagProblemCounts?.advanced      ?? []),
       ...(user.tagProblemCounts?.intermediate  ?? []),
+      ...(user.tagProblemCounts?.fundamental   ?? []).filter((t) => t.problemsSolved >= 5),
     ];
     const tagBreakdown = rawTags
       .filter((t) => t.problemsSolved >= 3 && !EXCLUDED_TAGS.has(t.tagName))
@@ -246,6 +247,7 @@ query UserFullStats($handle: String!) {
     globalRanking
     topPercentage
   }
+  problemsSolvedBeatsStats(username: $handle) { difficulty percentage }
   recentAcSubmissionList(username: $handle, limit: 10) {
     id title titleSlug timestamp lang runtime memory
   }

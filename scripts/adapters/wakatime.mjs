@@ -57,6 +57,8 @@ export function normalizeStats(raw, cfg) {
     totalSeconds: typeof d.total_seconds === "number" ? d.total_seconds : undefined,
     humanReadableTotal: d.human_readable_total || undefined,
     range,
+    status: d.status || undefined,
+    percentCalculated: typeof d.percent_calculated === 'number' ? d.percent_calculated : undefined,
   };
   if (typeof d.daily_average === "number") payload.dailyAverage = d.daily_average;
   if (languages && languages.length) payload.languages = languages;
@@ -471,12 +473,16 @@ export function normalizeLeaderboard(raw, cfg) {
   const profileUrl = (cfg && cfg.profileUrl) || "https://wakatime.com";
   const date = (cfg && cfg.generatedAt) || new Date().toISOString();
 
+  const rt = currentUser.running_total || {};
+
   const payload = {
     platform: "wakatime",
     subkind: "leaderboard",
     rank,
     rangeLabel,
     languages,
+    aiLineChangesTotal: typeof rt.ai_line_changes_total === 'number' ? rt.ai_line_changes_total : undefined,
+    aiAgentLineChanges: rt.ai_agent_line_changes && typeof rt.ai_agent_line_changes === 'object' ? rt.ai_agent_line_changes : undefined,
   };
 
   return [
