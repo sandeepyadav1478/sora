@@ -54,9 +54,9 @@ test("normalizeRatings returns [] on garbage / FAILED status (never throws)", ()
 
 test("fetch_ returns envelopes for a valid handle", async () => {
   // fetch_ calls RATING_URL and USER_INFO_URL in parallel — stub both
-  let callCount = 0;
+  let _callCount = 0;
   globalThis.fetch = async (url) => {
-    callCount++;
+    _callCount++;
     if (String(url).includes("user.info")) {
       return {
         ok: true,
