@@ -12,7 +12,8 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "test:sync": "node --test 'scripts/__tests__/*.test.mjs'"
+    "test:sync": "node --test 'scripts/__tests__/*.test.mjs'",
+    "fetch:linkedin": "node scripts/fetch-linkedin.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.14",

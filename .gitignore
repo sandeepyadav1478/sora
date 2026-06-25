@@ -35,3 +35,7 @@ public/pagefind/
 
 # workflow run logs
 logs/
+.mcp.json
+
+# LinkedIn personal data — never ship in template
+src/data/linkedin-cache.json

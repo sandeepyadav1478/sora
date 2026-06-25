@@ -232,6 +232,33 @@ if (kind === "rating" && platform === "stackoverflow") {
     badges.push({ glyph: "🏛", text: soCollectives[0] });
 }
 
+// rating — linkedin experience
+if (kind === "rating" && platform === "linkedin" && p.subkind === "experience") {
+  const company = typeof p.company === "string" ? p.company : "";
+  const duration = typeof p.duration === "string" ? p.duration : "";
+  const isCurrent = p.isCurrent === true;
+  if (ACTIVITY_DISPLAY.linkedin_company && company)
+    badges.push({ glyph: "🏢", text: company });
+  if (ACTIVITY_DISPLAY.linkedin_duration && duration)
+    badges.push({ glyph: "⏱", text: duration });
+  if (ACTIVITY_DISPLAY.linkedin_current && isCurrent)
+    badges.push({ glyph: "✓", text: "current" });
+  if (ACTIVITY_DISPLAY.linkedin_tooltip) {
+    const loc = typeof p.location === "string" ? p.location : "";
+    const type = typeof p.type === "string" ? p.type : "";
+    tip = [type, loc].filter(Boolean).join(" · ");
+  }
+}
+
+// profile — linkedin
+if (kind === "profile" && platform === "linkedin") {
+  const followers = typeof p.followers === "number" ? p.followers : 0;
+  if (ACTIVITY_DISPLAY.profile_followers && followers > 0)
+    badges.push({ glyph: "👥", text: String(followers) });
+  if (ACTIVITY_DISPLAY.linkedin_tooltip && typeof p.headline === "string" && p.headline)
+    tip = p.headline;
+}
+
 const issuer = typeof p.issuer === "string" ? p.issuer : "";
 if (kind === "badge" && issuer === "huggingface") {
   const dl = fmt(p.downloads);

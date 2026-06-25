@@ -71,4 +71,8 @@ export const SOURCES = {
     maxBadges: 50,        // accepted badges kept in the feed (newest-first)
     includeExpired: true, // set false to hide expired badges entirely
   },
+  linkedin: {
+    enabled: false,  // forker: set true after running npm run fetch:linkedin
+    cacheFile: "src/data/linkedin-cache.json",
+  },
 };

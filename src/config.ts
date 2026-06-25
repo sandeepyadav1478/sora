@@ -200,6 +200,12 @@ export const ACTIVITY_DISPLAY = {
   credly_issuer: false, // 🏅 issuing organisation name badge
   credly_tooltip: false, // hover: badge description (first 120 chars)
 
+  // rating — linkedin experience
+  linkedin_company: false,   // 🏢 company name badge
+  linkedin_duration: false,  // ⏱ duration badge (e.g. "1 yr 4 mos")
+  linkedin_current: false,   // ✓ "current" badge for active roles
+  linkedin_tooltip: false,   // hover: role type + location
+
   // repo (github)
   repo_stars: false, // ⭐ star count badge
   repo_forks: false, // 🍴 fork count badge
